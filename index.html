@@ -231,15 +231,6 @@
   footer a { text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   footer .made-in { margin-top: 8px; font-size: 9.5px; opacity: 0.8; }
-  .visit-stats {
-    margin-top: 10px; font-size: 9.5px; opacity: 0.55; letter-spacing: 0.3px;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-  }
-  .dot-live {
-    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-    background: #3dff8a; box-shadow: 0 0 6px #3dff8a; animation: dotLivePulse 2s ease-in-out infinite;
-  }
-  @keyframes dotLivePulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
 
   /* ============================================
      DECHOVÉ CVIČENÍ — fullscreen overlay (převzato z SYNTHLUCIDA Player)
@@ -381,7 +372,6 @@
     padding: 84px 22px 24px; display: flex; flex-direction: column; gap: 4px;
     transform: translateX(-100%); transition: transform 0.35s ease;
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
   .side-nav.open { transform: translateX(0); }
   .side-nav .side-nav-brand {
@@ -397,10 +387,9 @@
     opacity: 1; background: rgba(255,119,0,0.1); border-left-color: var(--accent-color); color: var(--accent-color);
   }
   .side-nav .side-nav-cta {
-    font-size: 10px; opacity: 0.55; line-height: 1.6; letter-spacing: 0.5px;
-    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-top: 6px;
+    margin-top: auto; font-size: 10px; opacity: 0.55; line-height: 1.6; letter-spacing: 0.5px;
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;
   }
-
   /* ---------- Kontaktní formulář v levém menu ---------- */
   .side-nav-contact-toggle {
     display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%;
@@ -477,6 +466,7 @@
   <a href="#cviceni" onclick="toggleSideNav(false)">Dechové cvičení</a>
   <a href="#techniky" onclick="toggleSideNav(false)">Techniky dechu</a>
   <a href="#clanky" onclick="toggleSideNav(false)">Články o dýchání</a>
+  <a href="#doplnky" onclick="toggleSideNav(false)">Doplňky a další cesty ke klidu</a>
   <a href="#faq" onclick="toggleSideNav(false)">Časté dotazy</a>
 
   <button class="side-nav-contact-toggle" id="side-nav-contact-toggle" onclick="toggleSideNavContact()" aria-expanded="false" aria-controls="side-nav-contact-panel">
@@ -517,6 +507,7 @@
       <span class="cta-icon" aria-hidden="true"></span>
       Spustit dechové cvičení
     </button>
+    <p style="font-size:11px; opacity:0.45; margin-top:16px; letter-spacing:0.3px;">Chceš k dýchání i hudbu na pozadí? Zkus <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA Relax Player</a>.</p>
   </section>
 
   <section class="content" aria-labelledby="jak-funguje">
@@ -598,7 +589,55 @@
       <p class="article-source">Zdroj: souhrnná studie (scoping review) 4-7-8 dýchání, 2025; dílčí klinické studie u COPD a poruch spánku.</p>
     </article>
 
+    <article class="article-card">
+      <h3>Dýchání a hudba: proč kombinace s ambientem funguje ještě lépe</h3>
+      <p>Řízené dýchání funguje samo o sobě, ale pomalá, nerušivá hudba dokáže efekt ještě podpořit. Ambient a chillout bez výrazného rytmu nenutí tělo se „přizpůsobovat“ tempu skladby tak jako rychlejší hudba, takže nepřebíjí tempo, které právě udává pulzující koule — spíš vytváří zvukové pozadí, které pomáhá udržet pozornost u dechu a odstínit rušivé zvuky okolí.</p>
+      <p>Pokud chceš dechové cvičení spojit s ambientní hudbou, můžeš si pustit <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA RELAX PLAYER</a> na pozadí a k tomu spustit dechové cvičení zde na Uklidni To — hudbu si necháš hrát na jedné záložce a dech si necháš vést koulí ve druhé.</p>
+    </article>
+
     <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Pokud máš úzkostnou poruchu, srdeční či plicní onemocnění, jsi těhotná, nebo se během cvičení necítíš dobře, poraď se s lékařem a dýchání okamžitě přeruš, pokud se ti udělá nevolno nebo se ti zatočí hlava.</p>
+  </section>
+
+  <section class="content" aria-labelledby="doplnky-nadpis" id="doplnky">
+    <h2 id="doplnky-nadpis">Doplňky a další cesty ke klidu</h2>
+    <p>Dech je základ, ale klidu pomáhá i pár dalších věcí, které stojí za zmínku — co o nich vlastně říká výzkum.</p>
+
+    <article class="article-card">
+      <h3>Hořčík (magnesium): oblíbený, ale ne zázračný</h3>
+      <p>Hořčík se v poslední době stal jedním z nejoblíbenějších doplňků na klid a lepší spánek, hlavně díky sociálním sítím. Přehledy studií z posledních let ukazují, že u lidí, kteří mají sklon k úzkosti nebo nižší hladinu hořčíku, může doplňování hořčíku mírně zlepšit pocit úzkosti a kvalitu spánku.</p>
+      <p>Důkazy ale zatím nejsou nijak silné — studie bývají menší a používají různé formy i dávky hořčíku, takže jednoznačné doporučení zatím chybí. Přesto jde o levný a bezpečný doplněk s minimem vedlejších účinků, takže je to rozumná volba k vyzkoušení, hlavně večer před spaním. Než začneš, poraď se s lékařem nebo lékárníkem — u lidí s ledvinovými potížemi může být hořčík problematický.</p>
+      <p class="article-source">Zdroj: systematické přehledy studií o hořčíku a úzkosti/spánku, 2017 a 2024.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>L-theanin: klid bez ospalosti ze zeleného čaje</h3>
+      <p>L-theanin je aminokyselina přirozeně obsažená v zeleném čaji, která je zajímavá tím, že podle EEG studií zvyšuje takzvané alfa vlny v mozku — ty souvisí s uvolněným, ale bdělým stavem, podobným lehké meditaci. V malých studiích dávka kolem 200 mg před stresující situací mírně snížila pocit úzkosti a tělesné reakce na stres, aniž by způsobila ospalost.</p>
+      <p>Na rozdíl od klasických uklidňujících léků L-theanin nezpomaluje reakce ani neovlivňuje paměť. Kombinace s kofeinem (například v šálku čaje) navíc podle výzkumu pomáhá zmírnit nervozitu, kterou kofein sám o sobě může způsobit — proto prý čaj působí „hladčeji“ než káva.</p>
+      <p class="article-source">Zdroj: klinické studie účinků L-theaninu na úzkost a alfa aktivitu mozku, 2004–2026.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Studená sprcha: proč nejdřív šok a teprve pak klid</h3>
+      <p>Studená voda na kůži nejdřív spustí takzvaný cold shock — tělo na pár vteřin zrychlí dech i tep a vyplaví stresové hormony, přesně jako při jakékoliv jiné zátěži. Teprve po tomto počátečním šoku se aktivuje bloudivý nerv a nastupuje uklidnění: tep se zpomalí pod výchozí úroveň a nervový systém se přepne do klidnějšího režimu. Efekt je proto opačný, než by se čekalo — klid přichází až jako reakce na ústup chladu, ne během něj.</p>
+      <p>Studie z roku 2022 potvrdila, že přiložení chladu na obličej po stresující úloze pomohlo tep i subjektivní pocit stresu zklidnit rychleji než bez chladu. Pravidelná studená expozice po dobu několika týdnů je navíc v menších studiích spojována s mírně lepší variabilitou srdečního tepu (HRV) a lepší náladou. Pro začátek stačí pár vteřin studeného konce sprchy a postupně čas prodlužovat — a hned po sprše je dobré chvíli pomalu dýchat, aby se uklidňující efekt ještě podpořil. Lidé se srdečními potížemi, vysokým tlakem nebo v těhotenství by měli chlad na tělo zkoušet jen po domluvě s lékařem, protože prudký cold shock může krátkodobě zvýšit tepovou frekvenci i krevní tlak.</p>
+      <p class="article-source">Zdroj: studie o vlivu chladového podnětu na obličej (Cold Face Test) na akutní stres, Scientific Reports, 2022; přehledy studií o bezpečnosti a účincích studené vody na duševní zdraví, 2023–2026.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Kofein a úzkost: kdy pomáhá a kdy škodí</h3>
+      <p>Vztah kofeinu a úzkosti není jednoznačný. U menších dávek a lidí zvyklých na pravidelnou konzumaci kofein často zlepšuje soustředění a náladu, u vyšších dávek nebo citlivějších jedinců ale zvyšuje kortizol a může spustit nebo zhoršit pocit nervozity a bušení srdce — efekt je tedy dost individuální a záleží na dávce.</p>
+      <p>Pokud máš sklony k úzkosti nebo špatně usínáš, může pomoct kofein omezit na dopoledne a sledovat, jak reaguje tvoje tělo — u někoho stačí i jeden šálek navíc, aby se objevil neklid. Dechové cvičení nebo studenou sprchu je dobré zkusit spíš mimo špičku účinku kofeinu, kdy je tělo přirozeně klidnější.</p>
+      <p class="article-source">Zdroj: systematický přehled vlivu kofeinu na úzkostné chování, 2023–2026; studie o kofeinu a reaktivitě kortizolu na stres.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Progresivní svalová relaxace: napni a pusť</h3>
+      <p>Progresivní svalová relaxace (metoda Edmunda Jacobsona z 30. let 20. století) funguje na jednoduchém principu — postupně napneš a pak uvolníš jednotlivé svalové skupiny od chodidel až po obličej. Tělo si tak lépe uvědomí rozdíl mezi napětím a uvolněním, což pomáhá rozpoznat a pustit i skryté svalové napětí, které si běžně ani neuvědomujeme.</p>
+      <p>Novější přehledy studií u dospělých potvrzují, že pravidelná progresivní svalová relaxace snižuje úzkost, stres i příznaky deprese, a to i u starších lidí nebo lidí v nemocniční péči. Sezení trvají obvykle 5 až 20 minut a dá se dělat úplně kdekoliv vsedě nebo vleže — hezky se doplňuje s dechovým cvičením, třeba jako večerní rituál před spaním.</p>
+      <p class="article-source">Zdroj: systematické přehledy účinnosti progresivní svalové relaxace na stres, úzkost a depresi, 2024–2025.</p>
+    </article>
+
+    <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Doplňky nezačínej brát bez konzultace s lékařem, hlavně pokud bereš i jiné léky, jsi těhotná nebo kojíš.</p>
   </section>
 
   <section class="content" aria-labelledby="faq">
@@ -628,11 +667,8 @@
 
 <footer>
   <div>© <span id="year"></span> Uklidni To — dechové cvičení zdarma online</div>
-  <div class="visit-stats" id="visit-stats">
-    <span class="dot-live" aria-hidden="true"></span>
-    návštěvnost: <span id="total-visits-badge">–</span> celkem · <span id="online-count-badge">–</span> online teď
-  </div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
+  <div class="made-in"><a href="privacy.html">Zásady ochrany soukromí</a></div>
 </footer>
 
 <!-- ============================================
@@ -1144,95 +1180,6 @@
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
   })();
-</script>
-
-<!-- Firebase - pohání počítadlo návštěvnosti (celkem + online teď).
-     Konfiguraci níže je potřeba nahradit vlastní (Firebase Console -> Project settings).
-     Bez vyplněné konfigurace stránka funguje úplně normálně, počítadlo jen zůstane skryté. -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script>
-  // ==========================================
-  // FIREBASE KONFIGURACE - SEM VLOŽ SVOJI VLASTNÍ
-  // (Firebase Console -> ⚙ Project settings -> Your apps -> SDK setup and configuration)
-  // Realtime Database musí mít pravidla, která dovolí číst/zapisovat do /stats a /presence,
-  // např.: { "rules": { "stats": { ".read": true, ".write": true }, "presence": { ".read": true, ".write": true } } }
-  // ==========================================
-  const firebaseConfig = {
-    apiKey: "VLOŽ_SVŮJ_API_KEY",
-    authDomain: "VLOZ-SVUJ-PROJEKT.firebaseapp.com",
-    databaseURL: "https://VLOZ-SVUJ-PROJEKT-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "VLOZ-SVUJ-PROJEKT",
-    storageBucket: "VLOZ-SVUJ-PROJEKT.firebasestorage.app",
-    messagingSenderId: "VLOZ_SVOJE_ID",
-    appId: "VLOZ_SVOJE_APP_ID"
-  };
-
-  try {
-    if (!firebaseConfig.apiKey || firebaseConfig.apiKey.indexOf('VLOŽ') !== -1) {
-      throw new Error('Firebase config not filled in yet');
-    }
-    firebase.initializeApp(firebaseConfig);
-  } catch (e) {
-    console.warn('Firebase se nepodařilo inicializovat - počítadlo návštěvnosti zůstane skryté, dokud nedoplníš firebaseConfig:', e);
-  }
-
-  // ==========================================
-  // CELKOVÝ POČET NÁVŠTĚV - zvýší se jednou při každém načtení stránky
-  // pomocí atomické transakce nad /stats/totalVisits.
-  // ==========================================
-  function initTotalVisitsCounter() {
-    try {
-      if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
-      const badge = document.getElementById('total-visits-badge');
-      const db = firebase.database();
-      const totalRef = db.ref('stats/totalVisits');
-
-      totalRef.transaction((current) => (current || 0) + 1);
-
-      totalRef.on('value', (snap) => {
-        if (!badge) return;
-        const count = snap.val();
-        badge.textContent = typeof count === 'number' ? count.toLocaleString('cs-CZ') : '–';
-      });
-    } catch (e) {
-      console.error('Počítadlo celkových návštěv se nepodařilo spustit:', e);
-    }
-  }
-
-  // ==========================================
-  // POČET AKTUÁLNĚ PŘIPOJENÝCH NÁVŠTĚVNÍKŮ (živé počítadlo v patičce)
-  // Standardní Firebase "presence" vzor: každé otevřené okno/tab si po připojení
-  // zapíše vlastní záznam do /presence a nastaví onDisconnect(), aby se záznam
-  // automaticky smazal při zavření stránky / výpadku sítě.
-  // ==========================================
-  function initOnlinePresence() {
-    try {
-      if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
-      const badge = document.getElementById('online-count-badge');
-      const db = firebase.database();
-      const presenceRef = db.ref('presence');
-      const myPresenceRef = presenceRef.push();
-
-      db.ref('.info/connected').on('value', (snap) => {
-        if (snap.val() === true) {
-          myPresenceRef.onDisconnect().remove();
-          myPresenceRef.set(true);
-        }
-      });
-
-      presenceRef.on('value', (snap) => {
-        if (!badge) return;
-        const count = snap.numChildren();
-        badge.textContent = count > 0 ? String(count) : '–';
-      });
-    } catch (e) {
-      console.error('Počítadlo online návštěvníků se nepodařilo spustit:', e);
-    }
-  }
-
-  initTotalVisitsCounter();
-  initOnlinePresence();
 </script>
 
 </body>
