@@ -440,6 +440,11 @@
     border-radius: 7px; cursor: pointer; transition: 0.2s; margin-top: 2px;
   }
   .side-contact-submit:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 10px var(--accent-color); }
+  .side-contact-submit:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+  .side-contact-status { margin: 2px 0 0; font-size: 10.5px; text-align: center; min-height: 13px; }
+  .side-contact-status.sending { color: rgba(255,255,255,0.55); }
+  .side-contact-status.success { color: var(--accent-color); }
+  .side-contact-status.error { color: #ff6b6b; }
   .side-contact-thanks { margin: 0; font-size: 11px; color: var(--accent-color); text-align: center; padding: 6px 0; }
 
   .nav-scrim {
@@ -478,19 +483,17 @@
     <span>✉ Kontakt</span> <span class="chevron">▾</span>
   </button>
   <div class="side-nav-contact-panel" id="side-nav-contact-panel">
-    <form class="side-contact-form" id="side-contact-form" action="https://formsubmit.co/dzpracovni@hotmail.com" method="POST">
-      <!-- Kontaktní formulář funguje přes formsubmit.co - stejnou službu jako
-           na synthlucida.com. Do action výše je potřeba vyplnit vlastní e-mail,
+    <form class="side-contact-form" id="side-contact-form" data-endpoint="https://formsubmit.co/ajax/dzpracovni@hotmail.com">
+      <!-- Kontaktní formulář funguje přes formsubmit.co AJAX endpoint (stejná
+           služba jako na synthlucida.com, jen bez přenačtení stránky - viz JS
+           níže). Do data-endpoint výše je potřeba vyplnit vlastní e-mail,
            na který mají zprávy z tohoto formuláře chodit. -->
-      <input type="hidden" name="_subject" value="Nová zpráva z webu Uklidni To">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_next" value="https://uklidnito.github.io/#kontakt-odeslano">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <input type="text" name="name" class="side-contact-input" placeholder="Vaše jméno" required>
       <input type="email" name="email" class="side-contact-input" placeholder="Váš e-mail" required>
       <textarea name="message" class="side-contact-textarea" placeholder="Vaše zpráva" rows="4" required></textarea>
       <button type="submit" class="side-contact-submit">Odeslat zprávu</button>
+      <p class="side-contact-status" id="side-contact-status" aria-live="polite"></p>
     </form>
   </div>
 
@@ -728,15 +731,47 @@
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
 
-  // Po přesměrování zpět z formsubmit.co (URL obsahuje #kontakt-odeslano)
-  // automaticky otevře menu i formulářový panel a zobrazí poděkování.
-  (function handleContactRedirect() {
-    if (window.location.hash !== '#kontakt-odeslano') return;
+  // Odeslání formuláře přes formsubmit.co AJAX endpoint (fetch) místo běžného
+  // POST přesměrování - stránka se nepřenačítá, takže odpověď přijde znatelně
+  // rychleji a uživatel rovnou vidí "Odesílám…" místo dlouhého čekání naslepo.
+  (function initSideContactForm() {
     const form = document.getElementById('side-contact-form');
     if (!form) return;
-    toggleSideNav(true);
-    toggleSideNavContact(true);
-    form.innerHTML = '<p class="side-contact-thanks">✔ Děkujeme! Zpráva byla odeslána.</p>';
+    const statusEl = document.getElementById('side-contact-status');
+    const submitBtn = form.querySelector('.side-contact-submit');
+    const endpoint = form.dataset.endpoint;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!endpoint || endpoint.indexOf('VLOZ_SVUJ_EMAIL') !== -1) {
+        statusEl.textContent = 'Formulář zatím není nastavený (chybí e-mail v konfiguraci).';
+        statusEl.className = 'side-contact-status error';
+        return;
+      }
+      submitBtn.disabled = true;
+      statusEl.textContent = 'Odesílám…';
+      statusEl.className = 'side-contact-status sending';
+
+      const formData = new FormData(form);
+      formData.append('_subject', 'Nová zpráva z webu Uklidni To');
+      formData.append('_template', 'table');
+      formData.append('_captcha', 'false');
+
+      fetch(endpoint, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Odeslání se nezdařilo');
+          form.innerHTML = '<p class="side-contact-thanks">✔ Děkujeme! Zpráva byla odeslána.</p>';
+        })
+        .catch(() => {
+          statusEl.textContent = 'Odeslání se nezdařilo, zkus to prosím znovu.';
+          statusEl.className = 'side-contact-status error';
+          submitBtn.disabled = false;
+        });
+    });
   })();
 
   // ---------- Stav dechového cvičení ----------
