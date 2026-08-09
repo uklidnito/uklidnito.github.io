@@ -231,6 +231,9 @@
   footer a { text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   footer .made-in { margin-top: 8px; font-size: 9.5px; opacity: 0.8; }
+  .visit-stats {
+    margin-top: 8px; font-size: 8.5px; opacity: 0.32; letter-spacing: 0.3px;
+  }
 
   /* ============================================
      DECHOVÉ CVIČENÍ — fullscreen overlay (převzato z SYNTHLUCIDA Player)
@@ -669,6 +672,7 @@
   <div>© <span id="year"></span> Uklidni To — dechové cvičení zdarma online</div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
   <div class="made-in"><a href="privacy.html">Zásady ochrany soukromí</a></div>
+  <div class="visit-stats" id="visit-stats"><span id="total-visits-badge">–</span> · <span id="online-count-badge">–</span></div>
 </footer>
 
 <!-- ============================================
@@ -1180,6 +1184,95 @@
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
   })();
+</script>
+
+<!-- Firebase - pohání počítadlo návštěvnosti (celkem + online teď).
+     Konfiguraci níže je potřeba nahradit vlastní (Firebase Console -> Project settings).
+     Bez vyplněné konfigurace stránka funguje úplně normálně, počítadlo jen zůstane skryté. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  // ==========================================
+  // FIREBASE KONFIGURACE - SEM VLOŽ SVOJI VLASTNÍ
+  // (Firebase Console -> ⚙ Project settings -> Your apps -> SDK setup and configuration)
+  // Realtime Database musí mít pravidla, která dovolí číst/zapisovat do /stats a /presence,
+  // např.: { "rules": { "stats": { ".read": true, ".write": true }, "presence": { ".read": true, ".write": true } } }
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBrR762zSdiwycRd2qIOerkTuePQ1H6e74",
+    authDomain: "uklidnito-d580e.firebaseapp.com",
+    databaseURL: "https://uklidnito-d580e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "uklidnito-d580e",
+    storageBucket: "uklidnito-d580e.firebasestorage.app",
+    messagingSenderId: "623488013540",
+    appId: "1:623488013540:web:f56b24bdf065ace0ce48f1"
+  };
+
+  try {
+    if (!firebaseConfig.apiKey || firebaseConfig.apiKey.indexOf('VLOŽ') !== -1) {
+      throw new Error('Firebase config not filled in yet');
+    }
+    firebase.initializeApp(firebaseConfig);
+  } catch (e) {
+    console.warn('Firebase se nepodařilo inicializovat - počítadlo návštěvnosti zůstane skryté, dokud nedoplníš firebaseConfig:', e);
+  }
+
+  // ==========================================
+  // CELKOVÝ POČET NÁVŠTĚV - zvýší se jednou při každém načtení stránky
+  // pomocí atomické transakce nad /stats/totalVisits.
+  // ==========================================
+  function initTotalVisitsCounter() {
+    try {
+      if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
+      const badge = document.getElementById('total-visits-badge');
+      const db = firebase.database();
+      const totalRef = db.ref('stats/totalVisits');
+
+      totalRef.transaction((current) => (current || 0) + 1);
+
+      totalRef.on('value', (snap) => {
+        if (!badge) return;
+        const count = snap.val();
+        badge.textContent = typeof count === 'number' ? count.toLocaleString('cs-CZ') : '–';
+      });
+    } catch (e) {
+      console.error('Počítadlo celkových návštěv se nepodařilo spustit:', e);
+    }
+  }
+
+  // ==========================================
+  // POČET AKTUÁLNĚ PŘIPOJENÝCH NÁVŠTĚVNÍKŮ (živé počítadlo v patičce)
+  // Standardní Firebase "presence" vzor: každé otevřené okno/tab si po připojení
+  // zapíše vlastní záznam do /presence a nastaví onDisconnect(), aby se záznam
+  // automaticky smazal při zavření stránky / výpadku sítě.
+  // ==========================================
+  function initOnlinePresence() {
+    try {
+      if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) return;
+      const badge = document.getElementById('online-count-badge');
+      const db = firebase.database();
+      const presenceRef = db.ref('presence');
+      const myPresenceRef = presenceRef.push();
+
+      db.ref('.info/connected').on('value', (snap) => {
+        if (snap.val() === true) {
+          myPresenceRef.onDisconnect().remove();
+          myPresenceRef.set(true);
+        }
+      });
+
+      presenceRef.on('value', (snap) => {
+        if (!badge) return;
+        const count = snap.numChildren();
+        badge.textContent = count > 0 ? String(count) : '–';
+      });
+    } catch (e) {
+      console.error('Počítadlo online návštěvníků se nepodařilo spustit:', e);
+    }
+  }
+
+  initTotalVisitsCounter();
+  initOnlinePresence();
 </script>
 
 </body>
