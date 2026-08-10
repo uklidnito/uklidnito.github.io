@@ -218,6 +218,68 @@
   .article-source { font-size: 10.5px !important; opacity: 0.45 !important; letter-spacing: 0.3px; font-style: italic; }
   .article-disclaimer { font-size: 10.5px; opacity: 0.4; line-height: 1.7; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
+  /* ---------- Tvůj pokrok ---------- */
+  .progress-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 24px; }
+  .progress-stat {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 14px 6px; text-align: center;
+  }
+  .progress-stat-value { font-family: 'Orbitron', sans-serif; font-size: clamp(18px, 5vw, 24px); color: var(--accent-color); text-shadow: 0 0 12px var(--accent-glow); line-height: 1.2; }
+  .progress-stat-label { font-size: 9.5px; letter-spacing: 0.4px; opacity: 0.6; margin-top: 4px; line-height: 1.4; }
+
+  .progress-calendar-wrap {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 18px 16px; margin-bottom: 24px;
+  }
+  .progress-calendar-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; opacity: 0.6; margin-bottom: 12px; letter-spacing: 0.3px; }
+  .progress-legend { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 3px; background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); display: inline-block; }
+  .progress-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .progress-day {
+    aspect-ratio: 1; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.03); cursor: pointer; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; opacity: 0.55; color: #fff; padding: 0; font-family: 'Poppins', sans-serif;
+    transition: 0.2s;
+  }
+  .progress-day:hover { border-color: var(--accent-color); }
+  .progress-day.done {
+    background: var(--accent-color); border-color: var(--accent-color); opacity: 1;
+    box-shadow: 0 0 10px rgba(255,119,0,0.5); color: #1a0a00; font-weight: 600;
+  }
+  .progress-day.today { outline: 1px solid #fff; outline-offset: 1px; }
+  .progress-day.empty { visibility: hidden; cursor: default; }
+
+  .progress-stress-wrap {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 18px 16px; margin-bottom: 18px;
+  }
+  .progress-stress-wrap h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
+  .progress-stress-hint { font-size: 12px; line-height: 1.6; opacity: 0.65; margin: 0 0 14px; }
+  .progress-stress-scale { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; }
+  .stress-btn {
+    aspect-ratio: 1; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04); color: #fff; font-size: 11px; cursor: pointer;
+    font-family: 'Orbitron', sans-serif; transition: 0.2s;
+  }
+  .stress-btn:hover { border-color: var(--accent-color); }
+  .stress-btn.selected-today { background: var(--accent-color); border-color: var(--accent-color); color: #1a0a00; box-shadow: 0 0 10px rgba(255,119,0,0.5); }
+  .progress-stress-feedback { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; min-height: 16px; }
+
+  .progress-stress-chart-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .progress-stress-chart-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
+  .progress-stress-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+  .stress-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .stress-bar { width: 100%; max-width: 16px; border-radius: 3px 3px 0 0; background: var(--accent-color); opacity: 0.85; min-height: 3px; }
+  .progress-stress-trend { font-size: 11.5px; opacity: 0.7; margin: 10px 0 0; line-height: 1.6; }
+
+  .progress-reset-btn {
+    display: block; margin: 0 auto; background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.5); font-size: 10.5px; letter-spacing: 0.5px; padding: 9px 16px;
+    border-radius: 30px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: 0.2s;
+  }
+  .progress-reset-btn:hover { border-color: rgba(255,100,100,0.6); color: rgba(255,140,140,0.85); }
+
   .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 0; }
   .faq-item h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
   .faq-item p { font-size: 13px; opacity: 0.72; margin: 0; }
@@ -470,6 +532,7 @@
   <div class="side-nav-brand">UKLIDNI <span class="dot">TO</span></div>
   <a href="#cviceni" onclick="toggleSideNav(false)">Dechové cvičení</a>
   <a href="#techniky" onclick="toggleSideNav(false)">Techniky dechu</a>
+  <a href="#pokrok" onclick="toggleSideNav(false)">Tvůj pokrok</a>
   <a href="#clanky" onclick="toggleSideNav(false)">Články o dýchání</a>
   <a href="#doplnky" onclick="toggleSideNav(false)">Doplňky a další cesty ke klidu</a>
   <a href="#faq" onclick="toggleSideNav(false)">Časté dotazy</a>
@@ -553,6 +616,53 @@
         <p>Dva nádechy nosem za sebou (dlouhý a krátký přisátí vzduchu), poté jeden dlouhý pomalý výdech ústy. Jeden z nejrychlejších způsobů snížení akutního stresu.</p>
       </div>
     </div>
+  </section>
+
+  <section class="content" aria-labelledby="pokrok-nadpis" id="pokrok">
+    <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
+    <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Data zůstávají jen v tomto prohlížeči, nikam se neposílají.</p>
+
+    <div class="progress-stats" id="progress-stats" aria-live="polite">
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="stat-streak">0</div>
+        <div class="progress-stat-label">Aktuální série (dní)</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="stat-longest">0</div>
+        <div class="progress-stat-label">Nejdelší série</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="stat-days">0</div>
+        <div class="progress-stat-label">Celkem dní</div>
+      </div>
+      <div class="progress-stat">
+        <div class="progress-stat-value" id="stat-sessions">0</div>
+        <div class="progress-stat-label">Celkem cvičení</div>
+      </div>
+    </div>
+
+    <div class="progress-calendar-wrap">
+      <div class="progress-calendar-header">
+        <span>Posledních 5 týdnů</span>
+        <div class="progress-legend"><span class="legend-dot"></span> odcvičeno</div>
+      </div>
+      <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
+    </div>
+
+    <div class="progress-stress-wrap">
+      <h3>Jak se dnes cítíš?</h3>
+      <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat.</p>
+      <div class="progress-stress-scale" id="progress-stress-scale" role="group" aria-label="Ohodnoť úroveň stresu 1 až 10"></div>
+      <p class="progress-stress-feedback" id="progress-stress-feedback"></p>
+
+      <div class="progress-stress-chart-wrap" id="progress-stress-chart-wrap" style="display:none;">
+        <h4>Vývoj v čase</h4>
+        <div class="progress-stress-chart" id="progress-stress-chart"></div>
+        <p class="progress-stress-trend" id="progress-stress-trend"></p>
+      </div>
+    </div>
+
+    <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Vymazat můj pokrok</button>
   </section>
 
   <section class="content" aria-labelledby="clanky-nadpis" id="clanky">
@@ -654,6 +764,13 @@
       <p>Cigareta nebo vaporizér se často berou jako způsob, jak se „zklidnit", ale nikotin je ve skutečnosti stimulant — zrychluje tep, zvyšuje krevní tlak a povzbuzuje nervovou soustavu podobně jako kofein. Pocit uklidnění, který kuřáci popisují, souvisí hlavně s odezněním abstinenčních příznaků mezi jednotlivými cigaretami, ne s reálným uklidňujícím účinkem nikotinu samotného. Studie navíc ukazují, že kuřáci mají v průměru vyšší hladinu úzkosti a stresu než nekuřáci nebo bývalí kuřáci, a že po odvykání kouření úzkost dlouhodobě klesá.</p>
       <p>Na spánek má nikotin podobně negativní vliv jako kofein — zkracuje celkovou dobu spánku, prodlužuje usínání a vede k častějšímu nočnímu buzení, částečně i kvůli nočnímu odvykacímu stavu u pravidelných kuřáků. Pokud jde o klidný spánek a nižší úzkost, jednoznačně nejúčinnější je nikotin omezit nebo se ho zbavit úplně; když to hned nejde, pomáhá aspoň vyhnout se mu několik hodin před spaním.</p>
       <p class="article-source">Zdroj: přehledy studií o vlivu nikotinu na úzkost a spánek, 2019–2023; výzkum vztahu kouření a odvykání kouření k hladině úzkosti.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Spánková hygiena: pravidelnost, tma a chlad podle výzkumu</h3>
+      <p>Kvalitní spánek stojí hlavně na pravidelnosti. Vnitřní biologické hodiny (cirkadiánní rytmus) se nejlépe seřizují, když člověk chodí spát a vstává přibližně ve stejnou dobu i o víkendu — nepravidelný režim a časté „dospávání" jsou v novějších studiích spojovány s horší kvalitou spánku a vyšším kardiovaskulárním rizikem, i když celkový počet hodin spánku vychází podobně.</p>
+      <p>Dvě podmínky prostředí mají podle přehledových studií opravdu solidní oporu v datech. První je chladnější ložnice — tělesná teplota při usínání přirozeně klesá, a pokojová teplota kolem 18-20 °C tento pokles usnadňuje, zatímco přetopená místnost spánek prokazatelně zhoršuje. Druhá je tma: světlo (včetně modrého světla z obrazovek) potlačuje přes sítnici tvorbu melatoninu, a proto se doporučuje omezit jasné světlo a displeje zhruba 1-3 hodiny před spaním a spát v zatemněné místnosti nebo s maskou na oči. Naopak ranní vystavení se dennímu světlu pomáhá vnitřní hodiny nastavit na správný čas. Kombinace s dechovým cvičením jako 4-7-8 nebo technikou Calm (viz výše) může být dobrým večerním rituálem, který na tyto návyky navazuje.</p>
+      <p class="article-source">Zdroj: Irish a kol., <em>The role of sleep hygiene in promoting public health: A review of empirical evidence</em>, Sleep Medicine Reviews, 2015; Chaput a kol., <em>Device-measured weekend catch-up sleep, mortality, and cardiovascular disease incidence in adults</em>, Sleep, 2024; Harding, Franks &amp; Wisden, <em>The Temperature Dependence of Sleep</em>, Frontiers in Neuroscience, 2019; doporučení pro expozici světlu podle Brown a kol., 2022.</p>
     </article>
 
     <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Doplňky nezačínej brát bez konzultace s lékařem, hlavně pokud bereš i jiné léky, jsi těhotná nebo kojíš.</p>
@@ -837,6 +954,7 @@
   let breathSloganQueue = [];
   let breathSloganTimeout = null;
   let breathSloganActiveTimeout = null;
+  let breathSessionStartTime = 0;
 
   const DEFAULT_PHASE_LABELS = { in: 'Nádech', hold: 'Zádrž', out: 'Výdech' };
 
@@ -1014,6 +1132,7 @@
     breathingActive = true;
     breathingPaused = false;
     breathPhaseIndex = 0;
+    breathSessionStartTime = Date.now();
     document.body.classList.add('breathing-active');
 
     lastBreathVisual = OUT_VISUAL;
@@ -1152,6 +1271,8 @@
 
   window.stopBreathing = function() {
     if (!breathingActive) return;
+    const sessionDurationMs = breathSessionStartTime ? (Date.now() - breathSessionStartTime) : 0;
+    if (sessionDurationMs >= 15000) recordBreathingSession();
     breathingActive = false;
     breathingPaused = false;
 
@@ -1194,6 +1315,243 @@
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
   })();
+
+  // ---------- Tvůj pokrok: kalendář odcvičených dní + volitelný záznam stresu ----------
+  const PROGRESS_STORAGE_KEY = 'uklidnito_progress';
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  // Lokální datum ve formátu YYYY-MM-DD (ne UTC, aby den odpovídal uživatelově časovému pásmu)
+  function dateKey(d) {
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  function loadProgressData() {
+    try {
+      const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return {
+          days: parsed.days && typeof parsed.days === 'object' ? parsed.days : {},
+          stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : []
+        };
+      }
+    } catch (e) { /* ignore */ }
+    return { days: {}, stressLog: [] };
+  }
+
+  function saveProgressData(data) {
+    try { localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
+  }
+
+  let progressData = loadProgressData();
+
+  // Zavolá se automaticky po dokončení dechového cvičení (viz stopBreathing)
+  function recordBreathingSession() {
+    const key = dateKey(new Date());
+    if (!progressData.days[key]) progressData.days[key] = { sessions: 0 };
+    progressData.days[key].sessions = (progressData.days[key].sessions || 0) + 1;
+    saveProgressData(progressData);
+    renderProgress();
+  }
+
+  // Ruční odškrtnutí/zrušení dne v kalendáři
+  window.toggleProgressDay = function(key) {
+    if (progressData.days[key]) {
+      delete progressData.days[key];
+    } else {
+      progressData.days[key] = { sessions: 0 };
+    }
+    saveProgressData(progressData);
+    renderProgress();
+  };
+
+  window.resetBreathProgress = function() {
+    if (!confirm('Opravdu chceš smazat celý svůj pokrok (kalendář i záznamy stresu)? Tuto akci nejde vrátit zpět.')) return;
+    progressData = { days: {}, stressLog: [] };
+    saveProgressData(progressData);
+    renderProgress();
+  };
+
+  window.logProgressStress = function(value) {
+    const key = dateKey(new Date());
+    const existingIdx = progressData.stressLog.findIndex(e => e.date === key);
+    if (existingIdx !== -1) {
+      progressData.stressLog[existingIdx].value = value;
+    } else {
+      progressData.stressLog.push({ date: key, value: value });
+    }
+    // necháváme jen posledních 60 záznamů, ať localStorage nenarůstá donekonečna
+    if (progressData.stressLog.length > 60) {
+      progressData.stressLog = progressData.stressLog.slice(progressData.stressLog.length - 60);
+    }
+    saveProgressData(progressData);
+    renderProgress();
+  };
+
+  function computeStreaks(days) {
+    const keys = Object.keys(days);
+    if (keys.length === 0) return { current: 0, longest: 0 };
+
+    const daySet = new Set(keys);
+    // Nejdelší série: projdeme všechny dny a pro každý začátek série (den bez předchozího dne) spočítáme délku
+    let longest = 0;
+    keys.forEach(k => {
+      const d = new Date(k + 'T00:00:00');
+      const prev = new Date(d); prev.setDate(prev.getDate() - 1);
+      if (daySet.has(dateKey(prev))) return; // není to začátek série
+      let len = 1;
+      let cursor = new Date(d);
+      while (true) {
+        cursor.setDate(cursor.getDate() + 1);
+        if (daySet.has(dateKey(cursor))) len++; else break;
+      }
+      if (len > longest) longest = len;
+    });
+
+    // Aktuální série: počítáme zpětně od dneška (pokud dnes ještě necvičil/a, zkusíme od včerejška)
+    let current = 0;
+    const today = new Date();
+    let cursor = new Date(today);
+    if (!daySet.has(dateKey(cursor))) {
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    while (daySet.has(dateKey(cursor))) {
+      current++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+
+    return { current, longest };
+  }
+
+  function renderProgressStats() {
+    const days = progressData.days;
+    const { current, longest } = computeStreaks(days);
+    const totalDays = Object.keys(days).length;
+    const totalSessions = Object.values(days).reduce((sum, d) => sum + (d.sessions || 0), 0);
+
+    document.getElementById('stat-streak').innerText = current;
+    document.getElementById('stat-longest').innerText = longest;
+    document.getElementById('stat-days').innerText = totalDays;
+    document.getElementById('stat-sessions').innerText = totalSessions;
+  }
+
+  function renderProgressCalendar() {
+    const wrap = document.getElementById('progress-calendar');
+    wrap.innerHTML = '';
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Začátek mřížky: 34 dní zpátky, zarovnáno na pondělí toho týdne
+    const start = new Date(today);
+    start.setDate(start.getDate() - 34);
+    const startDow = (start.getDay() + 6) % 7; // 0 = pondělí ... 6 = neděle
+    start.setDate(start.getDate() - startDow);
+
+    // Konec mřížky: dnešek zarovnaný na konec týdne (neděle)
+    const end = new Date(today);
+    const endDow = (end.getDay() + 6) % 7;
+    end.setDate(end.getDate() + (6 - endDow));
+
+    const todayKeyStr = dateKey(today);
+    const cursor = new Date(start);
+
+    while (cursor <= end) {
+      const key = dateKey(cursor);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'progress-day';
+      if (cursor > today) {
+        btn.classList.add('empty');
+        btn.disabled = true;
+      } else {
+        if (progressData.days[key]) btn.classList.add('done');
+        if (key === todayKeyStr) btn.classList.add('today');
+        btn.innerText = cursor.getDate();
+        btn.setAttribute('aria-label', key + (progressData.days[key] ? ' — odcvičeno' : ' — neodcvičeno'));
+        btn.onclick = () => toggleProgressDay(key);
+      }
+      wrap.appendChild(btn);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+  }
+
+  function renderProgressStressScale() {
+    const wrap = document.getElementById('progress-stress-scale');
+    wrap.innerHTML = '';
+    const todayKeyStr = dateKey(new Date());
+    const todayEntry = progressData.stressLog.find(e => e.date === todayKeyStr);
+
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'stress-btn';
+      if (todayEntry && todayEntry.value === i) btn.classList.add('selected-today');
+      btn.innerText = i;
+      btn.setAttribute('aria-label', 'Úroveň stresu ' + i + ' z 10');
+      btn.onclick = () => logProgressStress(i);
+      wrap.appendChild(btn);
+    }
+
+    const feedback = document.getElementById('progress-stress-feedback');
+    feedback.innerText = todayEntry ? ('Dnešní hodnocení: ' + todayEntry.value + '/10. Klikni na jiné číslo pro změnu.') : '';
+  }
+
+  function renderProgressStressChart() {
+    const chartWrap = document.getElementById('progress-stress-chart-wrap');
+    const log = progressData.stressLog.slice().sort((a, b) => a.date.localeCompare(b.date));
+
+    if (log.length < 2) {
+      chartWrap.style.display = 'none';
+      return;
+    }
+    chartWrap.style.display = 'block';
+
+    const recent = log.slice(-14);
+    const chartEl = document.getElementById('progress-stress-chart');
+    chartEl.innerHTML = '';
+    recent.forEach(entry => {
+      const col = document.createElement('div');
+      col.className = 'stress-bar-col';
+      const bar = document.createElement('div');
+      bar.className = 'stress-bar';
+      bar.style.height = (entry.value / 10 * 100) + '%';
+      bar.title = entry.date + ': ' + entry.value + '/10';
+      col.appendChild(bar);
+      chartEl.appendChild(col);
+    });
+
+    // Jednoduché srovnání první a druhé poloviny záznamů, aby uživatel viděl trend
+    const trendEl = document.getElementById('progress-stress-trend');
+    if (log.length >= 4) {
+      const mid = Math.floor(log.length / 2);
+      const firstHalf = log.slice(0, mid);
+      const secondHalf = log.slice(mid);
+      const avg = arr => arr.reduce((s, e) => s + e.value, 0) / arr.length;
+      const avgFirst = avg(firstHalf);
+      const avgSecond = avg(secondHalf);
+      const diff = avgFirst - avgSecond;
+      if (diff >= 0.5) {
+        trendEl.innerText = 'Tvé hodnocení stresu se v průměru snížilo z ' + avgFirst.toFixed(1) + ' na ' + avgSecond.toFixed(1) + ' bodů — pěkný posun.';
+      } else if (diff <= -0.5) {
+        trendEl.innerText = 'Tvé hodnocení stresu je v poslední době v průměru vyšší (' + avgSecond.toFixed(1) + ' oproti dřívějším ' + avgFirst.toFixed(1) + '). Zkus zařadit cvičení pravidelněji, případně zvaž i další podporu.';
+      } else {
+        trendEl.innerText = 'Tvé hodnocení stresu zůstává v posledních záznamech zhruba stejné (kolem ' + avgSecond.toFixed(1) + ' bodů).';
+      }
+    } else {
+      trendEl.innerText = '';
+    }
+  }
+
+  function renderProgress() {
+    renderProgressStats();
+    renderProgressCalendar();
+    renderProgressStressScale();
+    renderProgressStressChart();
+  }
+
+  renderProgress();
 </script>
 
 <!-- Firebase - pohání počítadlo návštěvnosti (celkem + online teď).
