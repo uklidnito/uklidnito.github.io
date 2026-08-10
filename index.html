@@ -478,11 +478,11 @@
     <span>✉ Kontakt</span> <span class="chevron">▾</span>
   </button>
   <div class="side-nav-contact-panel" id="side-nav-contact-panel">
-    <form class="side-contact-form" id="side-contact-form" data-endpoint="https://formsubmit.co/ajax/zanta.david@hotmail.com">
-      <!-- Kontaktní formulář funguje přes formsubmit.co AJAX endpoint (stejná
-           služba jako na synthlucida.com, jen bez přenačtení stránky - viz JS
-           níže). Do data-endpoint výše je potřeba vyplnit vlastní e-mail,
-           na který mají zprávy z tohoto formuláře chodit. -->
+    <form class="side-contact-form" id="side-contact-form" data-endpoint="https://api.web3forms.com/submit">
+      <!-- Kontaktní formulář funguje přes Web3Forms AJAX endpoint (fetch,
+           stránka se nepřenačítá - viz JS níže). Access Key je napevno
+           v hidden inputu access_key. -->
+      <input type="hidden" name="access_key" value="7674a578-969d-431d-9f07-64daba89437d">
       <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <input type="text" name="name" class="side-contact-input" placeholder="Vaše jméno" required>
       <input type="email" name="email" class="side-contact-input" placeholder="Váš e-mail" required>
@@ -787,7 +787,7 @@
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
 
-  // Odeslání formuláře přes formsubmit.co AJAX endpoint (fetch) místo běžného
+  // Odeslání formuláře přes Web3Forms AJAX endpoint (fetch) místo běžného
   // POST přesměrování - stránka se nepřenačítá, takže odpověď přijde znatelně
   // rychleji a uživatel rovnou vidí "Odesílám…" místo dlouhého čekání naslepo.
   (function initSideContactForm() {
@@ -799,27 +799,21 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!endpoint || endpoint.indexOf('VLOZ_SVUJ_EMAIL') !== -1) {
-        statusEl.textContent = 'Formulář zatím není nastavený (chybí e-mail v konfiguraci).';
-        statusEl.className = 'side-contact-status error';
-        return;
-      }
       submitBtn.disabled = true;
       statusEl.textContent = 'Odesílám…';
       statusEl.className = 'side-contact-status sending';
 
       const formData = new FormData(form);
-      formData.append('_subject', 'Nová zpráva z webu Uklidni To');
-      formData.append('_template', 'table');
-      formData.append('_captcha', 'false');
+      formData.append('subject', 'Nová zpráva z webu Uklidni To');
 
       fetch(endpoint, {
         method: 'POST',
         body: formData,
         headers: { 'Accept': 'application/json' }
       })
-        .then((res) => {
-          if (!res.ok) throw new Error('Odeslání se nezdařilo');
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.success) throw new Error('Odeslání se nezdařilo');
           form.innerHTML = '<p class="side-contact-thanks">✔ Děkujeme! Zpráva byla odeslána.</p>';
         })
         .catch(() => {
