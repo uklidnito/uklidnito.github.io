@@ -232,6 +232,23 @@
     border-radius: 14px; padding: 18px 16px; margin-bottom: 24px;
   }
   .progress-calendar-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; opacity: 0.6; margin-bottom: 12px; letter-spacing: 0.3px; }
+  .progress-view-toggle { display: flex; gap: 6px; }
+  .view-toggle-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+    font-size: 10.5px; letter-spacing: 0.3px; padding: 5px 11px; border-radius: 20px;
+    cursor: pointer; font-family: 'Poppins', sans-serif; opacity: 0.7; transition: 0.2s;
+  }
+  .view-toggle-btn.active { background: var(--accent-color); border-color: var(--accent-color); color: #1a0a00; opacity: 1; font-weight: 600; }
+  .progress-calendar-month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .progress-calendar-month-nav span { font-size: 12px; letter-spacing: 0.5px; opacity: 0.85; font-family: 'Orbitron', sans-serif; }
+  .progress-calendar-month-nav button {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+    width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 14px; line-height: 1;
+  }
+  .progress-calendar-month-nav button:hover:not(:disabled) { border-color: var(--accent-color); }
+  .progress-calendar-month-nav button:disabled { opacity: 0.25; cursor: default; }
+  .progress-calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 6px; }
+  .progress-calendar-weekdays span { text-align: center; font-size: 9px; opacity: 0.4; letter-spacing: 0.5px; }
   .progress-legend { display: flex; align-items: center; gap: 6px; }
   .legend-dot { width: 9px; height: 9px; border-radius: 3px; background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); display: inline-block; }
   .progress-calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
@@ -249,6 +266,8 @@
   }
   .progress-day.today { outline: 1px solid #fff; outline-offset: 1px; }
   .progress-day.empty { visibility: hidden; cursor: default; }
+  .progress-day.pad { opacity: 0.18; cursor: default; }
+  .progress-day.future { opacity: 0.25; cursor: default; }
 
   .progress-stress-wrap {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
@@ -676,9 +695,23 @@
 
     <div class="progress-calendar-wrap">
       <div class="progress-calendar-header">
-        <span>Posledních 5 týdnů</span>
+        <div class="progress-view-toggle" role="group" aria-label="Zobrazení kalendáře">
+          <button type="button" class="view-toggle-btn" id="view-btn-weeks" onclick="setProgressCalendarView('weeks')">5 týdnů</button>
+          <button type="button" class="view-toggle-btn" id="view-btn-month" onclick="setProgressCalendarView('month')">Měsíc</button>
+        </div>
         <div class="progress-legend"><span class="legend-dot"></span> odcvičeno</div>
       </div>
+
+      <div class="progress-calendar-month-nav" id="progress-calendar-month-nav" style="display:none;">
+        <button type="button" onclick="shiftProgressCalendarMonth(-1)" aria-label="Předchozí měsíc">‹</button>
+        <span id="progress-calendar-month-label"></span>
+        <button type="button" id="progress-calendar-next-btn" onclick="shiftProgressCalendarMonth(1)" aria-label="Následující měsíc">›</button>
+      </div>
+
+      <div class="progress-calendar-weekdays" id="progress-calendar-weekdays" style="display:none;">
+        <span>Po</span><span>Út</span><span>St</span><span>Čt</span><span>Pá</span><span>So</span><span>Ne</span>
+      </div>
+
       <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
     </div>
 
@@ -1484,7 +1517,50 @@
     document.getElementById('stat-sessions').innerText = totalSessions;
   }
 
-  function renderProgressCalendar() {
+  let progressCalendarView = 'weeks'; // 'weeks' | 'month'
+  let progressCalendarMonthOffset = 0; // 0 = aktuální měsíc, -1 = minulý, ...
+
+  window.setProgressCalendarView = function(view) {
+    progressCalendarView = view;
+    if (view === 'month') progressCalendarMonthOffset = 0;
+    renderProgressCalendar();
+  };
+
+  window.shiftProgressCalendarMonth = function(delta) {
+    if (progressCalendarMonthOffset + delta > 0) return; // nejde do budoucích měsíců
+    progressCalendarMonthOffset += delta;
+    renderProgressCalendar();
+  };
+
+  const MONTH_NAMES_CZ = ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec'];
+
+  function renderCalendarDayButton(cursor, today, todayKeyStr, opts) {
+    opts = opts || {};
+    const key = dateKey(cursor);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'progress-day';
+    if (opts.pad) {
+      btn.classList.add('pad');
+      btn.disabled = true;
+      btn.innerText = cursor.getDate();
+      return btn;
+    }
+    if (cursor > today) {
+      btn.classList.add('future');
+      btn.disabled = true;
+      btn.innerText = cursor.getDate();
+      return btn;
+    }
+    if (progressData.days[key]) btn.classList.add('done');
+    if (key === todayKeyStr) btn.classList.add('today');
+    btn.innerText = cursor.getDate();
+    btn.setAttribute('aria-label', key + (progressData.days[key] ? ' — odcvičeno' : ' — neodcvičeno'));
+    btn.onclick = () => toggleProgressDay(key);
+    return btn;
+  }
+
+  function renderProgressCalendarWeeks() {
     const wrap = document.getElementById('progress-calendar');
     wrap.innerHTML = '';
 
@@ -1506,22 +1582,63 @@
     const cursor = new Date(start);
 
     while (cursor <= end) {
-      const key = dateKey(cursor);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'progress-day';
-      if (cursor > today) {
-        btn.classList.add('empty');
-        btn.disabled = true;
-      } else {
-        if (progressData.days[key]) btn.classList.add('done');
-        if (key === todayKeyStr) btn.classList.add('today');
-        btn.innerText = cursor.getDate();
-        btn.setAttribute('aria-label', key + (progressData.days[key] ? ' — odcvičeno' : ' — neodcvičeno'));
-        btn.onclick = () => toggleProgressDay(key);
-      }
-      wrap.appendChild(btn);
+      wrap.appendChild(renderCalendarDayButton(cursor, today, todayKeyStr));
       cursor.setDate(cursor.getDate() + 1);
+    }
+  }
+
+  function renderProgressCalendarMonth() {
+    const wrap = document.getElementById('progress-calendar');
+    wrap.innerHTML = '';
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayKeyStr = dateKey(today);
+
+    const viewDate = new Date(today.getFullYear(), today.getMonth() + progressCalendarMonthOffset, 1);
+    const year = viewDate.getFullYear();
+    const month = viewDate.getMonth();
+
+    document.getElementById('progress-calendar-month-label').innerText = MONTH_NAMES_CZ[month] + ' ' + year;
+    document.getElementById('progress-calendar-next-btn').disabled = (progressCalendarMonthOffset >= 0);
+
+    const firstOfMonth = new Date(year, month, 1);
+    const lastOfMonth = new Date(year, month + 1, 0);
+    const leadingPad = (firstOfMonth.getDay() + 6) % 7; // kolik dní z minulého měsíce doplnit před 1.
+    const trailingPad = (7 - ((lastOfMonth.getDay() + 6) % 7 + 1)) % 7; // doplnění do konce týdne
+
+    // Dny z předchozího měsíce (jen pro vizuální zarovnání, needitovatelné)
+    for (let i = leadingPad; i > 0; i--) {
+      const d = new Date(year, month, 1 - i);
+      wrap.appendChild(renderCalendarDayButton(d, today, todayKeyStr, { pad: true }));
+    }
+    // Dny aktuálního měsíce
+    for (let day = 1; day <= lastOfMonth.getDate(); day++) {
+      const d = new Date(year, month, day);
+      wrap.appendChild(renderCalendarDayButton(d, today, todayKeyStr));
+    }
+    // Dny z následujícího měsíce (doplnění mřížky)
+    for (let i = 1; i <= trailingPad; i++) {
+      const d = new Date(year, month + 1, i);
+      wrap.appendChild(renderCalendarDayButton(d, today, todayKeyStr, { pad: true }));
+    }
+  }
+
+  function renderProgressCalendar() {
+    const weeksBtn = document.getElementById('view-btn-weeks');
+    const monthBtn = document.getElementById('view-btn-month');
+    const monthNav = document.getElementById('progress-calendar-month-nav');
+    const weekdaysRow = document.getElementById('progress-calendar-weekdays');
+
+    weeksBtn.classList.toggle('active', progressCalendarView === 'weeks');
+    monthBtn.classList.toggle('active', progressCalendarView === 'month');
+    monthNav.style.display = progressCalendarView === 'month' ? 'flex' : 'none';
+    weekdaysRow.style.display = progressCalendarView === 'month' ? 'grid' : 'none';
+
+    if (progressCalendarView === 'month') {
+      renderProgressCalendarMonth();
+    } else {
+      renderProgressCalendarWeeks();
     }
   }
 
