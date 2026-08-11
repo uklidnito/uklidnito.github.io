@@ -292,6 +292,53 @@
   .stress-bar { width: 100%; max-width: 16px; border-radius: 3px 3px 0 0; background: var(--accent-color); opacity: 0.85; min-height: 3px; }
   .progress-stress-trend { font-size: 11.5px; opacity: 0.7; margin: 10px 0 0; line-height: 1.6; }
 
+  /* ---------- Tep a HRV (měření přes kameru telefonu) ---------- */
+  .progress-hrv-wrap {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 18px 16px; margin-bottom: 18px;
+  }
+  .progress-hrv-wrap h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
+  .progress-hrv-hint { font-size: 12px; line-height: 1.6; opacity: 0.65; margin: 0 0 14px; }
+
+  .hrv-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hrv-btn {
+    background: var(--accent-color); border: none; color: #1a0a00; font-weight: 600;
+    padding: 9px 18px; border-radius: 20px; cursor: pointer; font-size: 12px;
+    letter-spacing: 0.3px; font-family: 'Poppins', sans-serif; transition: 0.2s;
+  }
+  .hrv-btn:hover { opacity: 0.88; }
+  .hrv-btn.hrv-cancel { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); font-weight: 400; }
+  .hrv-btn.hrv-cancel:hover { border-color: rgba(255,100,100,0.6); color: rgba(255,140,140,0.85); }
+
+  .hrv-progress-wrap { margin-top: 16px; text-align: center; }
+  .hrv-pulse-dot {
+    width: 16px; height: 16px; border-radius: 50%; background: var(--accent-color);
+    margin: 0 auto 12px; box-shadow: 0 0 10px var(--accent-color); opacity: 0.5;
+    transition: transform 0.15s ease-out, opacity 0.15s ease-out;
+  }
+  .hrv-pulse-dot.beat { transform: scale(1.6); opacity: 1; }
+  .hrv-live-canvas { width: 100%; max-width: 320px; height: 50px; display: block; margin: 0 auto 12px; opacity: 0.85; }
+  .hrv-progress-bar-track { width: 100%; max-width: 320px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1); margin: 0 auto; overflow: hidden; }
+  .hrv-progress-bar-fill { height: 100%; width: 0%; background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); transition: width 0.2s linear; }
+
+  .progress-hrv-status { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; min-height: 16px; line-height: 1.6; text-align: center; }
+
+  .hrv-result { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .hrv-result-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hrv-result-stat {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 14px 6px; text-align: center;
+  }
+  .hrv-result-value { font-family: 'Orbitron', sans-serif; font-size: clamp(20px, 5vw, 26px); color: var(--accent-color); text-shadow: 0 0 12px var(--accent-glow); line-height: 1.2; }
+  .hrv-result-label { font-size: 9.5px; letter-spacing: 0.4px; opacity: 0.6; margin-top: 4px; line-height: 1.4; }
+  .hrv-result-note { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; line-height: 1.6; }
+
+  .hrv-history-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .hrv-history-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
+  .hrv-history-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+  .hrv-history-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+  .hrv-history-bar { width: 100%; max-width: 16px; border-radius: 3px 3px 0 0; background: var(--accent-color); opacity: 0.85; min-height: 3px; }
+
   .progress-risk-banner {
     display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
     background: rgba(255,119,0,0.1); border: 1px solid var(--accent-color);
@@ -578,6 +625,7 @@
 <nav class="side-nav" id="side-nav" aria-label="Hlavní navigace">
   <div class="side-nav-brand">UKLIDNI <span class="dot">TO</span></div>
   <a href="#cviceni" onclick="toggleSideNav(false)">Dechové cvičení</a>
+  <a href="#tep-hrv" onclick="toggleSideNav(false)">Měření tepu a HRV</a>
   <a href="#techniky" onclick="toggleSideNav(false)">Techniky dechu</a>
   <a href="#pokrok" onclick="toggleSideNav(false)">Tvůj pokrok</a>
   <a href="#clanky" onclick="toggleSideNav(false)">Články o dýchání</a>
@@ -713,6 +761,45 @@
       </div>
 
       <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
+    </div>
+
+    <div class="progress-hrv-wrap" id="tep-hrv">
+      <h3>Tep a HRV</h3>
+      <p class="progress-hrv-hint">Volitelné — změř si tep a variabilitu srdečního tepu (HRV) přímo přes kameru telefonu, třeba před cvičením a po něm. Jemně přilož špičku prstu na zadní kameru (a blesk, pokud ho telefon má) a asi 20 sekund nehýbej. Jde o orientační odhad pro sledování vlastního pokroku v čase, ne o lékařský přístroj — při zdravotních potížích se poraď s lékařem. Kamera se použije jen v tomto prohlížeči, obraz nikam neodchází.</p>
+
+      <video id="hrv-video" playsinline muted style="display:none;"></video>
+
+      <div class="hrv-controls">
+        <button type="button" class="hrv-btn" id="hrv-measure-btn" onclick="startHrvMeasurement()">Změřit tep</button>
+        <button type="button" class="hrv-btn hrv-cancel" id="hrv-cancel-btn" style="display:none;" onclick="cancelHrvMeasurement()">Zrušit</button>
+      </div>
+
+      <div class="hrv-progress-wrap" id="hrv-progress-wrap" style="display:none;">
+        <div class="hrv-pulse-dot" id="hrv-pulse-dot"></div>
+        <canvas class="hrv-live-canvas" id="hrv-live-canvas" width="320" height="50"></canvas>
+        <div class="hrv-progress-bar-track"><div class="hrv-progress-bar-fill" id="hrv-progress-bar-fill"></div></div>
+      </div>
+
+      <p class="progress-hrv-status" id="hrv-status"></p>
+
+      <div class="hrv-result" id="hrv-result" style="display:none;">
+        <div class="hrv-result-stats">
+          <div class="hrv-result-stat">
+            <div class="hrv-result-value" id="hrv-result-bpm">–</div>
+            <div class="hrv-result-label">Tep (tepů/min)</div>
+          </div>
+          <div class="hrv-result-stat">
+            <div class="hrv-result-value" id="hrv-result-rmssd">–</div>
+            <div class="hrv-result-label">HRV — RMSSD (ms)</div>
+          </div>
+        </div>
+        <p class="hrv-result-note" id="hrv-result-note"></p>
+      </div>
+
+      <div class="hrv-history-wrap" id="hrv-history-wrap" style="display:none;">
+        <h4>Poslední měření</h4>
+        <div class="hrv-history-chart" id="hrv-history-chart"></div>
+      </div>
     </div>
 
     <div class="progress-stress-wrap">
@@ -1414,11 +1501,12 @@
         const parsed = JSON.parse(raw);
         return {
           days: parsed.days && typeof parsed.days === 'object' ? parsed.days : {},
-          stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : []
+          stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : [],
+          hrvLog: Array.isArray(parsed.hrvLog) ? parsed.hrvLog : []
         };
       }
     } catch (e) { /* ignore */ }
-    return { days: {}, stressLog: [] };
+    return { days: {}, stressLog: [], hrvLog: [] };
   }
 
   function saveProgressData(data) {
@@ -1448,8 +1536,8 @@
   };
 
   window.resetBreathProgress = function() {
-    if (!confirm('Opravdu chceš smazat celý svůj pokrok (kalendář i záznamy stresu)? Tuto akci nejde vrátit zpět.')) return;
-    progressData = { days: {}, stressLog: [] };
+    if (!confirm('Opravdu chceš smazat celý svůj pokrok (kalendář, záznamy stresu i měření tepu/HRV)? Tuto akci nejde vrátit zpět.')) return;
+    progressData = { days: {}, stressLog: [], hrvLog: [] };
     saveProgressData(progressData);
     renderProgress();
   };
@@ -1752,6 +1840,309 @@
   }
   window.exportProgressCSV = exportProgressCSV;
 
+  // ---------- Tep a HRV: měření pulsu přes kameru telefonu (fotopletysmografie) ----------
+  const HRV_DURATION_MS = 20000; // délka měření
+  const HRV_SAMPLE_FPS = 30;     // cílový vzorkovací kmitočet pro analýzu
+
+  let hrvStream = null;
+  let hrvVideoTrack = null;
+  let hrvRafId = null;
+  let hrvCanvas = null;
+  let hrvCtx = null;
+  let hrvSamples = [];      // { t: ms od startu, v: průměrná červená složka }
+  let hrvMeasuring = false;
+  let hrvStartTime = 0;
+  let hrvLiveBuffer = [];   // posledních pár sekund pro živý graf a "bliknutí" tepu
+  let hrvLastBeatTime = -Infinity;
+
+  window.startHrvMeasurement = async function() {
+    if (hrvMeasuring) return;
+    const statusEl = document.getElementById('hrv-status');
+    document.getElementById('hrv-result').style.display = 'none';
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      statusEl.innerText = 'Tento prohlížeč bohužel nepodporuje přístup ke kameře.';
+      return;
+    }
+
+    statusEl.innerText = 'Žádám o přístup ke kameře…';
+
+    try {
+      hrvStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 320 }, height: { ideal: 240 } }
+      });
+    } catch (e) {
+      statusEl.innerText = 'Nepodařilo se získat přístup ke kameře. Zkontroluj oprávnění v prohlížeči a zkus to znovu.';
+      return;
+    }
+
+    hrvVideoTrack = hrvStream.getVideoTracks()[0];
+
+    // Pokusíme se zapnout blesk (torch) - podporují hlavně Android prohlížeče, na iOS obvykle nejde
+    try {
+      const caps = hrvVideoTrack.getCapabilities ? hrvVideoTrack.getCapabilities() : {};
+      if (caps && caps.torch) {
+        await hrvVideoTrack.applyConstraints({ advanced: [{ torch: true }] });
+      }
+    } catch (e) { /* blesk se nepodařilo zapnout, měříme bez něj */ }
+
+    const video = document.getElementById('hrv-video');
+    video.srcObject = hrvStream;
+    try { await video.play(); } catch (e) { /* ignore */ }
+
+    hrvCanvas = document.createElement('canvas');
+    hrvCanvas.width = 32; hrvCanvas.height = 32;
+    hrvCtx = hrvCanvas.getContext('2d', { willReadFrequently: true });
+
+    hrvSamples = [];
+    hrvLiveBuffer = [];
+    hrvLastBeatTime = -Infinity;
+    hrvMeasuring = true;
+    hrvStartTime = performance.now();
+
+    document.getElementById('hrv-measure-btn').style.display = 'none';
+    document.getElementById('hrv-cancel-btn').style.display = 'inline-block';
+    document.getElementById('hrv-progress-wrap').style.display = 'block';
+    document.getElementById('hrv-progress-bar-fill').style.width = '0%';
+    statusEl.innerText = 'Jemně přilož špičku prstu na zadní kameru a chvíli nehýbej…';
+
+    hrvRafId = requestAnimationFrame(() => hrvLoop(video));
+  };
+
+  function hrvLoop(video) {
+    if (!hrvMeasuring) return;
+    const elapsed = performance.now() - hrvStartTime;
+
+    if (elapsed >= HRV_DURATION_MS) {
+      finishHrvMeasurement();
+      return;
+    }
+
+    if (video.readyState >= 2) {
+      hrvCtx.drawImage(video, 0, 0, hrvCanvas.width, hrvCanvas.height);
+      const frame = hrvCtx.getImageData(0, 0, hrvCanvas.width, hrvCanvas.height).data;
+      let sum = 0, n = 0;
+      for (let i = 0; i < frame.length; i += 4) { sum += frame[i]; n++; } // červený kanál - nejcitlivější na prokrvení
+      const avg = sum / n;
+      hrvSamples.push({ t: elapsed, v: avg });
+      updateHrvLive(elapsed, avg);
+    }
+
+    const fillEl = document.getElementById('hrv-progress-bar-fill');
+    if (fillEl) fillEl.style.width = Math.min(100, (elapsed / HRV_DURATION_MS) * 100) + '%';
+
+    hrvRafId = requestAnimationFrame(() => hrvLoop(video));
+  }
+
+  function updateHrvLive(elapsed, value) {
+    hrvLiveBuffer.push({ t: elapsed, v: value });
+    // necháváme jen posledních cca 4 sekundy pro živý graf a detekci tepu
+    while (hrvLiveBuffer.length > 0 && elapsed - hrvLiveBuffer[0].t > 4000) hrvLiveBuffer.shift();
+    if (hrvLiveBuffer.length < 6) return;
+
+    // jednoduchá detrend + detekce lokálního maxima - jen pro živé "bliknutí" tečky v rytmu tepu
+    const mean = hrvLiveBuffer.reduce((s, p) => s + p.v, 0) / hrvLiveBuffer.length;
+    const std = Math.sqrt(hrvLiveBuffer.reduce((s, p) => s + (p.v - mean) * (p.v - mean), 0) / hrvLiveBuffer.length) || 1;
+    const last = hrvLiveBuffer[hrvLiveBuffer.length - 1];
+    const prev = hrvLiveBuffer[hrvLiveBuffer.length - 2];
+    const isPeak = (last.v - mean) > std * 0.6 && (last.v - mean) >= (prev.v - mean);
+    if (isPeak && (elapsed - hrvLastBeatTime) > 320) {
+      hrvLastBeatTime = elapsed;
+      flashHrvBeatDot();
+    }
+
+    drawHrvLiveGraph(mean, std);
+  }
+
+  function flashHrvBeatDot() {
+    const dot = document.getElementById('hrv-pulse-dot');
+    if (!dot) return;
+    dot.classList.add('beat');
+    setTimeout(() => dot.classList.remove('beat'), 180);
+  }
+
+  function drawHrvLiveGraph(mean, std) {
+    const canvas = document.getElementById('hrv-live-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.beginPath();
+    const points = hrvLiveBuffer;
+    const range = Math.max(std * 3, 0.5);
+    points.forEach((p, i) => {
+      const x = (i / Math.max(1, points.length - 1)) * w;
+      const norm = (p.v - mean) / range; // přibližně -1..1
+      const y = h / 2 - norm * (h / 2 - 4);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color') || '#ff7700';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  window.cancelHrvMeasurement = function() {
+    stopHrvCamera();
+    hrvMeasuring = false;
+    document.getElementById('hrv-measure-btn').style.display = 'inline-block';
+    document.getElementById('hrv-cancel-btn').style.display = 'none';
+    document.getElementById('hrv-progress-wrap').style.display = 'none';
+    document.getElementById('hrv-status').innerText = 'Měření zrušeno.';
+  };
+
+  function stopHrvCamera() {
+    if (hrvRafId) cancelAnimationFrame(hrvRafId);
+    hrvRafId = null;
+    if (hrvStream) {
+      hrvStream.getTracks().forEach(t => { try { t.stop(); } catch (e) { /* ignore */ } });
+      hrvStream = null;
+    }
+    hrvVideoTrack = null;
+  }
+
+  function finishHrvMeasurement() {
+    hrvMeasuring = false;
+    stopHrvCamera();
+    document.getElementById('hrv-measure-btn').style.display = 'inline-block';
+    document.getElementById('hrv-cancel-btn').style.display = 'none';
+    document.getElementById('hrv-progress-wrap').style.display = 'none';
+
+    const analysis = analyzeHrvSamples(hrvSamples);
+    const statusEl = document.getElementById('hrv-status');
+    const resultEl = document.getElementById('hrv-result');
+    const noteEl = document.getElementById('hrv-result-note');
+
+    if (!analysis.valid) {
+      statusEl.innerText = 'Signál se nepodařilo spolehlivě zachytit. Zkus to znovu — prst přilož jemně, ale pevně, ideálně i s bleskem, a v klidu nehýbej.';
+      resultEl.style.display = 'none';
+      return;
+    }
+
+    statusEl.innerText = '';
+    document.getElementById('hrv-result-bpm').innerText = Math.round(analysis.bpm);
+    document.getElementById('hrv-result-rmssd').innerText = Math.round(analysis.rmssd);
+    noteEl.innerText = hrvNoteForResult(analysis);
+    resultEl.style.display = 'block';
+
+    saveHrvResult(analysis.bpm, analysis.rmssd);
+  }
+
+  function hrvNoteForResult(analysis) {
+    if (analysis.rmssd >= 60) return 'Vyšší HRV bývá spojována s klidnějším, uvolněnějším stavem nervového systému.';
+    if (analysis.rmssd >= 30) return 'HRV v běžném rozmezí. Zkus hodnotu sledovat v čase, třeba před a po dechovém cvičení.';
+    return 'Nižší HRV může souviset s aktuálním stresem nebo únavou — nejde ale o diagnózu. Zkus krátké dechové cvičení a měření za chvíli zopakovat.';
+  }
+
+  // Zpracování surových vzorků: převzorkování na pevný krok, vyhlazení, odstranění trendu, detekce vrcholů (tepů)
+  function analyzeHrvSamples(rawSamples) {
+    if (rawSamples.length < HRV_SAMPLE_FPS * 8) return { valid: false }; // příliš krátký/řídký záznam
+
+    const stepMs = 1000 / HRV_SAMPLE_FPS;
+    const totalMs = rawSamples[rawSamples.length - 1].t;
+    const resampled = [];
+    let ri = 0;
+    for (let t = 0; t <= totalMs; t += stepMs) {
+      while (ri < rawSamples.length - 2 && rawSamples[ri + 1].t < t) ri++;
+      const a = rawSamples[ri], b = rawSamples[Math.min(ri + 1, rawSamples.length - 1)];
+      const span = Math.max(1, b.t - a.t);
+      const frac = Math.min(1, Math.max(0, (t - a.t) / span));
+      resampled.push(a.v + (b.v - a.v) * frac);
+    }
+
+    // vyhlazení krátkým klouzavým průměrem (potlačí kamerový šum)
+    const smoothWin = 3;
+    const smoothed = resampled.map((_, i) => {
+      const from = Math.max(0, i - smoothWin), to = Math.min(resampled.length - 1, i + smoothWin);
+      let s = 0, n = 0;
+      for (let j = from; j <= to; j++) { s += resampled[j]; n++; }
+      return s / n;
+    });
+
+    // odstranění pomalého trendu (dýchání, drobný pohyb) delším klouzavým průměrem
+    const trendWin = Math.round(HRV_SAMPLE_FPS * 1.2);
+    const detrended = smoothed.map((_, i) => {
+      const from = Math.max(0, i - trendWin), to = Math.min(smoothed.length - 1, i + trendWin);
+      let s = 0, n = 0;
+      for (let j = from; j <= to; j++) { s += smoothed[j]; n++; }
+      const trend = s / n;
+      return smoothed[i] - trend;
+    });
+
+    const mean = detrended.reduce((s, v) => s + v, 0) / detrended.length;
+    const std = Math.sqrt(detrended.reduce((s, v) => s + (v - mean) * (v - mean), 0) / detrended.length) || 1;
+    const threshold = std * 0.5;
+
+    // detekce vrcholů s minimálním odstupem odpovídajícím max. cca 200 tepům/min
+    const minGapSamples = Math.round((60000 / 200) / stepMs);
+    const peaks = [];
+    for (let i = 2; i < detrended.length - 2; i++) {
+      if (
+        detrended[i] > threshold &&
+        detrended[i] >= detrended[i - 1] && detrended[i] >= detrended[i - 2] &&
+        detrended[i] >= detrended[i + 1] && detrended[i] >= detrended[i + 2]
+      ) {
+        if (peaks.length === 0 || (i - peaks[peaks.length - 1]) >= minGapSamples) {
+          peaks.push(i);
+        }
+      }
+    }
+
+    if (peaks.length < 8) return { valid: false };
+
+    let rr = [];
+    for (let i = 1; i < peaks.length; i++) rr.push((peaks[i] - peaks[i - 1]) * stepMs);
+
+    // odfiltrování fyziologicky nesmyslných intervalů (odlehlé hodnoty způsobené šumem)
+    const medianRr = rr.slice().sort((a, b) => a - b)[Math.floor(rr.length / 2)];
+    rr = rr.filter(v => v > medianRr * 0.6 && v < medianRr * 1.4);
+
+    if (rr.length < 6) return { valid: false };
+
+    const bpm = 60000 / (rr.reduce((s, v) => s + v, 0) / rr.length);
+    if (bpm < 35 || bpm > 200) return { valid: false };
+
+    let sumSqDiff = 0;
+    for (let i = 1; i < rr.length; i++) sumSqDiff += Math.pow(rr[i] - rr[i - 1], 2);
+    const rmssd = Math.sqrt(sumSqDiff / (rr.length - 1));
+
+    return { valid: true, bpm, rmssd, peaksCount: peaks.length };
+  }
+
+  function saveHrvResult(bpm, rmssd) {
+    const now = new Date();
+    progressData.hrvLog.push({ date: dateKey(now), time: now.getTime(), bpm: Math.round(bpm), rmssd: Math.round(rmssd) });
+    // necháváme jen posledních 60 záznamů, ať localStorage nenarůstá donekonečna
+    if (progressData.hrvLog.length > 60) {
+      progressData.hrvLog = progressData.hrvLog.slice(progressData.hrvLog.length - 60);
+    }
+    saveProgressData(progressData);
+    renderHrvHistory();
+  }
+
+  function renderHrvHistory() {
+    const wrap = document.getElementById('hrv-history-wrap');
+    const log = progressData.hrvLog || [];
+    if (log.length === 0) {
+      wrap.style.display = 'none';
+      return;
+    }
+    wrap.style.display = 'block';
+    const recent = log.slice(-14);
+    const maxBpm = Math.max(...recent.map(e => e.bpm), 1);
+    const chartEl = document.getElementById('hrv-history-chart');
+    chartEl.innerHTML = '';
+    recent.forEach(entry => {
+      const col = document.createElement('div');
+      col.className = 'hrv-history-col';
+      const bar = document.createElement('div');
+      bar.className = 'hrv-history-bar';
+      bar.style.height = (entry.bpm / maxBpm * 100) + '%';
+      bar.title = entry.date + ': ' + entry.bpm + ' bpm, HRV ' + entry.rmssd + ' ms';
+      col.appendChild(bar);
+      chartEl.appendChild(col);
+    });
+  }
+
   // ---------- Volitelná večerní připomínka (jen dokud je stránka otevřená - Notification API, ne skutečný push) ----------
   const REMINDER_STORAGE_KEY = 'uklidnito_reminder';
 
@@ -1840,6 +2231,7 @@
     renderProgressStressScale();
     renderProgressStressChart();
     renderProgressRiskBanner();
+    renderHrvHistory();
   }
 
   renderProgress();
