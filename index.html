@@ -333,6 +333,30 @@
   .hrv-result-label { font-size: 9.5px; letter-spacing: 0.4px; opacity: 0.6; margin-top: 4px; line-height: 1.4; }
   .hrv-result-note { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; line-height: 1.6; }
 
+  .hrv-alt-methods { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; }
+  .hrv-alt-link {
+    background: none; border: none; color: var(--accent-color); text-decoration: underline;
+    font-size: 11.5px; font-family: 'Poppins', sans-serif; cursor: pointer; padding: 2px 0; text-align: left; opacity: 0.85;
+  }
+  .hrv-alt-link:hover { opacity: 1; }
+
+  .hrv-tap-wrap, .hrv-manual-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; }
+  .hrv-tap-btn {
+    display: block; width: 100%; max-width: 320px; margin: 6px auto 12px;
+    background: var(--accent-color); border: none; color: #1a0a00; font-weight: 600;
+    padding: 22px; border-radius: 18px; cursor: pointer; font-size: 14px;
+    letter-spacing: 0.5px; font-family: 'Orbitron', sans-serif; transition: 0.12s; user-select: none;
+    box-shadow: 0 0 20px rgba(255,119,0,0.3);
+  }
+  .hrv-tap-btn:active { transform: scale(0.96); box-shadow: 0 0 30px var(--accent-color); }
+  .hrv-manual-row { display: flex; gap: 10px; justify-content: center; margin: 10px 0 12px; flex-wrap: wrap; }
+  .hrv-manual-row input {
+    width: 110px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px; color: #fff; padding: 9px 16px; font-size: 14px; text-align: center;
+    font-family: 'Poppins', sans-serif;
+  }
+  .hrv-manual-row input:focus { outline: none; border-color: var(--accent-color); }
+
   .hrv-history-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
   .hrv-history-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
   .hrv-history-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
@@ -770,14 +794,38 @@
       <video id="hrv-video" playsinline muted style="display:none;"></video>
 
       <div class="hrv-controls">
-        <button type="button" class="hrv-btn" id="hrv-measure-btn" onclick="startHrvMeasurement()">Změřit tep</button>
+        <button type="button" class="hrv-btn" id="hrv-measure-btn" onclick="startHrvMeasurement()">Změřit tep (kamera)</button>
         <button type="button" class="hrv-btn hrv-cancel" id="hrv-cancel-btn" style="display:none;" onclick="cancelHrvMeasurement()">Zrušit</button>
+      </div>
+
+      <div class="hrv-alt-methods" id="hrv-alt-methods">
+        <button type="button" class="hrv-alt-link" onclick="showHrvTapMode()">Nejde měření kamerou? Zkus poklep v rytmu tepu</button>
+        <button type="button" class="hrv-alt-link" onclick="showHrvManualMode()">Nebo si tep napočítej a zadej ručně</button>
       </div>
 
       <div class="hrv-progress-wrap" id="hrv-progress-wrap" style="display:none;">
         <div class="hrv-pulse-dot" id="hrv-pulse-dot"></div>
         <canvas class="hrv-live-canvas" id="hrv-live-canvas" width="320" height="50"></canvas>
         <div class="hrv-progress-bar-track"><div class="hrv-progress-bar-fill" id="hrv-progress-bar-fill"></div></div>
+      </div>
+
+      <div class="hrv-tap-wrap" id="hrv-tap-wrap" style="display:none;">
+        <p class="progress-hrv-hint">Přilož dva prsty na zápěstí nebo krk, najdi si tep a ťukej tlačítkem přesně v jeho rytmu. Stačí i beze světla nebo kamery — potřebujeme aspoň 8 ťuknutí, klidně 15-20 pro přesnější odhad.</p>
+        <button type="button" class="hrv-tap-btn" id="hrv-tap-btn" onclick="registerHrvTap()">Ťuk (tep)</button>
+        <p class="progress-hrv-status" id="hrv-tap-status">Ťukni poprvé, jakmile ucítíš tep.</p>
+        <div class="hrv-controls" style="justify-content:center;">
+          <button type="button" class="hrv-btn" id="hrv-tap-finish-btn" onclick="finishHrvTap()" disabled>Dokončit a spočítat</button>
+          <button type="button" class="hrv-btn hrv-cancel" onclick="cancelHrvTap()">Zrušit</button>
+        </div>
+      </div>
+
+      <div class="hrv-manual-wrap" id="hrv-manual-wrap" style="display:none;">
+        <p class="progress-hrv-hint">Napočítej si tep sám — přilož prsty na zápěstí nebo krk, počítej úderů 15 sekund a výsledek vynásob 4 (nebo počítej rovnou celou minutu) — a zadej ho tady.</p>
+        <div class="hrv-manual-row">
+          <input type="number" id="hrv-manual-input" min="30" max="220" inputmode="numeric" placeholder="např. 72">
+          <button type="button" class="hrv-btn" onclick="saveManualHrv()">Uložit</button>
+        </div>
+        <button type="button" class="hrv-btn hrv-cancel" onclick="cancelHrvManual()">Zrušit</button>
       </div>
 
       <p class="progress-hrv-status" id="hrv-status"></p>
@@ -1858,6 +1906,7 @@
 
   window.startHrvMeasurement = async function() {
     if (hrvMeasuring) return;
+    hideHrvAltPanels();
     const statusEl = document.getElementById('hrv-status');
     document.getElementById('hrv-result').style.display = 'none';
 
@@ -2132,9 +2181,14 @@
     return 'Signál se nepodařilo spolehlivě zachytit. Zkus to znovu — prst přilož jemně, ale pevně, ideálně i s bleskem, a v klidu nehýbej.';
   }
 
-  function saveHrvResult(bpm, rmssd) {
+  function saveHrvResult(bpm, rmssd, source) {
     const now = new Date();
-    progressData.hrvLog.push({ date: dateKey(now), time: now.getTime(), bpm: Math.round(bpm), rmssd: Math.round(rmssd) });
+    progressData.hrvLog.push({
+      date: dateKey(now), time: now.getTime(),
+      bpm: Math.round(bpm),
+      rmssd: (rmssd === null || rmssd === undefined || isNaN(rmssd)) ? null : Math.round(rmssd),
+      source: source || 'camera'
+    });
     // necháváme jen posledních 60 záznamů, ať localStorage nenarůstá donekonečna
     if (progressData.hrvLog.length > 60) {
       progressData.hrvLog = progressData.hrvLog.slice(progressData.hrvLog.length - 60);
@@ -2142,6 +2196,126 @@
     saveProgressData(progressData);
     renderHrvHistory();
   }
+
+  // ---------- Alternativa 1: tep poklepem (bez kamery) - uživatel ťuká tlačítkem v rytmu vlastního tepu ----------
+  let hrvTapTimes = [];
+
+  function hideHrvAltPanels() {
+    const tapWrap = document.getElementById('hrv-tap-wrap');
+    const manualWrap = document.getElementById('hrv-manual-wrap');
+    if (tapWrap) tapWrap.style.display = 'none';
+    if (manualWrap) manualWrap.style.display = 'none';
+  }
+
+  window.showHrvTapMode = function() {
+    if (hrvMeasuring) return;
+    hideHrvAltPanels();
+    document.getElementById('hrv-result').style.display = 'none';
+    document.getElementById('hrv-status').innerText = '';
+    hrvTapTimes = [];
+    document.getElementById('hrv-tap-status').innerText = 'Ťukni poprvé, jakmile ucítíš tep.';
+    document.getElementById('hrv-tap-finish-btn').disabled = true;
+    document.getElementById('hrv-tap-wrap').style.display = 'block';
+  };
+
+  window.registerHrvTap = function() {
+    const now = performance.now();
+    hrvTapTimes.push(now);
+    const statusEl = document.getElementById('hrv-tap-status');
+    const finishBtn = document.getElementById('hrv-tap-finish-btn');
+    const count = hrvTapTimes.length;
+
+    if (count < 2) {
+      statusEl.innerText = 'Ťuknutí: 1. Pokračuj přesně v rytmu tepu…';
+      return;
+    }
+
+    // živý odhad tepu z posledních pár intervalů
+    const recentGaps = hrvTapTimes.slice(-5);
+    const gaps = [];
+    for (let i = 1; i < recentGaps.length; i++) gaps.push(recentGaps[i] - recentGaps[i - 1]);
+    const avgGap = gaps.reduce((s, v) => s + v, 0) / gaps.length;
+    const liveBpm = Math.round(60000 / avgGap);
+
+    statusEl.innerText = 'Ťuknutí: ' + count + ' — průběžný odhad ' +
+      (liveBpm > 0 && liveBpm < 250 ? liveBpm + ' tepů/min' : '…') +
+      '. Klidně pokračuj pro přesnější výsledek.';
+
+    if (count >= 8) finishBtn.disabled = false;
+  };
+
+  window.finishHrvTap = function() {
+    if (hrvTapTimes.length < 8) return;
+
+    let rr = [];
+    for (let i = 1; i < hrvTapTimes.length; i++) rr.push(hrvTapTimes[i] - hrvTapTimes[i - 1]);
+
+    const medianRr = rr.slice().sort((a, b) => a - b)[Math.floor(rr.length / 2)];
+    rr = rr.filter(v => v > medianRr * 0.6 && v < medianRr * 1.4);
+
+    const statusEl = document.getElementById('hrv-tap-status');
+    if (rr.length < 5) {
+      statusEl.innerText = 'Ťuknutí byla moc nepravidelná. Zkus to znovu a ťukej co nejpřesněji v rytmu tepu.';
+      return;
+    }
+
+    const bpm = 60000 / (rr.reduce((s, v) => s + v, 0) / rr.length);
+    if (bpm < 30 || bpm > 220) {
+      statusEl.innerText = 'Výsledek vyšel mimo běžný rozsah, zkus to prosím znovu.';
+      return;
+    }
+
+    let sumSqDiff = 0;
+    for (let i = 1; i < rr.length; i++) sumSqDiff += Math.pow(rr[i] - rr[i - 1], 2);
+    const rmssd = rr.length > 1 ? Math.sqrt(sumSqDiff / (rr.length - 1)) : null;
+
+    document.getElementById('hrv-tap-wrap').style.display = 'none';
+    document.getElementById('hrv-result-bpm').innerText = Math.round(bpm);
+    document.getElementById('hrv-result-rmssd').innerText = rmssd !== null ? Math.round(rmssd) : '–';
+    document.getElementById('hrv-result-note').innerText =
+      'Naťukáno ručně, ne přes kameru — odhad tepu bývá slušný, HRV je u tohoto způsobu jen orientační (ovlivněná lidskou reakční dobou).';
+    document.getElementById('hrv-result').style.display = 'block';
+
+    saveHrvResult(bpm, rmssd, 'tap');
+    hrvTapTimes = [];
+  };
+
+  window.cancelHrvTap = function() {
+    hrvTapTimes = [];
+    document.getElementById('hrv-tap-wrap').style.display = 'none';
+  };
+
+  // ---------- Alternativa 2: ruční zadání tepu (uživatel si tep napočítá sám) ----------
+  window.showHrvManualMode = function() {
+    if (hrvMeasuring) return;
+    hideHrvAltPanels();
+    document.getElementById('hrv-result').style.display = 'none';
+    document.getElementById('hrv-status').innerText = '';
+    document.getElementById('hrv-manual-input').value = '';
+    document.getElementById('hrv-manual-wrap').style.display = 'block';
+  };
+
+  window.saveManualHrv = function() {
+    const input = document.getElementById('hrv-manual-input');
+    const bpm = parseInt(input.value, 10);
+    if (!bpm || bpm < 30 || bpm > 220) {
+      document.getElementById('hrv-status').innerText = 'Zadej prosím tep jako číslo mezi 30 a 220.';
+      return;
+    }
+
+    document.getElementById('hrv-manual-wrap').style.display = 'none';
+    document.getElementById('hrv-result-bpm').innerText = bpm;
+    document.getElementById('hrv-result-rmssd').innerText = '–';
+    document.getElementById('hrv-result-note').innerText = 'Zadáno ručně — HRV lze spolehlivě spočítat jen z měření přes kameru nebo poklepu.';
+    document.getElementById('hrv-result').style.display = 'block';
+    document.getElementById('hrv-status').innerText = '';
+
+    saveHrvResult(bpm, null, 'manual');
+  };
+
+  window.cancelHrvManual = function() {
+    document.getElementById('hrv-manual-wrap').style.display = 'none';
+  };
 
   function renderHrvHistory() {
     const wrap = document.getElementById('hrv-history-wrap');
@@ -2161,7 +2335,7 @@
       const bar = document.createElement('div');
       bar.className = 'hrv-history-bar';
       bar.style.height = (entry.bpm / maxBpm * 100) + '%';
-      bar.title = entry.date + ': ' + entry.bpm + ' bpm, HRV ' + entry.rmssd + ' ms';
+      bar.title = entry.date + ': ' + entry.bpm + ' bpm' + (entry.rmssd != null ? ', HRV ' + entry.rmssd + ' ms' : '');
       col.appendChild(bar);
       chartEl.appendChild(col);
     });
