@@ -1854,6 +1854,7 @@
   let hrvStartTime = 0;
   let hrvLiveBuffer = [];   // posledních pár sekund pro živý graf a "bliknutí" tepu
   let hrvLastBeatTime = -Infinity;
+  let hrvTorchSupported = false;
 
   window.startHrvMeasurement = async function() {
     if (hrvMeasuring) return;
@@ -1879,10 +1880,12 @@
     hrvVideoTrack = hrvStream.getVideoTracks()[0];
 
     // Pokusíme se zapnout blesk (torch) - podporují hlavně Android prohlížeče, na iOS obvykle nejde
+    hrvTorchSupported = false;
     try {
       const caps = hrvVideoTrack.getCapabilities ? hrvVideoTrack.getCapabilities() : {};
       if (caps && caps.torch) {
         await hrvVideoTrack.applyConstraints({ advanced: [{ torch: true }] });
+        hrvTorchSupported = true;
       }
     } catch (e) { /* blesk se nepodařilo zapnout, měříme bez něj */ }
 
@@ -2013,7 +2016,7 @@
     const noteEl = document.getElementById('hrv-result-note');
 
     if (!analysis.valid) {
-      statusEl.innerText = 'Signál se nepodařilo spolehlivě zachytit. Zkus to znovu — prst přilož jemně, ale pevně, ideálně i s bleskem, a v klidu nehýbej.';
+      statusEl.innerText = diagnoseHrvFailure(hrvSamples);
       resultEl.style.display = 'none';
       return;
     }
@@ -2070,7 +2073,7 @@
 
     const mean = detrended.reduce((s, v) => s + v, 0) / detrended.length;
     const std = Math.sqrt(detrended.reduce((s, v) => s + (v - mean) * (v - mean), 0) / detrended.length) || 1;
-    const threshold = std * 0.5;
+    const threshold = std * 0.4;
 
     // detekce vrcholů s minimálním odstupem odpovídajícím max. cca 200 tepům/min
     const minGapSamples = Math.round((60000 / 200) / stepMs);
@@ -2087,7 +2090,7 @@
       }
     }
 
-    if (peaks.length < 8) return { valid: false };
+    if (peaks.length < 6) return { valid: false };
 
     let rr = [];
     for (let i = 1; i < peaks.length; i++) rr.push((peaks[i] - peaks[i - 1]) * stepMs);
@@ -2096,7 +2099,7 @@
     const medianRr = rr.slice().sort((a, b) => a - b)[Math.floor(rr.length / 2)];
     rr = rr.filter(v => v > medianRr * 0.6 && v < medianRr * 1.4);
 
-    if (rr.length < 6) return { valid: false };
+    if (rr.length < 5) return { valid: false };
 
     const bpm = 60000 / (rr.reduce((s, v) => s + v, 0) / rr.length);
     if (bpm < 35 || bpm > 200) return { valid: false };
@@ -2106,6 +2109,27 @@
     const rmssd = Math.sqrt(sumSqDiff / (rr.length - 1));
 
     return { valid: true, bpm, rmssd, peaksCount: peaks.length };
+  }
+
+  // Rozliší nejčastější příčiny neúspěšného měření podle statistik ze surových vzorků
+  function diagnoseHrvFailure(rawSamples) {
+    if (rawSamples.length < HRV_SAMPLE_FPS * 8) {
+      return 'Měření bylo příliš krátké nebo přerušené. Zkus to znovu a nech kameru běžet celých 20 sekund.';
+    }
+
+    const values = rawSamples.map(s => s.v);
+    const mean = values.reduce((s, v) => s + v, 0) / values.length;
+    const std = Math.sqrt(values.reduce((s, v) => s + (v - mean) * (v - mean), 0) / values.length) || 0;
+
+    if (mean > 235) {
+      return 'Zdá se, že prst dost nezakrývá zadní kameru — světlo proniká kolem. Přilož prst tak, aby úplně zakryl objektiv (i blesk, pokud ho má telefon).';
+    }
+    if (std < 0.8) {
+      return hrvTorchSupported
+        ? 'Signál je příliš plochý — zkus prst přiložit pevněji (ale ne moc silně) a chvíli úplně nehýbat rukou.'
+        : 'Tvůj telefon/prohlížeč bohužel nepodporuje blesk kamery, takže signál přes prst může být slabý. Zkus měřit v jasně osvětlené místnosti a přilož prst pevněji na objektiv.';
+    }
+    return 'Signál se nepodařilo spolehlivě zachytit. Zkus to znovu — prst přilož jemně, ale pevně, ideálně i s bleskem, a v klidu nehýbej.';
   }
 
   function saveHrvResult(bpm, rmssd) {
