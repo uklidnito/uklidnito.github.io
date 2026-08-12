@@ -2985,9 +2985,37 @@
 
 <script>
   // Registrace Service Workera pro offline fungování a PWA instalaci.
+  // Nová verze (jiný CACHE_VERSION v sw.js) se aktivuje sama a stránka se sama obnoví,
+  // takže uživatel nemusí nic mačkat ani ručně mazat cache.
   if ('serviceWorker' in navigator) {
+    let swRefreshing = false;
+
+    // Jakmile nová verze SW převezme kontrolu nad stránkou, obnov ji (jen jednou).
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (swRefreshing) return;
+      swRefreshing = true;
+      window.location.reload();
+    });
+
+    // Záložní cesta přes explicitní zprávu ze service workera (viz activate v sw.js).
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SW_UPDATED' && !swRefreshing) {
+        swRefreshing = true;
+        window.location.reload();
+      }
+    });
+
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
+      // updateViaCache: 'none' zajistí, že se sw.js nikdy nebere ze zastaralé HTTP cache prohlížeče.
+      navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+        .then((reg) => {
+          // Hned po načtení a pak pravidelně zkontroluj, jestli není nová verze.
+          reg.update().catch(() => {});
+          setInterval(() => reg.update().catch(() => {}), 60 * 60 * 1000); // každou hodinu
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') reg.update().catch(() => {});
+          });
+        })
         .catch((err) => console.warn('Service worker se nepodařilo zaregistrovat:', err));
     });
   }

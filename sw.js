@@ -1,6 +1,6 @@
 // Uklidni To — Service Worker
 // Zvyš CACHE_VERSION při každé větší aktualizaci obsahu, aby si klienti stáhli nová data.
-const CACHE_VERSION = 'v13';
+const CACHE_VERSION = 'v20';
 const CACHE_NAME = `uklidnito-${CACHE_VERSION}`;
 
 // Základní "app shell" — soubory nutné pro fungování appky offline.
@@ -32,7 +32,20 @@ self.addEventListener('activate', (event) => {
           .map((key) => caches.delete(key))
       ))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window', includeUncontrolled: true }))
+      .then((clientsList) => {
+        // Dej otevřeným tabům vědět, že běží nová verze — stránka si podle toho sama obnoví obsah.
+        clientsList.forEach((client) => client.postMessage({ type: 'SW_UPDATED', version: CACHE_VERSION }));
+      })
   );
+});
+
+// Umožní stránce (index.html) vyžádat si okamžité převzetí kontroly novou verzí,
+// pokud by z nějakého důvodu automatický skipWaiting() při instalaci nestačil.
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {
