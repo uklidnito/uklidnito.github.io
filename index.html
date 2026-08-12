@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" class="no-js">
 <head>
+<script>document.documentElement.classList.replace('no-js','js');</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2599270563466963"
      crossorigin="anonymous"></script>
 <meta charset="UTF-8">
@@ -8,8 +9,8 @@
 <meta name="theme-color" content="#1a0033">
 
 <title>Uklidni To – Dechové cvičení online zdarma | 4-7-8, Box, Coherent</title>
-<meta name="description" content="Uklidni To je jednoduché dechové cvičení zdarma přímo v prohlížeči. Zklidni mysl, sniž stres a úzkost pomocí technik 4-7-8, Box breathing, Coherent, Calm a fyziologického vzdechu. Bez registrace, funguje na mobilu i počítači.">
-<meta name="keywords" content="dechové cvičení, dýchací cvičení, jak se uklidnit, cvičení na úzkost, cvičení proti stresu, technika 4-7-8, box breathing, coherent breathing, fyziologický vzdech, dechová technika na spaní, uklidni to, dechové cvičení online zdarma">
+<meta name="description" content="Uklidni To je dechové cvičení zdarma v prohlížeči. Zklidni mysl a sniž stres pomocí 8 technik (4-7-8, Box, Coherent a dalších). Bez registrace, funguje na mobilu i PC.">
+<meta name="keywords" content="dechové cvičení, dýchací cvičení, jak se uklidnit, cvičení na úzkost, cvičení proti stresu, technika 4-7-8, box breathing, coherent breathing, fyziologický vzdech, bránice dýchání, střídavé dýchání nozdrami, lví dech, dechová technika na spaní, uklidni to, dechové cvičení online zdarma">
 <meta name="author" content="SYNTHLUCIDA">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://uklidnito.github.io/">
@@ -24,6 +25,7 @@
 <meta property="og:image" content="https://uklidnito.github.io/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Uklidni To – dechové cvičení online zdarma">
 <meta property="og:locale" content="cs_CZ">
 
 <!-- Twitter Card -->
@@ -31,6 +33,7 @@
 <meta name="twitter:title" content="Uklidni To – Dechové cvičení online zdarma">
 <meta name="twitter:description" content="Osm dechových technik s vizuální pulzující koulí. Zklidni mysl za pár minut, zdarma přímo v prohlížeči.">
 <meta name="twitter:image" content="https://uklidnito.github.io/og-image.png">
+<meta name="twitter:image:alt" content="Uklidni To – dechové cvičení online zdarma">
 
 <!-- Icons / PWA -->
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -190,8 +193,9 @@
   @keyframes breathRingPulse { 0% { transform: scale(0.85); opacity: 0.35; } 100% { transform: scale(1.7); opacity: 0; } }
 
   /* ---------- Content sections (rozklikávací panely) ---------- */
-  section.content { display: none; max-width: 720px; margin: 0 auto; padding: 30px 22px 46px; }
-  section.content.panel-active { display: block; animation: panelFadeIn 0.35s ease; }
+  section.content { max-width: 720px; margin: 0 auto; padding: 30px 22px 46px; }
+  .js section.content { display: none; }
+  .js section.content.panel-active { display: block; animation: panelFadeIn 0.35s ease; }
   @keyframes panelFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
   .panel-topbar {
@@ -731,8 +735,8 @@
   <a href="#cviceni" onclick="showPanel(null); toggleSideNav(false); return false;">Dechové cvičení</a>
   <a href="#jak-funguje" onclick="showPanel('sec-jak-funguje'); toggleSideNav(false); return false;">Jak to funguje</a>
   <a href="#tep-hrv" onclick="showPanel('pokrok', 'tep-hrv'); toggleSideNav(false); return false;">Měření tepu a HRV</a>
-  <a href="#techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
   <a href="#pokrok" onclick="showPanel('pokrok'); toggleSideNav(false); return false;">Tvůj pokrok</a>
+  <a href="#techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
   <a href="#clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
   <a href="#doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
   <a href="#faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
@@ -820,6 +824,18 @@
       <div class="tech-card">
         <h3>Vzdech — Huberman Lab</h3>
         <p>Dva nádechy nosem za sebou (dlouhý a krátký přisátí vzduchu), poté jeden dlouhý pomalý výdech ústy. Jeden z nejrychlejších způsobů snížení akutního stresu.</p>
+      </div>
+      <div class="tech-card">
+        <h3>Bránice — břišní dýchání</h3>
+        <p>Nádech nosem na 4 s vědomě do břicha, krátká zádrž 2 s, pomalý výdech na 6 s. Zapojení bránice prohlubuje a zpomaluje dech, podle výzkumu zlepšuje pozornost a snižuje hladinu kortizolu.</p>
+      </div>
+      <div class="tech-card">
+        <h3>Nozdry — Nadi Shodhana</h3>
+        <p>Nádech 4 s, zádrž 4 s, výdech 8 s — poměr vycházející z jógové techniky střídavého dýchání nosními dírkami. Pomalý rytmus s delším výdechem zklidňuje podobně jako klasická Nadi Shodhana.</p>
+      </div>
+      <div class="tech-card">
+        <h3>Lví dech — Simhasana</h3>
+        <p>Hluboký nádech nosem na 4 s a razantní výdech ústy na 4 s s vyplazeným jazykem. Uvolňuje napětí ve tváři, čelisti a krku a funguje jako rychlý ventil na frustraci nebo napětí.</p>
       </div>
     </div>
   </section>
