@@ -980,6 +980,7 @@
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Vymazat můj pokrok</button>
       <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Exportovat data (CSV)</button>
+      <button class="progress-reset-btn" id="progress-export-pdf-btn" onclick="exportProgressPDF()">Exportovat data (PDF)</button>
     </div>
   </section>
 
@@ -2200,7 +2201,7 @@
       if (data.sessions === 0 && data.stressCount === 0) {
         return '<span class="summary-empty">Zatím žádná aktivita.</span>';
       }
-      const sessionsPart = 'cvičil/a ses ' + data.sessions + 'x';
+      const sessionsPart = 'cvičil/a jsi ' + data.sessions + 'x';
       const stressPart = data.avgStress !== null ? ', stres průměrně ' + data.avgStress.toFixed(1) + '/10' : '';
       return sessionsPart + stressPart + '.';
     };
@@ -2235,8 +2236,7 @@
     return s;
   }
 
-  function exportProgressCSV() {
-    const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu', 'poznamka']];
+  function getProgressExportRows() {
     const allDates = new Set([
       ...Object.keys(progressData.days),
       ...progressData.stressLog.map(e => e.date),
@@ -2246,11 +2246,18 @@
     const stressByDate = {};
     progressData.stressLog.forEach(e => { stressByDate[e.date] = e.value; });
 
-    sortedDates.forEach(d => {
-      const sessions = progressData.days[d] ? (progressData.days[d].sessions || 0) : '';
-      const stress = stressByDate[d] !== undefined ? stressByDate[d] : '';
-      const note = progressData.journal[d] || '';
-      rows.push([d, sessions, stress, note].map(csvField));
+    return sortedDates.map(d => ({
+      date: d,
+      sessions: progressData.days[d] ? (progressData.days[d].sessions || 0) : '',
+      stress: stressByDate[d] !== undefined ? stressByDate[d] : '',
+      note: progressData.journal[d] || ''
+    }));
+  }
+
+  function exportProgressCSV() {
+    const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu', 'poznamka']];
+    getProgressExportRows().forEach(r => {
+      rows.push([r.date, r.sessions, r.stress, r.note].map(csvField));
     });
 
     const csv = rows.map(r => r.join(';')).join('\n');
@@ -2265,6 +2272,77 @@
     URL.revokeObjectURL(url);
   }
   window.exportProgressCSV = exportProgressCSV;
+
+  function pdfEscapeHtml(value) {
+    return String(value === undefined || value === null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function exportProgressPDF() {
+    const rows = getProgressExportRows();
+    const todayStr = new Date().toLocaleDateString('cs-CZ');
+
+    const tableRows = rows.length
+      ? rows.map(r => `
+        <tr>
+          <td>${pdfEscapeHtml(r.date)}</td>
+          <td>${pdfEscapeHtml(r.sessions)}</td>
+          <td>${pdfEscapeHtml(r.stress)}</td>
+          <td>${pdfEscapeHtml(r.note)}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="4" class="empty">Zatím žádná zaznamenaná data.</td></tr>`;
+
+    const html = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Uklidni To – Tvůj pokrok</title>
+<style>
+  body { font-family: 'Poppins', Arial, sans-serif; color: #111; margin: 32px; }
+  h1 { font-family: 'Orbitron', Arial, sans-serif; font-size: 22px; margin-bottom: 2px; }
+  .subtitle { font-size: 12px; color: #555; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; }
+  tr:nth-child(even) td { background: #fafafa; }
+  .empty { text-align: center; color: #777; padding: 20px; }
+  @media print {
+    body { margin: 12mm; }
+  }
+</style>
+</head>
+<body>
+  <h1>Uklidni To – Tvůj pokrok</h1>
+  <div class="subtitle">Export ze dne ${pdfEscapeHtml(todayStr)}</div>
+  <table>
+    <thead>
+      <tr><th>Datum</th><th>Počet cvičení</th><th>Hodnocení stresu</th><th>Poznámka</th></tr>
+    </thead>
+    <tbody>
+      ${tableRows}
+    </tbody>
+  </table>
+  <script>
+    window.onload = function () {
+      window.focus();
+      window.print();
+    };
+  <\/script>
+</body>
+</html>`;
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Prohlížeč zablokoval otevření okna pro export. Povol prosím vyskakovací okna pro tuto stránku a zkus to znovu.');
+      return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+  }
+  window.exportProgressPDF = exportProgressPDF;
 
   // ---------- Tep a HRV: měření pulsu přes kameru telefonu (fotopletysmografie) ----------
   const HRV_DURATION_MS = 20000; // délka měření
