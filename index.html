@@ -821,6 +821,18 @@
         <h3>Vzdech — Huberman Lab</h3>
         <p>Dva nádechy nosem za sebou (dlouhý a krátký přisátí vzduchu), poté jeden dlouhý pomalý výdech ústy. Jeden z nejrychlejších způsobů snížení akutního stresu.</p>
       </div>
+      <div class="tech-card">
+        <h3>Bráničné dýchání</h3>
+        <p>Pomalý nádech nosem na 4 s do břicha (hrudník zůstává klidný), krátká zádrž na 2 s, dlouhý výdech ústy na 6 s. Zapojuje bránici místo mělkého hrudního dýchání a aktivuje parasympatický nervový systém — základ většiny relaxačních technik.</p>
+      </div>
+      <div class="tech-card">
+        <h3>Střídavé nozdry — Nadí šódhana</h3>
+        <p>Nádech jednou nosní dírkou, krátká zádrž, výdech druhou — a v dalším kole obráceně. V józe se běžně provádí se zacpáváním nozder prstem; zde stačí sledovat rytmus a nádech/výdech si jen v duchu přiřazovat ke straně. Vyrovnává obě mozkové hemisféry a zklidňuje mysl.</p>
+      </div>
+      <div class="tech-card">
+        <h3>Lví dech — Simhasana</h3>
+        <p>Nádech nosem na 3 s, poté prudký výdech ústy s vyplazeným jazykem a zvukem „ha“. Pochází z jógy, rychle uvolňuje nahromaděné napětí v obličeji, čelisti a hrudníku — hodí se jako krátký reset uprostřed stresového dne.</p>
+      </div>
     </div>
   </section>
 
@@ -1215,6 +1227,18 @@
         <h4>Vzdech — Huberman Lab</h4>
         <p>Dva nádechy nosem (jeden dlouhý, druhý krátký „přisátí“ vzduchu navrch), následované jedním dlouhým, pomalým výdechem ústy. Tuto techniku zkoumá Huberman Lab na Stanfordu jako jeden z nejrychlejších způsobů, jak v reálném čase snížit fyziologický stres.</p>
       </div>
+      <div class="breath-guide-tech">
+        <h4>Bráničné dýchání</h4>
+        <p>Nádech nosem na 4 s směrem do břicha (hrudník se moc nehýbe), zádrž na 2 s, dlouhý výdech ústy na 6 s. Na rozdíl od mělkého hrudního dýchání zapojuje bránici a plně rozproudí spodní část plic — je to základní technika, na které stojí většina relaxačních cvičení.</p>
+      </div>
+      <div class="breath-guide-tech">
+        <h4>Střídavé nozdry — Nadí šódhana</h4>
+        <p>Jóga technika, kdy se v jednom kole nadechuje jednou nosní dírkou a vydechuje druhou, v dalším kole obráceně — tradičně se nozdry střídavě zacpávají prstem. V aplikaci si jen sleduj rytmus nádech-zádrž-výdech. Pomáhá vyrovnat aktivitu obou mozkových hemisfér a zklidnit rozbouřenou mysl.</p>
+      </div>
+      <div class="breath-guide-tech">
+        <h4>Lví dech — Simhasana</h4>
+        <p>Nádech nosem na 3 s, poté rychlý, silný výdech ústy s vyplazeným jazykem a slyšitelným „ha“. Jógová technika na rychlé uvolnění napětí v obličeji, čelisti a hrudníku — dobrá volba, když potřebuješ okamžitý ventil místo dlouhého uklidňování.</p>
+      </div>
 
       <p class="breath-guide-note">Pouze obecné informace pro relaxaci, nejde o lékařskou radu. Pokud se ti udělá nevolno nebo se ti zatočí hlava, dýchej normálně a přestaň.</p>
     </div>
@@ -1226,6 +1250,9 @@
     <button class="btn-breath-tech" data-tech="coherent" onclick="selectBreathTechnique('coherent')">COHERENT</button>
     <button class="btn-breath-tech" data-tech="calm" onclick="selectBreathTechnique('calm')">CALM</button>
     <button class="btn-breath-tech" data-tech="sigh" onclick="selectBreathTechnique('sigh')">VZDECH</button>
+    <button class="btn-breath-tech" data-tech="diaphragm" onclick="selectBreathTechnique('diaphragm')">BRÁNICE</button>
+    <button class="btn-breath-tech" data-tech="nadi" onclick="selectBreathTechnique('nadi')">NOZDRY</button>
+    <button class="btn-breath-tech" data-tech="lion" onclick="selectBreathTechnique('lion')">LVÍ DECH</button>
   </div>
   <div class="breath-technique-info" id="breath-technique-info"></div>
 
@@ -1449,6 +1476,35 @@
         { type: 'in',  duration: 2, label: 'Nádech' },
         { type: 'in',  duration: 1, label: 'Ještě nádech' },
         { type: 'out', duration: 6, label: 'Dlouhý výdech' },
+      ]
+    },
+    diaphragm: {
+      name: 'Bráničné dýchání',
+      info: 'Hluboký nádech do břicha · zapojuje bránici',
+      phases: [
+        { type: 'in',   duration: 4 },
+        { type: 'hold', duration: 2 },
+        { type: 'out',  duration: 6 },
+      ]
+    },
+    nadi: {
+      name: 'Střídavé nozdry',
+      info: 'Nadí šódhana · vyrovná mysl mezi oběma stranami',
+      phases: [
+        { type: 'in',   duration: 4, label: 'Nádech · pravá nosní dírka' },
+        { type: 'hold', duration: 2, label: 'Zádrž' },
+        { type: 'out',  duration: 4, label: 'Výdech · levá nosní dírka' },
+        { type: 'in',   duration: 4, label: 'Nádech · levá nosní dírka' },
+        { type: 'hold', duration: 2, label: 'Zádrž' },
+        { type: 'out',  duration: 4, label: 'Výdech · pravá nosní dírka' },
+      ]
+    },
+    lion: {
+      name: 'Lví dech',
+      info: 'Simhasana · rychlé uvolnění napětí',
+      phases: [
+        { type: 'in',  duration: 3, label: 'Nádech nosem' },
+        { type: 'out', duration: 2, label: 'Prudký výdech „ha“ s jazykem ven' },
       ]
     }
   };
