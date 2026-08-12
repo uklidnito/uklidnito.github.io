@@ -302,6 +302,7 @@
   .stress-btn:hover { border-color: var(--accent-color); }
   .stress-btn.selected-today { background: var(--accent-color); border-color: var(--accent-color); color: #1a0a00; box-shadow: 0 0 10px rgba(255,119,0,0.5); }
   .progress-stress-feedback { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; min-height: 16px; }
+  .progress-stress-unlock-hint { font-size: 11.5px; opacity: 0.55; margin: 6px 0 0; line-height: 1.6; font-style: italic; }
 
   .progress-stress-chart-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
   .progress-stress-chart-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
@@ -899,6 +900,7 @@
       <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat.</p>
       <div class="progress-stress-scale" id="progress-stress-scale" role="group" aria-label="Ohodnoť úroveň stresu 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-stress-feedback"></p>
+      <p class="progress-stress-unlock-hint" id="progress-stress-unlock-hint" style="display:none;"></p>
 
       <div class="progress-stress-chart-wrap" id="progress-stress-chart-wrap" style="display:none;">
         <h4>Vývoj v čase</h4>
@@ -1965,9 +1967,20 @@
 
   function renderProgressStressChart() {
     const chartWrap = document.getElementById('progress-stress-chart-wrap');
+    const unlockHint = document.getElementById('progress-stress-unlock-hint');
     const log = progressData.stressLog.slice().sort((a, b) => a.date.localeCompare(b.date));
 
-    if (log.length < 2) {
+    if (log.length < 4) {
+      const remaining = 4 - log.length;
+      unlockHint.style.display = 'block';
+      unlockHint.innerText = log.length === 0
+        ? 'Jakmile se ohodnotíš alespoň 4×, zobrazí se ti tu graf vývoje a index stresu, který ukáže, jestli se ti daří stres postupně snižovat.'
+        : 'Ještě ' + remaining + '× se ohodnoť (v libovolné dny) a odemkneš graf vývoje a index stresu s trendem.';
+    } else {
+      unlockHint.style.display = 'none';
+    }
+
+    if (log.length < 4) {
       chartWrap.style.display = 'none';
       return;
     }
