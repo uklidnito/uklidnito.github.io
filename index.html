@@ -304,6 +304,32 @@
   .progress-stress-feedback { font-size: 11.5px; opacity: 0.7; margin: 12px 0 0; min-height: 16px; }
   .progress-stress-unlock-hint { font-size: 11.5px; opacity: 0.55; margin: 6px 0 0; line-height: 1.6; font-style: italic; }
 
+  .progress-summary-wrap { display: flex; gap: 12px; margin: 16px 0 20px; }
+  .progress-summary-col {
+    flex: 1; min-width: 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .progress-summary-col h4 {
+    font-size: 10.5px; letter-spacing: 0.6px; opacity: 0.55; margin: 0 0 8px; font-weight: 500;
+    text-transform: uppercase; font-family: 'Poppins', sans-serif;
+  }
+  .progress-summary-col p { font-size: 13px; line-height: 1.55; margin: 0; }
+  .progress-summary-col .summary-empty { opacity: 0.5; font-style: italic; }
+  @media (max-width: 560px) { .progress-summary-wrap { flex-direction: column; } }
+
+  .progress-journal-wrap { margin-top: 14px; }
+  .progress-journal-label { display: block; font-size: 11.5px; opacity: 0.7; margin-bottom: 6px; line-height: 1.5; }
+  .progress-journal-label span { opacity: 0.55; font-style: italic; }
+  .progress-journal-textarea {
+    width: 100%; padding: 9px 10px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.18); color: #fff; border-radius: 7px;
+    font-family: 'Poppins', sans-serif; font-size: 12px; outline: none; transition: 0.2s;
+    resize: vertical; min-height: 44px; line-height: 1.5;
+  }
+  .progress-journal-textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .progress-journal-textarea:hover, .progress-journal-textarea:focus { border-color: var(--accent-color); background: rgba(255,119,0,0.06); }
+  .progress-journal-status { font-size: 10.5px; opacity: 0.5; margin: 5px 0 0; min-height: 13px; }
+
   .progress-stress-chart-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
   .progress-stress-chart-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
 
@@ -786,6 +812,17 @@
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Data zůstávají jen v tomto prohlížeči, nikam se neposílají.</p>
 
+    <div class="progress-summary-wrap" id="progress-summary-wrap">
+      <div class="progress-summary-col">
+        <h4>Tento týden</h4>
+        <p id="progress-summary-week">–</p>
+      </div>
+      <div class="progress-summary-col">
+        <h4>Tento měsíc</h4>
+        <p id="progress-summary-month">–</p>
+      </div>
+    </div>
+
     <div class="progress-risk-banner" id="progress-risk-banner" style="display:none;" role="status">
       <span id="progress-risk-text"></span>
       <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
@@ -900,6 +937,13 @@
       <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat.</p>
       <div class="progress-stress-scale" id="progress-stress-scale" role="group" aria-label="Ohodnoť úroveň stresu 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-stress-feedback"></p>
+
+      <div class="progress-journal-wrap">
+        <label class="progress-journal-label" for="progress-journal-note">Co dnes pomohlo / co tě stresovalo? <span>(nepovinné, jen pro tebe — nikam se to neposílá)</span></label>
+        <textarea class="progress-journal-textarea" id="progress-journal-note" rows="2" maxlength="280" placeholder="Např. dobře jsem se vyspal/a, ale napjatý den v práci…" oninput="handleProgressJournalInput(this.value)"></textarea>
+        <p class="progress-journal-status" id="progress-journal-status"></p>
+      </div>
+
       <p class="progress-stress-unlock-hint" id="progress-stress-unlock-hint" style="display:none;"></p>
 
       <div class="progress-stress-chart-wrap" id="progress-stress-chart-wrap" style="display:none;">
@@ -1716,11 +1760,12 @@
         return {
           days: parsed.days && typeof parsed.days === 'object' ? parsed.days : {},
           stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : [],
-          hrvLog: Array.isArray(parsed.hrvLog) ? parsed.hrvLog : []
+          hrvLog: Array.isArray(parsed.hrvLog) ? parsed.hrvLog : [],
+          journal: parsed.journal && typeof parsed.journal === 'object' ? parsed.journal : {}
         };
       }
     } catch (e) { /* ignore */ }
-    return { days: {}, stressLog: [], hrvLog: [] };
+    return { days: {}, stressLog: [], hrvLog: [], journal: {} };
   }
 
   function saveProgressData(data) {
@@ -1750,8 +1795,8 @@
   };
 
   window.resetBreathProgress = function() {
-    if (!confirm('Opravdu chceš smazat celý svůj pokrok (kalendář, záznamy stresu i měření tepu/HRV)? Tuto akci nejde vrátit zpět.')) return;
-    progressData = { days: {}, stressLog: [], hrvLog: [] };
+    if (!confirm('Opravdu chceš smazat celý svůj pokrok (kalendář, záznamy stresu, deníček i měření tepu/HRV)? Tuto akci nejde vrátit zpět.')) return;
+    progressData = { days: {}, stressLog: [], hrvLog: [], journal: {} };
     saveProgressData(progressData);
     renderProgress();
   };
@@ -2089,6 +2134,81 @@
       dots;
   }
 
+  // ---------- Deníček nálady: volitelná poznámka k dnešnímu dni ----------
+  let journalSaveTimeout = null;
+
+  window.handleProgressJournalInput = function(value) {
+    const status = document.getElementById('progress-journal-status');
+    status.innerText = 'Píšeš…';
+    clearTimeout(journalSaveTimeout);
+    journalSaveTimeout = setTimeout(() => {
+      const key = dateKey(new Date());
+      const trimmed = value.trim();
+      if (trimmed) {
+        progressData.journal[key] = trimmed;
+      } else {
+        delete progressData.journal[key];
+      }
+      saveProgressData(progressData);
+      status.innerText = trimmed ? 'Uloženo' : '';
+    }, 500);
+  };
+
+  function renderProgressJournal() {
+    const key = dateKey(new Date());
+    const textarea = document.getElementById('progress-journal-note');
+    const status = document.getElementById('progress-journal-status');
+    if (document.activeElement !== textarea) {
+      textarea.value = progressData.journal[key] || '';
+    }
+    status.innerText = progressData.journal[key] ? 'Uloženo' : '';
+  }
+
+  // ---------- Týdenní a měsíční souhrn ----------
+  function startOfWeek(d) {
+    const date = new Date(d);
+    const day = (date.getDay() + 6) % 7; // pondělí = 0
+    date.setDate(date.getDate() - day);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  function summarizeRange(startDate, endDate) {
+    const startKey = dateKey(startDate);
+    const endKey = dateKey(endDate);
+    let sessions = 0;
+    Object.keys(progressData.days).forEach(k => {
+      if (k >= startKey && k <= endKey) sessions += (progressData.days[k].sessions || 0);
+    });
+    const stressVals = progressData.stressLog.filter(e => e.date >= startKey && e.date <= endKey).map(e => e.value);
+    const avgStress = stressVals.length ? (stressVals.reduce((s, v) => s + v, 0) / stressVals.length) : null;
+    return { sessions, avgStress, stressCount: stressVals.length };
+  }
+
+  function renderProgressSummary() {
+    const now = new Date();
+    const weekStart = startOfWeek(now);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const week = summarizeRange(weekStart, now);
+    const month = summarizeRange(monthStart, now);
+
+    const weekEl = document.getElementById('progress-summary-week');
+    const monthEl = document.getElementById('progress-summary-month');
+
+    const format = (data) => {
+      if (data.sessions === 0 && data.stressCount === 0) {
+        return '<span class="summary-empty">Zatím žádná aktivita.</span>';
+      }
+      const sessionsPart = 'cvičil/a ses ' + data.sessions + 'x';
+      const stressPart = data.avgStress !== null ? ', stres průměrně ' + data.avgStress.toFixed(1) + '/10' : '';
+      return sessionsPart + stressPart + '.';
+    };
+
+    weekEl.innerHTML = format(week);
+    monthEl.innerHTML = format(month);
+  }
+
   function renderProgressRiskBanner() {
     const banner = document.getElementById('progress-risk-banner');
     const textEl = document.getElementById('progress-risk-text');
@@ -2106,9 +2226,22 @@
     }
   }
 
+  function csvField(value) {
+    if (value === undefined || value === null) return '';
+    const s = String(value);
+    if (/[;"\n]/.test(s)) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
   function exportProgressCSV() {
-    const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu']];
-    const allDates = new Set([...Object.keys(progressData.days), ...progressData.stressLog.map(e => e.date)]);
+    const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu', 'poznamka']];
+    const allDates = new Set([
+      ...Object.keys(progressData.days),
+      ...progressData.stressLog.map(e => e.date),
+      ...Object.keys(progressData.journal)
+    ]);
     const sortedDates = [...allDates].sort();
     const stressByDate = {};
     progressData.stressLog.forEach(e => { stressByDate[e.date] = e.value; });
@@ -2116,7 +2249,8 @@
     sortedDates.forEach(d => {
       const sessions = progressData.days[d] ? (progressData.days[d].sessions || 0) : '';
       const stress = stressByDate[d] !== undefined ? stressByDate[d] : '';
-      rows.push([d, sessions, stress]);
+      const note = progressData.journal[d] || '';
+      rows.push([d, sessions, stress, note].map(csvField));
     });
 
     const csv = rows.map(r => r.join(';')).join('\n');
@@ -2672,6 +2806,8 @@
     renderProgressCalendar();
     renderProgressStressScale();
     renderProgressStressChart();
+    renderProgressJournal();
+    renderProgressSummary();
     renderProgressRiskBanner();
     renderHrvHistory();
   }
