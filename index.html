@@ -329,6 +329,25 @@
   .progress-journal-textarea::placeholder { color: rgba(255,255,255,0.35); }
   .progress-journal-textarea:hover, .progress-journal-textarea:focus { border-color: var(--accent-color); background: rgba(255,119,0,0.06); }
   .progress-journal-status { font-size: 10.5px; opacity: 0.5; margin: 5px 0 0; min-height: 13px; }
+  .progress-journal-save-btn {
+    margin-top: 8px; padding: 8px 16px; background: rgba(255,119,0,0.12);
+    border: 1px solid var(--accent-color); color: #fff; border-radius: 20px;
+    font-family: 'Poppins', sans-serif; font-size: 11.5px; letter-spacing: 0.5px;
+    cursor: pointer; transition: 0.2s;
+  }
+  .progress-journal-save-btn:hover { background: rgba(255,119,0,0.25); }
+  .progress-journal-save-btn:disabled { opacity: 0.35; cursor: default; background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.15); }
+  .progress-journal-list { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .progress-journal-item {
+    display: flex; align-items: flex-start; gap: 8px; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 10px;
+  }
+  .progress-journal-item-text { flex: 1; font-size: 11.5px; line-height: 1.55; opacity: 0.85; white-space: pre-wrap; word-break: break-word; }
+  .progress-journal-item-del {
+    flex-shrink: 0; background: none; border: none; color: rgba(255,255,255,0.45);
+    font-size: 15px; line-height: 1; cursor: pointer; padding: 2px 4px;
+  }
+  .progress-journal-item-del:hover { color: var(--accent-color); }
 
   .progress-stress-chart-wrap { margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
   .progress-stress-chart-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 10px; font-weight: 500; }
@@ -941,7 +960,9 @@
       <div class="progress-journal-wrap">
         <label class="progress-journal-label" for="progress-journal-note">Co dnes pomohlo / co tě stresovalo? <span>(nepovinné, jen pro tebe — ukládá se lokálně v tomto prohlížeči, nikam se neodesílá)</span></label>
         <textarea class="progress-journal-textarea" id="progress-journal-note" rows="2" maxlength="280" placeholder="Např. dobře jsem se vyspal/a, ale napjatý den v práci…" oninput="handleProgressJournalInput(this.value)"></textarea>
+        <button type="button" class="progress-journal-save-btn" id="progress-journal-save-btn" onclick="saveProgressJournalNote()">Uložit poznámku</button>
         <p class="progress-journal-status" id="progress-journal-status"></p>
+        <ul class="progress-journal-list" id="progress-journal-list"></ul>
       </div>
 
       <p class="progress-stress-unlock-hint" id="progress-stress-unlock-hint" style="display:none;"></p>
@@ -1758,11 +1779,22 @@
       const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        const rawJournal = parsed.journal && typeof parsed.journal === 'object' ? parsed.journal : {};
+        // Migrace ze starého formátu (1 poznámka na den jako string) na pole poznámek na den.
+        const journal = {};
+        Object.keys(rawJournal).forEach((k) => {
+          const v = rawJournal[k];
+          if (Array.isArray(v)) {
+            journal[k] = v.filter((s) => typeof s === 'string' && s.trim());
+          } else if (typeof v === 'string' && v.trim()) {
+            journal[k] = [v.trim()];
+          }
+        });
         return {
           days: parsed.days && typeof parsed.days === 'object' ? parsed.days : {},
           stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : [],
           hrvLog: Array.isArray(parsed.hrvLog) ? parsed.hrvLog : [],
-          journal: parsed.journal && typeof parsed.journal === 'object' ? parsed.journal : {}
+          journal: journal
         };
       }
     } catch (e) { /* ignore */ }
@@ -2135,34 +2167,61 @@
       dots;
   }
 
-  // ---------- Deníček nálady: volitelná poznámka k dnešnímu dni ----------
-  let journalSaveTimeout = null;
-
+  // ---------- Deníček nálady: volitelné poznámky k dnešnímu dni (může jich být víc) ----------
   window.handleProgressJournalInput = function(value) {
+    const btn = document.getElementById('progress-journal-save-btn');
+    if (btn) btn.disabled = !value.trim();
+  };
+
+  window.saveProgressJournalNote = function() {
+    const textarea = document.getElementById('progress-journal-note');
     const status = document.getElementById('progress-journal-status');
-    status.innerText = 'Píšeš…';
-    clearTimeout(journalSaveTimeout);
-    journalSaveTimeout = setTimeout(() => {
-      const key = dateKey(new Date());
-      const trimmed = value.trim();
-      if (trimmed) {
-        progressData.journal[key] = trimmed;
-      } else {
-        delete progressData.journal[key];
-      }
-      saveProgressData(progressData);
-      status.innerText = trimmed ? 'Uloženo' : '';
-    }, 500);
+    const trimmed = (textarea.value || '').trim();
+    if (!trimmed) return;
+
+    const key = dateKey(new Date());
+    if (!Array.isArray(progressData.journal[key])) progressData.journal[key] = [];
+    progressData.journal[key].push(trimmed);
+    saveProgressData(progressData);
+
+    textarea.value = '';
+    const btn = document.getElementById('progress-journal-save-btn');
+    if (btn) btn.disabled = true;
+    status.innerText = 'Uloženo';
+    renderProgressJournal();
+  };
+
+  window.deleteProgressJournalNote = function(dateKeyStr, index) {
+    const notes = progressData.journal[dateKeyStr];
+    if (!Array.isArray(notes)) return;
+    notes.splice(index, 1);
+    if (notes.length === 0) delete progressData.journal[dateKeyStr];
+    saveProgressData(progressData);
+    renderProgressJournal();
   };
 
   function renderProgressJournal() {
     const key = dateKey(new Date());
     const textarea = document.getElementById('progress-journal-note');
     const status = document.getElementById('progress-journal-status');
-    if (document.activeElement !== textarea) {
-      textarea.value = progressData.journal[key] || '';
+    const list = document.getElementById('progress-journal-list');
+    const btn = document.getElementById('progress-journal-save-btn');
+    const notes = Array.isArray(progressData.journal[key]) ? progressData.journal[key] : [];
+
+    if (document.activeElement !== textarea && btn) {
+      btn.disabled = !textarea.value.trim();
     }
-    status.innerText = progressData.journal[key] ? 'Uloženo' : '';
+    if (document.activeElement !== status) {
+      status.innerText = '';
+    }
+
+    list.innerHTML = notes.map((note, i) => {
+      const esc = note.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return '<li class="progress-journal-item">' +
+        '<span class="progress-journal-item-text">' + esc + '</span>' +
+        '<button type="button" class="progress-journal-item-del" aria-label="Smazat poznámku" onclick="deleteProgressJournalNote(\'' + key + '\',' + i + ')">×</button>' +
+        '</li>';
+    }).join('');
   }
 
   // ---------- Týdenní a měsíční souhrn ----------
@@ -2250,7 +2309,7 @@
       date: d,
       sessions: progressData.days[d] ? (progressData.days[d].sessions || 0) : '',
       stress: stressByDate[d] !== undefined ? stressByDate[d] : '',
-      note: progressData.journal[d] || ''
+      note: Array.isArray(progressData.journal[d]) ? progressData.journal[d].join(' | ') : ''
     }));
   }
 
