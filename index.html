@@ -810,7 +810,7 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
     </div>
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
-    <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Data zůstávají jen v tomto prohlížeči, nikam se neposílají.</p>
+    <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Vše — kalendář, hodnocení stresu, deníček i týdenní/měsíční souhrny — se ukládá jen lokálně v tomto prohlížeči (localStorage), nikam se to neodesílá ani neanalyzuje. Při vymazání dat prohlížeče nebo na jiném zařízení pokrok neuvidíš.</p>
 
     <div class="progress-summary-wrap" id="progress-summary-wrap">
       <div class="progress-summary-col">
@@ -934,12 +934,12 @@
 
     <div class="progress-stress-wrap">
       <h3>Jak se dnes cítíš?</h3>
-      <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat.</p>
+      <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat. Ukládá se jen v tomto prohlížeči, nikam se neposílá.</p>
       <div class="progress-stress-scale" id="progress-stress-scale" role="group" aria-label="Ohodnoť úroveň stresu 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-stress-feedback"></p>
 
       <div class="progress-journal-wrap">
-        <label class="progress-journal-label" for="progress-journal-note">Co dnes pomohlo / co tě stresovalo? <span>(nepovinné, jen pro tebe — nikam se to neposílá)</span></label>
+        <label class="progress-journal-label" for="progress-journal-note">Co dnes pomohlo / co tě stresovalo? <span>(nepovinné, jen pro tebe — ukládá se lokálně v tomto prohlížeči, nikam se neodesílá)</span></label>
         <textarea class="progress-journal-textarea" id="progress-journal-note" rows="2" maxlength="280" placeholder="Např. dobře jsem se vyspal/a, ale napjatý den v práci…" oninput="handleProgressJournalInput(this.value)"></textarea>
         <p class="progress-journal-status" id="progress-journal-status"></p>
       </div>
