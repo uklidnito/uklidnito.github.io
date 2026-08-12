@@ -2531,6 +2531,18 @@
       }
     } catch (e) { /* blesk se nepodařilo zapnout, měříme bez něj */ }
 
+    // Pokusíme se vypnout automatickou expozici/ostření/vyvážení bílé - právě tohle
+    // je nejčastější důvod, proč je signál úplně plochý: telefon se snaží obraz pod
+    // prstem "zesvětlit" a průběžně dorovnává jas, čímž se pulz v obraze úplně smaže.
+    try {
+      const caps2 = hrvVideoTrack.getCapabilities ? hrvVideoTrack.getCapabilities() : {};
+      const advanced = [];
+      if (caps2.exposureMode && caps2.exposureMode.includes('manual')) advanced.push({ exposureMode: 'manual' });
+      if (caps2.focusMode && caps2.focusMode.includes('manual')) advanced.push({ focusMode: 'manual' });
+      if (caps2.whiteBalanceMode && caps2.whiteBalanceMode.includes('manual')) advanced.push({ whiteBalanceMode: 'manual' });
+      if (advanced.length) await hrvVideoTrack.applyConstraints({ advanced });
+    } catch (e) { /* telefon/prohlížeč to nepodporuje - měříme bez zámku expozice */ }
+
     const video = document.getElementById('hrv-video');
     video.srcObject = hrvStream;
     try { await video.play(); } catch (e) { /* ignore */ }
@@ -2715,7 +2727,7 @@
 
     const mean = detrended.reduce((s, v) => s + v, 0) / detrended.length;
     const std = Math.sqrt(detrended.reduce((s, v) => s + (v - mean) * (v - mean), 0) / detrended.length) || 1;
-    const threshold = std * 0.4;
+    const threshold = std * 0.3;
 
     // detekce vrcholů s minimálním odstupem odpovídajícím max. cca 200 tepům/min
     const minGapSamples = Math.round((60000 / 200) / stepMs);
@@ -2732,16 +2744,16 @@
       }
     }
 
-    if (peaks.length < 6) return { valid: false };
+    if (peaks.length < 5) return { valid: false };
 
     let rr = [];
     for (let i = 1; i < peaks.length; i++) rr.push((peaks[i] - peaks[i - 1]) * stepMs);
 
     // odfiltrování fyziologicky nesmyslných intervalů (odlehlé hodnoty způsobené šumem)
     const medianRr = rr.slice().sort((a, b) => a - b)[Math.floor(rr.length / 2)];
-    rr = rr.filter(v => v > medianRr * 0.6 && v < medianRr * 1.4);
+    rr = rr.filter(v => v > medianRr * 0.55 && v < medianRr * 1.45);
 
-    if (rr.length < 5) return { valid: false };
+    if (rr.length < 4) return { valid: false };
 
     const bpm = 60000 / (rr.reduce((s, v) => s + v, 0) / rr.length);
     if (bpm < 35 || bpm > 200) return { valid: false };
@@ -2766,7 +2778,7 @@
     if (mean > 235) {
       return 'Zdá se, že prst dost nezakrývá zadní kameru — světlo proniká kolem. Přilož prst tak, aby úplně zakryl objektiv (i blesk, pokud ho má telefon).';
     }
-    if (std < 0.8) {
+    if (std < 0.5) {
       return hrvTorchSupported
         ? 'Signál je příliš plochý — zkus prst přiložit pevněji (ale ne moc silně) a chvíli úplně nehýbat rukou.'
         : 'Tvůj telefon/prohlížeč bohužel nepodporuje blesk kamery, takže signál přes prst může být slabý. Zkus měřit v jasně osvětlené místnosti a přilož prst pevněji na objektiv.';
