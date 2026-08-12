@@ -570,12 +570,12 @@
   .menu-toggle.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
   .side-nav {
-    position: fixed; top: 0; left: 0; height: 100vh; width: 230px; z-index: 1000;
+    position: fixed; top: 0; left: 0; height: 100vh; height: 100dvh; width: 230px; z-index: 1000;
     background: rgba(8, 3, 16, 0.97); border-right: 1px solid rgba(255,255,255,0.1);
     padding: 84px 22px 24px; display: flex; flex-direction: column; gap: 4px;
     transform: translateX(-100%); transition: transform 0.35s ease;
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y;
   }
   .side-nav.open { transform: translateX(0); }
   .side-nav .side-nav-brand {
@@ -1218,8 +1218,29 @@
     const btn = document.getElementById('side-nav-contact-toggle');
     const open = typeof force === 'boolean' ? force : !panel.classList.contains('open');
     panel.classList.toggle('open', open);
+    if (open) {
+      // Nastavíme max-height přesně podle skutečné výšky obsahu, aby se
+      // formulář nikdy neořízl (dřív byla natvrdo 480px, což na mobilu
+      // s delším formulářem nestačilo a spodek formuláře byl nedostupný).
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    } else {
+      panel.style.maxHeight = '0px';
+    }
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
+
+  // Pokud se obsah panelu změní (např. po odeslání formuláře se zobrazí
+  // poděkování), přepočítáme max-height, ať se nic neuřízne.
+  (function keepContactPanelHeightInSync() {
+    const panel = document.getElementById('side-nav-contact-panel');
+    if (!panel || !window.MutationObserver) return;
+    const observer = new MutationObserver(function () {
+      if (panel.classList.contains('open')) {
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+    observer.observe(panel, { childList: true, subtree: true });
+  })();
 
   // Odeslání formuláře přes Web3Forms AJAX endpoint (fetch) místo běžného
   // POST přesměrování - stránka se nepřenačítá, takže odpověď přijde znatelně
