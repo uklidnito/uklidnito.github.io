@@ -189,8 +189,26 @@
   @keyframes heroCorePulse { 0%,100% { transform: scale(0.7); opacity: 0.5; } 50% { transform: scale(1.05); opacity: 0.95; } }
   @keyframes breathRingPulse { 0% { transform: scale(0.85); opacity: 0.35; } 100% { transform: scale(1.7); opacity: 0; } }
 
-  /* ---------- Content sections ---------- */
-  section.content { max-width: 720px; margin: 0 auto; padding: 46px 22px; }
+  /* ---------- Content sections (rozklikávací panely) ---------- */
+  section.content { display: none; max-width: 720px; margin: 0 auto; padding: 30px 22px 46px; }
+  section.content.panel-active { display: block; animation: panelFadeIn 0.35s ease; }
+  @keyframes panelFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .panel-topbar {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    max-width: 720px; margin: 0 auto 20px; padding-top: 6px;
+  }
+  .panel-nav-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; padding: 8px 16px; border-radius: 20px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; font-size: 12px; letter-spacing: 0.4px;
+    transition: 0.25s;
+  }
+  .panel-nav-btn:hover { border-color: var(--accent-color); box-shadow: 0 0 12px rgba(255,119,0,0.35); }
+  .panel-nav-btn.close-btn { opacity: 0.75; }
+
+  .hero.hero-hidden { display: none; }
   section.content h2 {
     font-size: 16px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent-color);
     text-shadow: 0 0 10px var(--accent-color); margin: 0 0 18px; text-align: center;
@@ -648,13 +666,14 @@
 <div class="nav-scrim" id="nav-scrim" onclick="toggleSideNav(false)"></div>
 <nav class="side-nav" id="side-nav" aria-label="Hlavní navigace">
   <div class="side-nav-brand">UKLIDNI <span class="dot">TO</span></div>
-  <a href="#cviceni" onclick="toggleSideNav(false)">Dechové cvičení</a>
-  <a href="#tep-hrv" onclick="toggleSideNav(false)">Měření tepu a HRV</a>
-  <a href="#techniky" onclick="toggleSideNav(false)">Techniky dechu</a>
-  <a href="#pokrok" onclick="toggleSideNav(false)">Tvůj pokrok</a>
-  <a href="#clanky" onclick="toggleSideNav(false)">Články o dýchání</a>
-  <a href="#doplnky" onclick="toggleSideNav(false)">Doplňky a další cesty ke klidu</a>
-  <a href="#faq" onclick="toggleSideNav(false)">Časté dotazy</a>
+  <a href="#cviceni" onclick="showPanel(null); toggleSideNav(false); return false;">Dechové cvičení</a>
+  <a href="#jak-funguje" onclick="showPanel('sec-jak-funguje'); toggleSideNav(false); return false;">Jak to funguje</a>
+  <a href="#tep-hrv" onclick="showPanel('pokrok', 'tep-hrv'); toggleSideNav(false); return false;">Měření tepu a HRV</a>
+  <a href="#techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
+  <a href="#pokrok" onclick="showPanel('pokrok'); toggleSideNav(false); return false;">Tvůj pokrok</a>
+  <a href="#clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
+  <a href="#doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
+  <a href="#faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
 
   <button class="side-nav-contact-toggle" id="side-nav-contact-toggle" onclick="toggleSideNavContact()" aria-expanded="false" aria-controls="side-nav-contact-panel">
     <span>✉ Kontakt</span> <span class="chevron">▾</span>
@@ -697,7 +716,11 @@
     <p style="font-size:11px; opacity:0.45; margin-top:16px; letter-spacing:0.3px;">Chceš k dýchání i hudbu na pozadí? Zkus <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA Relax Player</a>.</p>
   </section>
 
-  <section class="content" aria-labelledby="jak-funguje">
+  <section class="content" id="sec-jak-funguje" aria-labelledby="jak-funguje">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="jak-funguje">Jak dechové cvičení funguje</h2>
     <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe.</p>
     <p>Kdykoli si můžeš vybrat jednu z pěti vědecky podložených technik podle toho, co zrovna potřebuješ: rychle se zklidnit, usnout, nebo naopak zůstat soustředěný/á pod tlakem. Na podporovaných telefonech cvičení navíc jemně vibruje při každé změně fáze, takže se můžeš soustředit i se zavřenýma očima.</p>
@@ -710,7 +733,11 @@
     </ul>
   </section>
 
-  <section class="content" aria-labelledby="techniky">
+  <section class="content" id="sec-techniky" aria-labelledby="techniky">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="techniky">Techniky dechu</h2>
     <p>Každou techniku můžeš zvolit přímo v dechovém cvičení a kdykoliv mezi nimi za běhu přepínat.</p>
     <div class="tech-grid">
@@ -738,6 +765,10 @@
   </section>
 
   <section class="content" aria-labelledby="pokrok-nadpis" id="pokrok">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Data zůstávají jen v tomto prohlížeči, nikam se neposílají.</p>
 
@@ -882,6 +913,10 @@
   </section>
 
   <section class="content" aria-labelledby="clanky-nadpis" id="clanky">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="clanky-nadpis">Články o dýchání</h2>
     <p>Krátký přehled toho, co o jednotlivých dechových technikách skutečně říkají recenzované studie — bez zbytečného přehánění.</p>
 
@@ -930,6 +965,10 @@
   </section>
 
   <section class="content" aria-labelledby="doplnky-nadpis" id="doplnky">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="doplnky-nadpis">Doplňky a další cesty ke klidu</h2>
     <p>Dech je základ, ale klidu pomáhá i pár dalších věcí, které stojí za zmínku — co o nich vlastně říká výzkum.</p>
 
@@ -992,7 +1031,11 @@
     <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Doplňky nezačínej brát bez konzultace s lékařem, hlavně pokud bereš i jiné léky, jsi těhotná nebo kojíš.</p>
   </section>
 
-  <section class="content" aria-labelledby="faq">
+  <section class="content" id="sec-faq" aria-labelledby="faq">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn" onclick="history.back()">← Zpět</button>
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
     <h2 id="faq">Časté dotazy</h2>
     <div class="faq-item">
       <h3>Co je Uklidni To?</h3>
@@ -1098,6 +1141,63 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- Rozklikávací panely (sekce z bočního menu) ----------
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq'];
+
+  function renderPanel(id, subId) {
+    const hero = document.getElementById('cviceni');
+    PANEL_IDS.forEach(function (pid) {
+      const el = document.getElementById(pid);
+      if (el) el.classList.remove('panel-active');
+    });
+
+    if (!id || PANEL_IDS.indexOf(id) === -1) {
+      hero.classList.remove('hero-hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    hero.classList.add('hero-hidden');
+    const panel = document.getElementById(id);
+    if (panel) panel.classList.add('panel-active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+
+    if (subId) {
+      setTimeout(function () {
+        const sub = document.getElementById(subId);
+        if (sub) sub.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+  }
+
+  window.showPanel = function (id, subId) {
+    renderPanel(id, subId);
+    const hash = id ? '#' + id : '#cviceni';
+    history.pushState({ panel: id || null }, '', hash);
+  };
+
+  window.closePanel = function () {
+    renderPanel(null);
+    history.pushState({ panel: null }, '', '#cviceni');
+  };
+
+  window.addEventListener('popstate', function (e) {
+    const id = e.state && e.state.panel ? e.state.panel : null;
+    renderPanel(id);
+  });
+
+  (function initPanelFromHash() {
+    const hashId = location.hash ? location.hash.slice(1) : '';
+    const hashToPanel = { 'jak-funguje': 'sec-jak-funguje', 'techniky': 'sec-techniky', 'faq': 'sec-faq' };
+    let startId = null;
+    let subId = null;
+    if (PANEL_IDS.indexOf(hashId) !== -1) startId = hashId;
+    else if (hashToPanel[hashId]) startId = hashToPanel[hashId];
+    else if (hashId === 'tep-hrv') { startId = 'pokrok'; subId = 'tep-hrv'; }
+    renderPanel(startId, subId);
+    history.replaceState({ panel: startId }, '', startId ? '#' + startId : '#cviceni');
+  })();
 
   // ---------- Boční menu ----------
   window.toggleSideNav = function(force) {
@@ -2523,6 +2623,16 @@
 
   initTotalVisitsCounter();
   initOnlinePresence();
+</script>
+
+<script>
+  // Registrace Service Workera pro offline fungování a PWA instalaci.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .catch((err) => console.warn('Service worker se nepodařilo zaregistrovat:', err));
+    });
+  }
 </script>
 
 </body>
