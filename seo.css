@@ -1,0 +1,121 @@
+/* Uklidni To — sdílený styl pro odlehčené SEO stránky (jak-funguje, techniky, clanky, doplnky, faq) */
+@property --accent-color { syntax: '<color>'; inherits: true; initial-value: #ff7700; }
+@property --accent-glow { syntax: '<color>'; inherits: true; initial-value: #993300; }
+
+:root {
+  --bg-color-1: #3a1a00;
+  --bg-color-2: #0a0500;
+  --accent-color: #ff7700;
+  --accent-glow: #993300;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+body {
+  margin: 0; min-height: 100vh; color: #fff;
+  font-family: 'Poppins', sans-serif; font-weight: 300;
+  background: radial-gradient(circle at 50% 15%, var(--bg-color-1), var(--bg-color-2) 65%, #000);
+  overflow-x: hidden;
+}
+h1, h2, h3, .brand, .cta-btn { font-family: 'Orbitron', sans-serif; }
+a { color: var(--accent-color); }
+
+.ambient-blobs { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.16; background: var(--accent-color); animation: floatBlobs 50s infinite linear alternate; }
+.blob.b1 { width: 340px; height: 340px; top: -6%; left: -10%; }
+.blob.b2 { width: 420px; height: 420px; bottom: -8%; right: -12%; background: var(--accent-glow); animation-duration: 60s; animation-delay: -12s; }
+@keyframes floatBlobs { 0% { transform: translate(0,0); } 100% { transform: translate(60px,40px); } }
+
+header, main, footer { position: relative; z-index: 1; }
+
+header {
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  padding: 28px 20px 8px; text-align: center;
+}
+.brand { font-size: 15px; letter-spacing: 4px; opacity: 0.85; text-decoration: none; display: inline-block; }
+.brand .dot { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
+
+.breadcrumb {
+  max-width: 720px; margin: 10px auto 0; padding: 0 22px; font-size: 11px; letter-spacing: 0.3px;
+  opacity: 0.5; text-align: center;
+}
+.breadcrumb a { color: rgba(255,255,255,0.75); text-decoration: none; }
+.breadcrumb a:hover { color: var(--accent-color); }
+
+main { max-width: 720px; margin: 0 auto; padding: 18px 22px 10px; }
+
+.page-hero { text-align: center; padding: 14px 0 8px; }
+.page-hero h1 {
+  font-size: clamp(24px, 6vw, 34px); letter-spacing: 1.5px; margin: 6px 0 14px;
+  color: #fff; text-shadow: 0 0 22px var(--accent-color);
+}
+.page-hero .lead { font-size: clamp(13px, 3vw, 15px); line-height: 1.8; opacity: 0.82; margin: 0 0 22px; }
+
+section.content { padding: 6px 0 34px; }
+section.content h2 {
+  font-size: 15px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-color);
+  text-shadow: 0 0 10px var(--accent-color); margin: 30px 0 14px;
+}
+section.content p { font-size: 14px; line-height: 1.85; opacity: 0.82; margin: 0 0 14px; }
+
+.tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+@media (max-width: 560px) { .tech-grid { grid-template-columns: 1fr; } }
+.tech-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 18px 18px 16px;
+}
+.tech-card h3 { margin: 0 0 8px; font-size: 12px; letter-spacing: 1.5px; color: var(--accent-color); }
+.tech-card p { font-size: 12.5px; line-height: 1.7; opacity: 0.72; margin: 0; }
+
+.article-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 20px 20px 16px; margin-bottom: 16px;
+}
+.article-card h3 { font-size: 13.5px; letter-spacing: 0.5px; color: #fff; margin: 0 0 10px; font-family: 'Poppins', sans-serif; font-weight: 500; line-height: 1.5; }
+.article-card p { font-size: 13px; line-height: 1.75; opacity: 0.78; margin: 0 0 10px; }
+.article-card p:last-child { margin-bottom: 0; }
+.article-source { font-size: 10.5px !important; opacity: 0.45 !important; letter-spacing: 0.3px; font-style: italic; }
+.article-disclaimer { font-size: 10.5px; opacity: 0.4; line-height: 1.7; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+.faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 0; }
+.faq-item h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
+.faq-item p { font-size: 13px; opacity: 0.72; margin: 0; }
+
+.benefits-list { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+.benefits-list li { font-size: 13.5px; opacity: 0.82; padding-left: 22px; position: relative; line-height: 1.6; }
+.benefits-list li::before { content: "○"; position: absolute; left: 0; color: var(--accent-color); }
+
+.cta-wrap { text-align: center; margin: 34px 0 8px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--accent-color);
+  color: #fff; padding: 15px 28px; border-radius: 40px; cursor: pointer; text-decoration: none;
+  font-size: 12.5px; letter-spacing: 1.5px; box-shadow: 0 0 20px rgba(255,119,0,0.35);
+  transition: 0.3s;
+}
+.cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
+.cta-icon { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); animation: breatheIconPulse 4s ease-in-out infinite; }
+@keyframes breatheIconPulse { 0%,100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.25); opacity: 1; } }
+.cta-sub { font-size: 11px; opacity: 0.45; margin-top: 14px; letter-spacing: 0.3px; }
+
+.related-links { margin: 8px 0 30px; padding: 18px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; }
+.related-links h2 { margin-top: 0 !important; }
+.related-links ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.related-links a { font-size: 13px; text-decoration: none; }
+.related-links a:hover { text-decoration: underline; }
+
+footer {
+  text-align: center; padding: 30px 20px 40px; font-size: 10.5px; opacity: 0.5; letter-spacing: 0.5px;
+  position: relative; z-index: 1;
+}
+footer a { text-decoration: none; color: var(--accent-color); }
+footer a:hover { text-decoration: underline; }
+footer .made-in { margin-top: 8px; font-size: 9.5px; opacity: 0.8; }
+
+@media (prefers-reduced-motion: reduce) {
+  .blob, .cta-icon { animation: none; }
+}
