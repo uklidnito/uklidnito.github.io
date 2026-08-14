@@ -164,7 +164,7 @@
     display: flex; align-items: center; justify-content: center; flex-direction: column;
     padding: 28px 20px 8px; text-align: center;
   }
-  .brand { font-size: 15px; letter-spacing: 4px; opacity: 0.85; }
+  .brand { font-size: 15px; letter-spacing: 4px; opacity: 0.85; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
   .brand .dot { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
 
   /* ---------- Hero / Tool ---------- */
@@ -579,9 +579,11 @@
     overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y;
   }
   .side-nav.open { transform: translateX(0); }
-  .side-nav .side-nav-brand {
-    font-size: 13px; letter-spacing: 3px; opacity: 0.8; margin-bottom: 22px;
+  .side-nav a.side-nav-brand {
+    display: block; font-size: 13px; letter-spacing: 3px; opacity: 0.8; margin-bottom: 22px;
+    padding: 0; border-left: none; border-radius: 0; color: #fff;
   }
+  .side-nav a.side-nav-brand:hover { opacity: 1; background: none; border-left: none; color: #fff; }
   .side-nav .side-nav-brand .dot { color: var(--accent-color); text-shadow: 0 0 8px var(--accent-color); }
   .side-nav a {
     color: #fff; text-decoration: none; font-size: 12.5px; letter-spacing: 1px;
@@ -667,7 +669,7 @@
 </button>
 <div class="nav-scrim" id="nav-scrim" onclick="toggleSideNav(false)"></div>
 <nav class="side-nav" id="side-nav" aria-label="Hlavní navigace">
-  <div class="side-nav-brand">UKLIDNI <span class="dot">TO</span></div>
+  <a href="#cviceni" class="side-nav-brand" onclick="showPanel(null); toggleSideNav(false); return false;">UKLIDNI <span class="dot">TO</span></a>
   <a href="#cviceni" onclick="showPanel(null); toggleSideNav(false); return false;">Dechové cvičení</a>
   <a href="#jak-funguje" onclick="showPanel('sec-jak-funguje'); toggleSideNav(false); return false;">Jak to funguje</a>
   <a href="#pokrok" onclick="showPanel('pokrok'); toggleSideNav(false); return false;">Tvůj pokrok</a>
@@ -2684,8 +2686,30 @@
   .admin-modal-close { position: absolute; top: 6px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; opacity: 0.6; line-height: 1; padding: 4px; }
   .admin-modal-close:hover { opacity: 1; }
   .admin-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 8px 0 0; min-height: 14px; }
-  .admin-badge { position: fixed; bottom: 10px; left: 10px; font-size: 9px; letter-spacing: 1.5px; opacity: 0.4; z-index: 500; cursor: pointer; font-family: 'Orbitron', sans-serif; color: var(--accent-color); user-select: none; }
-  .admin-badge:hover { opacity: 0.8; }
+  .admin-badge {
+    position: fixed; bottom: 10px; left: 10px; z-index: 500;
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(26,0,51,0.9); border: 1px solid var(--accent-color);
+    border-radius: 20px; padding: 6px 8px 6px 14px;
+    box-shadow: 0 0 14px rgba(255,119,0,0.2);
+    font-family: 'Poppins', sans-serif;
+    user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
+  }
+  .admin-badge .admin-badge-label {
+    font-size: 9px; letter-spacing: 1px; color: var(--accent-color);
+    font-family: 'Orbitron', sans-serif; opacity: 0.9; white-space: nowrap;
+  }
+  .admin-badge .admin-badge-email {
+    font-size: 10.5px; opacity: 0.8; color: #fff; max-width: 160px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .admin-badge .admin-badge-logout {
+    font-size: 10px; letter-spacing: 0.5px; color: #fff; cursor: pointer;
+    background: rgba(255,119,0,0.18); border: 1px solid var(--accent-color);
+    border-radius: 12px; padding: 4px 10px; font-family: 'Orbitron', sans-serif;
+    white-space: nowrap;
+  }
+  .admin-badge .admin-badge-logout:hover { background: rgba(255,119,0,0.35); }
 </style>
 <div class="admin-overlay" id="admin-login-overlay">
   <div class="admin-modal">
@@ -2791,11 +2815,11 @@
 <script>
   // ==========================================
   // SKRYTÝ ADMIN REŽIM
-  // Aktivace: 6x rychlý klik na logo v hlavičce do 2,5 s.
+  // Aktivace: 3x rychlý klik na logo v hlavičce do 2,5 s.
   // Přihlášení ověřuje Firebase Authentication (účet se vytváří ručně
   // ve Firebase konzoli -> Authentication -> Users, NIKDY ne v tomto souboru).
-  // Po přihlášení appka vypadá stejně, jen se objeví tichý štítek "ADMIN VERZE"
-  // a veškerý pokrok (kalendář, stres, nálada, deníček) se navíc zálohuje
+  // Po přihlášení appka vypadá stejně, jen se dole vlevo objeví pruh
+  // "Přihlášen: <e-mail>" s tlačítkem Odhlásit, a veškerý pokrok (kalendář, stres, nálada, deníček) se navíc zálohuje
   // do Firebase Realtime Database pod /adminData/<uid tvého účtu>, odkud se
   // po přihlášení na jiném zařízení zase stáhne a sloučí s tím, co je lokálně.
   //
@@ -2823,7 +2847,7 @@
       const now = Date.now();
       brandClickTimes.push(now);
       brandClickTimes = brandClickTimes.filter((t) => now - t < 2500);
-      if (brandClickTimes.length >= 6) {
+      if (brandClickTimes.length >= 3) {
         brandClickTimes = [];
         if (adminUid) {
           if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout();
@@ -2870,16 +2894,24 @@
       if (fbReady()) firebase.auth().signOut();
     }
 
-    function renderAdminBadge(active) {
+    function renderAdminBadge(active, email) {
       let badge = document.getElementById('admin-badge');
-      if (active && !badge) {
-        badge = document.createElement('div');
-        badge.id = 'admin-badge';
-        badge.className = 'admin-badge';
-        badge.textContent = 'ADMIN VERZE';
-        badge.title = 'Klikni 6x na logo pro odhlášení';
-        badge.onclick = () => { if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout(); };
-        document.body.appendChild(badge);
+      if (active) {
+        if (!badge) {
+          badge = document.createElement('div');
+          badge.id = 'admin-badge';
+          badge.className = 'admin-badge';
+          badge.innerHTML =
+            '<span class="admin-badge-label">ADMIN</span>' +
+            '<span class="admin-badge-email" id="admin-badge-email"></span>' +
+            '<button type="button" class="admin-badge-logout" id="admin-badge-logout-btn">Odhlásit</button>';
+          document.body.appendChild(badge);
+          document.getElementById('admin-badge-logout-btn').onclick = () => {
+            if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout();
+          };
+        }
+        const emailEl = document.getElementById('admin-badge-email');
+        if (emailEl) { emailEl.textContent = 'Přihlášen: ' + (email || ''); emailEl.title = email || ''; }
       } else if (!active && badge) {
         badge.remove();
       }
@@ -2936,7 +2968,7 @@
     if (fbReady()) {
       firebase.auth().onAuthStateChanged((user) => {
         adminUid = user ? user.uid : null;
-        renderAdminBadge(!!user);
+        renderAdminBadge(!!user, user ? user.email : null);
         if (user) pullAndMerge(user.uid);
       });
     }
