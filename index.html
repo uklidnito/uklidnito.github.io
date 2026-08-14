@@ -698,7 +698,7 @@
 </nav>
 
 <header>
-  <div class="brand">UKLIDNI <span class="dot">TO</span></div>
+  <div class="brand" onclick="handleBrandSecretClick()">UKLIDNI <span class="dot">TO</span></div>
 </header>
 
 <main>
@@ -2669,11 +2669,41 @@
   initReminderUI();
 </script>
 
+<!-- Skrytý přihlašovací dialog: aktivuje se 6x rychlým klikem na logo v hlavičce.
+     Žádné heslo ani tajný klíč tu není a nikdy nebude - ověření běží přes Firebase Authentication
+     (účet se vytváří ručně ve Firebase konzoli, ne v tomto souboru). -->
+<style>
+  .admin-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .admin-overlay.open { display: flex; }
+  .admin-modal { position: relative; width: 100%; max-width: 300px; background: #1a0033; border: 1px solid var(--accent-color); border-radius: 14px; padding: 26px 20px 20px; box-shadow: 0 0 30px rgba(255,119,0,0.25); }
+  .admin-modal h3 { margin: 0 0 14px; font-size: 14px; letter-spacing: 1px; text-align: center; opacity: 0.9; }
+  .admin-input { display: block; width: 100%; margin-bottom: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; font-family: 'Poppins', sans-serif; font-size: 13px; }
+  .admin-input:focus { outline: none; border-color: var(--accent-color); }
+  .admin-submit-btn { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--accent-color); background: rgba(255,119,0,0.15); color: #fff; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 11.5px; letter-spacing: 1px; }
+  .admin-submit-btn:hover { background: rgba(255,119,0,0.3); }
+  .admin-modal-close { position: absolute; top: 6px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; opacity: 0.6; line-height: 1; padding: 4px; }
+  .admin-modal-close:hover { opacity: 1; }
+  .admin-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 8px 0 0; min-height: 14px; }
+  .admin-badge { position: fixed; bottom: 10px; left: 10px; font-size: 9px; letter-spacing: 1.5px; opacity: 0.4; z-index: 500; cursor: pointer; font-family: 'Orbitron', sans-serif; color: var(--accent-color); user-select: none; }
+  .admin-badge:hover { opacity: 0.8; }
+</style>
+<div class="admin-overlay" id="admin-login-overlay">
+  <div class="admin-modal">
+    <button type="button" class="admin-modal-close" onclick="closeAdminLogin()" aria-label="Zavřít">×</button>
+    <h3>Přihlášení</h3>
+    <input type="email" id="admin-email" class="admin-input" placeholder="E-mail" autocomplete="username">
+    <input type="password" id="admin-pass" class="admin-input" placeholder="Heslo" autocomplete="current-password">
+    <button type="button" class="admin-submit-btn" onclick="submitAdminLogin()">Přihlásit</button>
+    <p class="admin-status" id="admin-login-status"></p>
+  </div>
+</div>
+
 <!-- Firebase - pohání počítadlo návštěvnosti (celkem + online teď).
      Konfiguraci níže je potřeba nahradit vlastní (Firebase Console -> Project settings).
      Bez vyplněné konfigurace stránka funguje úplně normálně, počítadlo jen zůstane skryté. -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
   // ==========================================
   // FIREBASE KONFIGURACE - SEM VLOŽ SVOJI VLASTNÍ
@@ -2756,6 +2786,161 @@
 
   initTotalVisitsCounter();
   initOnlinePresence();
+</script>
+
+<script>
+  // ==========================================
+  // SKRYTÝ ADMIN REŽIM
+  // Aktivace: 6x rychlý klik na logo v hlavičce do 2,5 s.
+  // Přihlášení ověřuje Firebase Authentication (účet se vytváří ručně
+  // ve Firebase konzoli -> Authentication -> Users, NIKDY ne v tomto souboru).
+  // Po přihlášení appka vypadá stejně, jen se objeví tichý štítek "ADMIN VERZE"
+  // a veškerý pokrok (kalendář, stres, nálada, deníček) se navíc zálohuje
+  // do Firebase Realtime Database pod /adminData/<uid tvého účtu>, odkud se
+  // po přihlášení na jiném zařízení zase stáhne a sloučí s tím, co je lokálně.
+  //
+  // Bezpečnost zajišťují pravidla Realtime Database (nastav ve Firebase konzoli
+  // -> Realtime Database -> Rules), ne nic v tomto souboru:
+  //   "adminData": {
+  //     "$uid": {
+  //       ".read":  "auth != null && auth.uid === $uid",
+  //       ".write": "auth != null && auth.uid === $uid"
+  //     }
+  //   }
+  // Díky tomu do /adminData nemůže zapsat ani číst nikdo jiný než přihlášený
+  // vlastník účtu - i kdyby si celý tento soubor kdokoliv přečetl na GitHubu.
+  // ==========================================
+  (function () {
+    const ADMIN_SYNC_PATH = 'adminData';
+    let adminUid = null;
+    let brandClickTimes = [];
+
+    function fbReady() {
+      return typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length;
+    }
+
+    window.handleBrandSecretClick = function () {
+      const now = Date.now();
+      brandClickTimes.push(now);
+      brandClickTimes = brandClickTimes.filter((t) => now - t < 2500);
+      if (brandClickTimes.length >= 6) {
+        brandClickTimes = [];
+        if (adminUid) {
+          if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout();
+        } else {
+          openAdminLogin();
+        }
+      }
+    };
+
+    window.openAdminLogin = function () {
+      if (!fbReady()) return;
+      document.getElementById('admin-login-status').textContent = '';
+      document.getElementById('admin-email').value = '';
+      document.getElementById('admin-pass').value = '';
+      document.getElementById('admin-login-overlay').classList.add('open');
+      setTimeout(() => document.getElementById('admin-email').focus(), 50);
+    };
+
+    window.closeAdminLogin = function () {
+      document.getElementById('admin-login-overlay').classList.remove('open');
+    };
+
+    window.submitAdminLogin = function () {
+      const email = document.getElementById('admin-email').value.trim();
+      const pass = document.getElementById('admin-pass').value;
+      const status = document.getElementById('admin-login-status');
+      if (!fbReady()) { status.textContent = 'Přihlášení není teď dostupné.'; return; }
+      if (!email || !pass) { status.textContent = 'Vyplň e-mail i heslo.'; return; }
+      status.textContent = 'Přihlašuji…';
+      firebase.auth().signInWithEmailAndPassword(email, pass)
+        .then(() => closeAdminLogin())
+        .catch(() => { status.textContent = 'Přihlášení se nezdařilo.'; });
+    };
+
+    // Enter v poli hesla rovnou odešle formulář.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.getElementById('admin-login-overlay').classList.contains('open')) {
+        submitAdminLogin();
+      }
+      if (e.key === 'Escape') closeAdminLogin();
+    });
+
+    function doAdminLogout() {
+      if (fbReady()) firebase.auth().signOut();
+    }
+
+    function renderAdminBadge(active) {
+      let badge = document.getElementById('admin-badge');
+      if (active && !badge) {
+        badge = document.createElement('div');
+        badge.id = 'admin-badge';
+        badge.className = 'admin-badge';
+        badge.textContent = 'ADMIN VERZE';
+        badge.title = 'Klikni 6x na logo pro odhlášení';
+        badge.onclick = () => { if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout(); };
+        document.body.appendChild(badge);
+      } else if (!active && badge) {
+        badge.remove();
+      }
+    }
+
+    function mergeLogs(a, b) {
+      const byDate = {};
+      (b || []).forEach((e) => { byDate[e.date] = e; });
+      (a || []).forEach((e) => { byDate[e.date] = e; }); // lokální (čerstvější) záznam vyhrává
+      return Object.values(byDate).sort((x, y) => x.date.localeCompare(y.date)).slice(-60);
+    }
+
+    function mergeProgress(local, remote) {
+      if (!remote) return local;
+      const merged = {
+        days: Object.assign({}, remote.days || {}, local.days || {}),
+        journal: {},
+        stressLog: mergeLogs(local.stressLog, remote.stressLog),
+        moodLog: mergeLogs(local.moodLog, remote.moodLog)
+      };
+      const journalKeys = new Set([
+        ...Object.keys((remote && remote.journal) || {}),
+        ...Object.keys((local && local.journal) || {})
+      ]);
+      journalKeys.forEach((k) => {
+        const a = Array.isArray(local.journal && local.journal[k]) ? local.journal[k] : [];
+        const b = Array.isArray(remote.journal && remote.journal[k]) ? remote.journal[k] : [];
+        merged.journal[k] = Array.from(new Set([...b, ...a]));
+      });
+      return merged;
+    }
+
+    function pushToCloud(data) {
+      if (!adminUid || !fbReady()) return;
+      firebase.database().ref(ADMIN_SYNC_PATH + '/' + adminUid).set(data).catch(() => {});
+    }
+
+    function pullAndMerge(uid) {
+      firebase.database().ref(ADMIN_SYNC_PATH + '/' + uid).once('value').then((snap) => {
+        progressData = mergeProgress(progressData, snap.val());
+        saveProgressData(progressData);
+        renderProgress();
+      }).catch(() => {});
+    }
+
+    // Zavěsíme se na existující funkci pro ukládání pokroku - každá změna
+    // (kalendář, stres, nálada, deníček) se tak v admin režimu navíc pošle do cloudu.
+    const originalSaveProgressData = saveProgressData;
+    saveProgressData = function (data) {
+      originalSaveProgressData(data);
+      pushToCloud(data);
+    };
+
+    if (fbReady()) {
+      firebase.auth().onAuthStateChanged((user) => {
+        adminUid = user ? user.uid : null;
+        renderAdminBadge(!!user);
+        if (user) pullAndMerge(user.uid);
+      });
+    }
+  })();
 </script>
 
 <script>
