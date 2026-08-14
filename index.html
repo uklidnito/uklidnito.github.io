@@ -410,6 +410,18 @@
 
   .progress-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
+  .progress-save-wrap { text-align: center; margin: 4px 0 22px; }
+  .progress-save-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,119,0,0.15); border: 1px solid var(--accent-color);
+    color: #fff; font-size: 12px; letter-spacing: 1.5px; padding: 13px 28px;
+    border-radius: 30px; cursor: pointer; font-family: 'Orbitron', sans-serif;
+    box-shadow: 0 0 16px rgba(255,119,0,0.3); transition: 0.2s;
+  }
+  .progress-save-btn:hover { background: rgba(255,119,0,0.28); box-shadow: 0 0 22px rgba(255,119,0,0.45); }
+  .progress-save-btn.saved { background: rgba(120,255,150,0.15); border-color: rgba(120,255,150,0.7); box-shadow: 0 0 16px rgba(120,255,150,0.35); }
+  .progress-save-status { font-size: 11px; opacity: 0.75; margin: 9px 0 0; min-height: 14px; }
+
   .progress-reset-btn {
     display: block; margin: 0 auto; background: transparent; border: 1px solid rgba(255,255,255,0.2);
     color: rgba(255,255,255,0.5); font-size: 10.5px; letter-spacing: 0.5px; padding: 9px 16px;
@@ -715,6 +727,8 @@
     </form>
   </div>
 
+  <div class="side-nav-admin" id="side-nav-admin"></div>
+
   <div class="side-nav-cta">Krátké, vědecky podložené dechové cvičení zdarma v prohlížeči.</div>
 </nav>
 
@@ -802,6 +816,12 @@
     </div>
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Vše — kalendář, hodnocení stresu i nálady, deníček i týdenní/měsíční souhrny — se ukládá jen lokálně v tomto prohlížeči (localStorage), nikam se to neodesílá ani neanalyzuje. Při vymazání dat prohlížeče nebo na jiném zařízení pokrok neuvidíš.</p>
+
+    <div class="progress-save-wrap">
+      <button type="button" class="progress-save-btn" id="progress-save-btn" onclick="manualSaveProgress()">💾 Uložit pokrok</button>
+      <p class="progress-save-status" id="progress-save-status" aria-live="polite"></p>
+    </div>
+
 
     <div class="progress-summary-wrap" id="progress-summary-wrap">
       <div class="progress-summary-col">
@@ -1814,6 +1834,29 @@
     try { localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
   }
 
+  // Tlačítko "Uložit pokrok" v sekci Tvůj pokrok - vše se ukládá automaticky
+  // průběžně (saveProgressData se volá po každé změně), takže tohle tlačítko
+  // nic navíc technicky nedělá, ale dá uživateli jasnou vizuální jistotu,
+  // že je vše uložené - lokálně, nebo (po admin přihlášení) i do cloudu,
+  // protože saveProgressData je v tom případě přepsaná níže tak, že navíc
+  // pošle data do Firebase (viz pushToCloud).
+  window.manualSaveProgress = function () {
+    saveProgressData(progressData);
+    const status = document.getElementById('progress-save-status');
+    const btn = document.getElementById('progress-save-btn');
+    const isAdmin = !!document.getElementById('admin-badge');
+    const time = new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+    if (status) {
+      status.textContent = isAdmin
+        ? '✓ Uloženo v prohlížeči i do cloudu (' + time + ')'
+        : '✓ Uloženo v tomto prohlížeči (' + time + ')';
+    }
+    if (btn) {
+      btn.classList.add('saved');
+      setTimeout(() => btn.classList.remove('saved'), 1400);
+    }
+  };
+
   let progressData = loadProgressData();
 
   // Zavolá se automaticky po dokončení dechového cvičení (viz stopBreathing)
@@ -2712,28 +2755,29 @@
   .admin-modal-close { position: absolute; top: 6px; right: 10px; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; opacity: 0.6; line-height: 1; padding: 4px; }
   .admin-modal-close:hover { opacity: 1; }
   .admin-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 8px 0 0; min-height: 14px; }
+  .side-nav-admin { flex-shrink: 0; }
   .admin-badge {
-    position: fixed; bottom: 10px; left: 10px; z-index: 500;
-    display: flex; align-items: center; gap: 8px;
-    background: rgba(26,0,51,0.9); border: 1px solid var(--accent-color);
-    border-radius: 20px; padding: 6px 8px 6px 14px;
-    box-shadow: 0 0 14px rgba(255,119,0,0.2);
+    display: flex; flex-direction: column; align-items: stretch; gap: 8px;
+    background: rgba(255,119,0,0.06); border: 1px solid var(--accent-color);
+    border-radius: 10px; padding: 10px 12px; margin: 4px 0 8px;
+    box-shadow: 0 0 14px rgba(255,119,0,0.15);
     font-family: 'Poppins', sans-serif;
     user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
   }
+  .admin-badge .admin-badge-top { display: flex; align-items: center; gap: 8px; }
   .admin-badge .admin-badge-label {
     font-size: 9px; letter-spacing: 1px; color: var(--accent-color);
     font-family: 'Orbitron', sans-serif; opacity: 0.9; white-space: nowrap;
   }
   .admin-badge .admin-badge-email {
-    font-size: 10.5px; opacity: 0.8; color: #fff; max-width: 160px;
+    font-size: 10.5px; opacity: 0.8; color: #fff; flex: 1; min-width: 0;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .admin-badge .admin-badge-logout {
     font-size: 10px; letter-spacing: 0.5px; color: #fff; cursor: pointer;
     background: rgba(255,119,0,0.18); border: 1px solid var(--accent-color);
-    border-radius: 12px; padding: 4px 10px; font-family: 'Orbitron', sans-serif;
-    white-space: nowrap;
+    border-radius: 12px; padding: 6px 10px; font-family: 'Orbitron', sans-serif;
+    white-space: nowrap; width: 100%; text-align: center;
   }
   .admin-badge .admin-badge-logout:hover { background: rgba(255,119,0,0.35); }
 </style>
@@ -2924,14 +2968,18 @@
       let badge = document.getElementById('admin-badge');
       if (active) {
         if (!badge) {
+          const slot = document.getElementById('side-nav-admin');
+          if (!slot) return;
           badge = document.createElement('div');
           badge.id = 'admin-badge';
           badge.className = 'admin-badge';
           badge.innerHTML =
-            '<span class="admin-badge-label">ADMIN</span>' +
-            '<span class="admin-badge-email" id="admin-badge-email"></span>' +
+            '<div class="admin-badge-top">' +
+              '<span class="admin-badge-label">ADMIN</span>' +
+              '<span class="admin-badge-email" id="admin-badge-email"></span>' +
+            '</div>' +
             '<button type="button" class="admin-badge-logout" id="admin-badge-logout-btn">Odhlásit</button>';
-          document.body.appendChild(badge);
+          slot.appendChild(badge);
           document.getElementById('admin-badge-logout-btn').onclick = () => {
             if (confirm('Odhlásit admin režim na tomto zařízení?')) doAdminLogout();
           };
