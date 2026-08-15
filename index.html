@@ -745,13 +745,13 @@
 <div class="nav-scrim" id="nav-scrim" onclick="toggleSideNav(false)"></div>
 <nav class="side-nav" id="side-nav" aria-label="Hlavní navigace">
   <a href="#cviceni" class="side-nav-brand" onclick="showPanel(null); toggleSideNav(false); return false;">UKLIDNI <span class="dot">TO</span></a>
-  <a href="#cviceni" onclick="showPanel(null); toggleSideNav(false); return false;">Dechové cvičení</a>
-  <a href="#jak-funguje" onclick="showPanel('sec-jak-funguje'); toggleSideNav(false); return false;">Jak to funguje</a>
-  <a href="#pokrok" onclick="showPanel('pokrok'); toggleSideNav(false); return false;">Tvůj pokrok</a>
-  <a href="#techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
-  <a href="#clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
-  <a href="#doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
-  <a href="#faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
+  <a href="#cviceni" data-panel="cviceni" onclick="showPanel(null); toggleSideNav(false); return false;">Dechové cvičení</a>
+  <a href="#jak-funguje" data-panel="sec-jak-funguje" onclick="showPanel('sec-jak-funguje'); toggleSideNav(false); return false;">Jak to funguje</a>
+  <a href="#pokrok" data-panel="pokrok" onclick="showPanel('pokrok'); toggleSideNav(false); return false;">Tvůj pokrok</a>
+  <a href="#techniky" data-panel="sec-techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
+  <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
+  <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
+  <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
 
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
@@ -1400,6 +1400,8 @@
       if (el) el.classList.remove('panel-active');
     });
 
+    updateActiveNav(id);
+
     if (!id || PANEL_IDS.indexOf(id) === -1) {
       hero.classList.remove('hero-hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1417,6 +1419,15 @@
         if (sub) sub.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 80);
     }
+  }
+
+  // Zvýrazní v bočním menu odkaz, který odpovídá právě zobrazené sekci
+  // (id z showPanel/renderPanel), ať uživatel vždy vidí, kde v appce je.
+  function updateActiveNav(id) {
+    const current = (id && PANEL_IDS.indexOf(id) !== -1) ? id : 'cviceni';
+    document.querySelectorAll('#side-nav a[data-panel]').forEach(function (a) {
+      a.classList.toggle('active', a.getAttribute('data-panel') === current);
+    });
   }
 
   window.showPanel = function (id, subId) {
