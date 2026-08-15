@@ -258,8 +258,21 @@
 
   .progress-calendar-wrap {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px; padding: 18px 16px; margin-bottom: 24px;
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 24px;
   }
+  .progress-calendar-toggle {
+    display: flex; align-items: center; justify-content: space-between; width: 100%;
+    background: none; border: none; color: #fff; cursor: pointer; padding: 4px 0;
+    font-family: 'Poppins', sans-serif; font-size: 13px; letter-spacing: 0.3px; opacity: 0.85; transition: 0.2s;
+  }
+  .progress-calendar-toggle:hover, .progress-calendar-toggle[aria-expanded="true"] { opacity: 1; color: var(--accent-color); }
+  .progress-calendar-toggle .chevron { font-size: 11px; transition: transform 0.3s ease; opacity: 0.7; }
+  .progress-calendar-toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+  .progress-calendar-body {
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.5s ease;
+  }
+  .progress-calendar-body.open { opacity: 1; margin-top: 14px; }
   .progress-calendar-header { display: flex; align-items: center; justify-content: space-between; font-size: 11px; opacity: 0.6; margin-bottom: 12px; letter-spacing: 0.3px; }
   .progress-view-toggle { display: flex; gap: 6px; }
   .view-toggle-btn {
@@ -864,25 +877,32 @@
     </div>
 
     <div class="progress-calendar-wrap">
-      <div class="progress-calendar-header">
-        <div class="progress-view-toggle" role="group" aria-label="Zobrazení kalendáře">
-          <button type="button" class="view-toggle-btn" id="view-btn-weeks" onclick="setProgressCalendarView('weeks')">5 týdnů</button>
-          <button type="button" class="view-toggle-btn" id="view-btn-month" onclick="setProgressCalendarView('month')">Měsíc</button>
+      <button type="button" class="progress-calendar-toggle" id="progress-calendar-toggle" onclick="toggleProgressCalendar()" aria-expanded="false" aria-controls="progress-calendar-body">
+        <span>📅 Kalendář odcvičených dní</span>
+        <span class="chevron">▾</span>
+      </button>
+
+      <div class="progress-calendar-body" id="progress-calendar-body">
+        <div class="progress-calendar-header">
+          <div class="progress-view-toggle" role="group" aria-label="Zobrazení kalendáře">
+            <button type="button" class="view-toggle-btn" id="view-btn-weeks" onclick="setProgressCalendarView('weeks')">5 týdnů</button>
+            <button type="button" class="view-toggle-btn" id="view-btn-month" onclick="setProgressCalendarView('month')">Měsíc</button>
+          </div>
+          <div class="progress-legend"><span class="legend-dot"></span> odcvičeno</div>
         </div>
-        <div class="progress-legend"><span class="legend-dot"></span> odcvičeno</div>
-      </div>
 
-      <div class="progress-calendar-month-nav" id="progress-calendar-month-nav" style="display:none;">
-        <button type="button" onclick="shiftProgressCalendarMonth(-1)" aria-label="Předchozí měsíc">‹</button>
-        <span id="progress-calendar-month-label"></span>
-        <button type="button" id="progress-calendar-next-btn" onclick="shiftProgressCalendarMonth(1)" aria-label="Následující měsíc">›</button>
-      </div>
+        <div class="progress-calendar-month-nav" id="progress-calendar-month-nav" style="display:none;">
+          <button type="button" onclick="shiftProgressCalendarMonth(-1)" aria-label="Předchozí měsíc">‹</button>
+          <span id="progress-calendar-month-label"></span>
+          <button type="button" id="progress-calendar-next-btn" onclick="shiftProgressCalendarMonth(1)" aria-label="Následující měsíc">›</button>
+        </div>
 
-      <div class="progress-calendar-weekdays" id="progress-calendar-weekdays" style="display:none;">
-        <span>Po</span><span>Út</span><span>St</span><span>Čt</span><span>Pá</span><span>So</span><span>Ne</span>
-      </div>
+        <div class="progress-calendar-weekdays" id="progress-calendar-weekdays" style="display:none;">
+          <span>Po</span><span>Út</span><span>St</span><span>Čt</span><span>Pá</span><span>So</span><span>Ne</span>
+        </div>
 
-      <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
+        <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
+      </div>
     </div>
 
     <div class="progress-stress-wrap">
@@ -2087,6 +2107,28 @@
       renderProgressCalendarMonth();
     } else {
       renderProgressCalendarWeeks();
+    }
+
+    refreshProgressCalendarBodyHeight();
+  }
+
+  // ---------- Rozbalovací kalendář v sekci Tvůj pokrok ----------
+  window.toggleProgressCalendar = function(force) {
+    const body = document.getElementById('progress-calendar-body');
+    const btn = document.getElementById('progress-calendar-toggle');
+    const open = typeof force === 'boolean' ? force : !body.classList.contains('open');
+    body.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+  };
+
+  // Po přerenderování kalendáře (změna zobrazení, měsíce, odškrtnutí dne) se
+  // může změnit jeho výška — pokud je právě rozbalený, max-height dorovnáme,
+  // ať se spodek kalendáře neořízne.
+  function refreshProgressCalendarBodyHeight() {
+    const body = document.getElementById('progress-calendar-body');
+    if (body && body.classList.contains('open')) {
+      body.style.maxHeight = body.scrollHeight + 'px';
     }
   }
 
