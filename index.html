@@ -241,7 +241,20 @@
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px; padding: 20px 20px 16px; margin-bottom: 16px;
   }
-  .article-card h3 { font-size: 13.5px; letter-spacing: 0.5px; color: #fff; margin: 0 0 10px; font-family: 'Poppins', sans-serif; font-weight: 500; line-height: 1.5; }
+  .article-card h3 {
+    font-size: 13.5px; letter-spacing: 0.5px; color: #fff; margin: 0; font-family: 'Poppins', sans-serif;
+    font-weight: 500; line-height: 1.5; cursor: pointer; user-select: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .article-card h3::after {
+    content: '▾'; flex-shrink: 0; font-size: 12px; opacity: 0.5; transition: transform 0.3s ease;
+  }
+  .article-card.expanded h3::after { transform: rotate(180deg); }
+  .article-card .article-body {
+    max-height: 0; opacity: 0; overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.35s ease, margin 0.4s ease;
+  }
+  .article-card.expanded .article-body { opacity: 1; margin-top: 10px; }
   .article-card p { font-size: 13px; line-height: 1.75; opacity: 0.78; margin: 0 0 10px; }
   .article-card p:last-child { margin-bottom: 0; }
   .article-source { font-size: 10.5px !important; opacity: 0.45 !important; letter-spacing: 0.3px; font-style: italic; }
@@ -1389,6 +1402,40 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- Rozklikávací karty článků (doplňky i články o dýchání) ----------
+  // Ve výchozím stavu je vidět jen nadpis; kliknutím/klávesou se článek rozbalí.
+  (function initCollapsibleArticles() {
+    document.querySelectorAll('.article-card').forEach(function (card) {
+      const heading = card.querySelector('h3');
+      if (!heading || card.querySelector('.article-body')) return;
+
+      const body = document.createElement('div');
+      body.className = 'article-body';
+      let node = heading.nextSibling;
+      while (node) {
+        const next = node.nextSibling;
+        body.appendChild(node);
+        node = next;
+      }
+      card.appendChild(body);
+
+      heading.setAttribute('role', 'button');
+      heading.setAttribute('tabindex', '0');
+      heading.setAttribute('aria-expanded', 'false');
+
+      function toggle() {
+        const open = card.classList.toggle('expanded');
+        heading.setAttribute('aria-expanded', open ? 'true' : 'false');
+        body.style.maxHeight = open ? body.scrollHeight + 'px' : '0px';
+      }
+
+      heading.addEventListener('click', toggle);
+      heading.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  })();
 
   // ---------- Rozklikávací panely (sekce z bočního menu) ----------
   const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq'];
