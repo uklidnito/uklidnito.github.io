@@ -127,7 +127,7 @@ první blok už vyplněný tvými reálnými údaji (což podle nahraného soubo
 je), **v druhém bloku nemusíš nic měnit** — je to schválně napsané stejně,
 aby to fungovalo automaticky.
 
-Pokud bys v budoucnu měnil/a Firebase projekt, over si, že jsou
+Pokud bys v budoucnu měnil/a Firebase projekt, ověř si, že jsou
 **oba** bloky `firebaseConfig` ve shodě (najdeš je přes hledání textu
 `firebaseConfig` v souboru).
 

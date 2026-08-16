@@ -503,14 +503,14 @@
     background: rgba(255,119,0,0.05);
   }
   .poradna-search-form {
-    display: flex; align-items: center; gap: 10px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
     border-radius: 30px; padding: 6px 8px 6px 20px; transition: 0.25s;
   }
   .poradna-search-form:focus-within { border-color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
   .poradna-search-icon { flex-shrink: 0; opacity: 0.55; font-size: 15px; }
   .poradna-search-input {
-    flex: 1; background: none; border: none; outline: none; color: #fff;
+    flex: 1 1 160px; min-width: 0; background: none; border: none; outline: none; color: #fff;
     font-family: 'Poppins', sans-serif; font-size: 14px; padding: 10px 0;
   }
   .poradna-search-input::placeholder { color: rgba(255,255,255,0.4); }
@@ -521,6 +521,13 @@
   }
   .poradna-search-submit:hover { box-shadow: 0 0 14px var(--accent-color); }
   .poradna-search-submit:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+
+  @media (max-width: 460px) {
+    .poradna-search-form { border-radius: 20px; padding: 14px 16px 14px 16px; }
+    .poradna-search-icon { display: none; }
+    .poradna-search-input { flex: 1 1 100%; order: 1; padding: 4px 0 10px; }
+    .poradna-search-submit { flex: 1 1 100%; order: 2; text-align: center; padding: 13px 20px; }
+  }
 
   .poradna-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
   .poradna-chip {
@@ -1393,7 +1400,7 @@
     </div>
     <h2 id="poradna-nadpis">Rady a poradna</h2>
     <p class="poradna-intro">Zeptej se na cokoliv ohledně klidu, zvládání stresu, zdravého životního stylu, doplňků stravy, spánku nebo kondice. Odpověď generuje umělá inteligence (Google Gemini) a hledá jen v těchto tématech.</p>
-    <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, over si to prosím u lékaře nebo jiného kvalifikovaného odborníka.</p>
+    <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, ověř si to prosím u lékaře nebo jiného kvalifikovaného odborníka.</p>
 
     <form class="poradna-search-form" id="poradna-form" onsubmit="return handlePoradnaSubmit(event);">
       <span class="poradna-search-icon" aria-hidden="true">🔍</span>
