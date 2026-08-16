@@ -509,11 +509,20 @@
   }
   .poradna-search-form:focus-within { border-color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
   .poradna-search-icon { flex-shrink: 0; opacity: 0.55; font-size: 15px; }
+  .poradna-input-wrap { position: relative; flex: 1 1 160px; min-width: 0; }
   .poradna-search-input {
-    flex: 1 1 160px; min-width: 0; background: none; border: none; outline: none; color: #fff;
-    font-family: 'Poppins', sans-serif; font-size: 14px; padding: 10px 0;
+    width: 100%; box-sizing: border-box; background: none; border: none; outline: none; color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 14px; padding: 10px 26px 10px 0;
   }
   .poradna-search-input::placeholder { color: rgba(255,255,255,0.4); }
+  .poradna-clear-btn {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border: none; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.65);
+    font-size: 11px; line-height: 1; cursor: pointer; padding: 0;
+    display: flex; align-items: center; justify-content: center; transition: 0.2s;
+  }
+  .poradna-clear-btn:hover { background: rgba(255,119,0,0.2); color: #fff; }
   .poradna-search-submit {
     flex-shrink: 0; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 1px;
     background: var(--accent-color); color: #1a0500; border: none; border-radius: 24px;
@@ -525,7 +534,8 @@
   @media (max-width: 460px) {
     .poradna-search-form { border-radius: 20px; padding: 14px 16px 14px 16px; }
     .poradna-search-icon { display: none; }
-    .poradna-search-input { flex: 1 1 100%; order: 1; padding: 4px 0 10px; }
+    .poradna-input-wrap { flex: 1 1 100%; order: 1; }
+    .poradna-search-input { padding: 4px 26px 10px 0; }
     .poradna-search-submit { flex: 1 1 100%; order: 2; text-align: center; padding: 13px 20px; }
   }
 
@@ -564,6 +574,17 @@
     font-size: 10.5px; opacity: 0.45; margin-top: 14px; padding-top: 12px;
     border-top: 1px solid rgba(255,255,255,0.08); line-height: 1.6;
   }
+  .poradna-answer-actions {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px;
+  }
+  .poradna-action-btn {
+    font-family: 'Poppins', sans-serif; font-size: 11.5px; letter-spacing: 0.3px;
+    color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 20px;
+    padding: 8px 14px; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .poradna-action-btn:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(255,119,0,0.08); }
+  .poradna-share-status { font-size: 11px; opacity: 0.55; }
   .poradna-error {
     font-size: 12.5px; color: #ff8a8a; background: rgba(255,80,80,0.08);
     border: 1px solid rgba(255,80,80,0.3); border-radius: 10px; padding: 12px 14px;
@@ -1404,8 +1425,12 @@
 
     <form class="poradna-search-form" id="poradna-form" onsubmit="return handlePoradnaSubmit(event);">
       <span class="poradna-search-icon" aria-hidden="true">🔍</span>
-      <input type="text" class="poradna-search-input" id="poradna-input" maxlength="300"
-             placeholder="Např. jak zvládnout stres před zkouškou…" autocomplete="off">
+      <div class="poradna-input-wrap">
+        <input type="text" class="poradna-search-input" id="poradna-input" maxlength="300"
+               placeholder="Např. jak zvládnout stres před zkouškou…" autocomplete="off"
+               oninput="togglePoradnaClearBtn()">
+        <button type="button" class="poradna-clear-btn" id="poradna-clear-btn" onclick="clearPoradnaInput()" aria-label="Smazat text" title="Smazat text" hidden>✕</button>
+      </div>
       <button type="submit" class="poradna-search-submit" id="poradna-submit-btn">Zeptat se</button>
     </form>
 
@@ -3858,6 +3883,8 @@ Pravidla:
   odborníkem, pokud se dotaz týká zdravotního stavu.`;
 
   let aiInstance = null;
+  let lastPoradnaQuestion = '';
+  let lastPoradnaAnswerText = '';
   let appCheckReady = false;
   const modelCache = {}; // model name -> GenerativeModel instance (nevytváříme opakovaně)
 
@@ -3943,6 +3970,7 @@ Pravidla:
     const wrap = document.getElementById('poradna-result-wrap');
     if (!question || !question.trim()) return;
     if (input) input.value = question;
+    togglePoradnaClearBtn();
 
     if (!aiInstance) {
       poradnaShowError('Vyhledávání zatím není nastavené. Dokonči prosím propojení s Gemini podle návodu (NAVOD-RADY-A-PORADNA.md) — vlož Firebase a reCAPTCHA klíče do kódu stránky.');
@@ -3965,11 +3993,19 @@ Pravidla:
         // Tenhle model funguje - zapamatuj si ho pro příště.
         try { localStorage.setItem(PORADNA_MODEL_STORAGE_KEY, modelName); } catch (e) {}
 
+        lastPoradnaQuestion = question.trim();
+        lastPoradnaAnswerText = text;
+
         wrap.innerHTML =
           '<div class="poradna-answer-card">' +
             '<h4>Odpověď</h4>' +
             '<div class="poradna-answer-body">' + poradnaFormatAnswer(text) + '</div>' +
             '<div class="poradna-answer-source">Odpověď vygenerovala umělá inteligence (Google Gemini) a je jen obecná informace, ne lékařská rada ani diagnóza. Před rozhodnutím o zdraví, doplňcích nebo léčbě se poraď s lékařem či jiným kvalifikovaným odborníkem.</div>' +
+            '<div class="poradna-answer-actions">' +
+              '<button type="button" class="poradna-action-btn" onclick="exportPoradnaPDF()">📄 Export do PDF</button>' +
+              '<button type="button" class="poradna-action-btn" onclick="sharePoradnaAnswer()">🔗 Sdílet</button>' +
+              '<span class="poradna-share-status" id="poradna-share-status"></span>' +
+            '</div>' +
           '</div>';
         if (btn) btn.disabled = false;
         return;
@@ -3987,6 +4023,103 @@ Pravidla:
     console.error('Rady a poradna: chyba při volání Gemini:', lastError);
     poradnaShowError('Odpověď se teď nepodařilo získat. Zkus to prosím za chvíli znovu — pokud to nepomůže, zkontroluj nastavení podle návodu (klíče, App Check, kvóta zdarma).');
     if (btn) btn.disabled = false;
+  };
+
+  function poradnaEscapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  window.exportPoradnaPDF = function () {
+    if (!lastPoradnaAnswerText) return;
+    const todayStr = new Date().toLocaleDateString('cs-CZ');
+
+    const html = `<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Uklidni To – Rady a poradna</title>
+<style>
+  body { font-family: 'Poppins', Arial, sans-serif; color: #111; margin: 32px; line-height: 1.6; }
+  h1 { font-family: 'Orbitron', Arial, sans-serif; font-size: 22px; margin-bottom: 2px; }
+  .subtitle { font-size: 12px; color: #555; margin-bottom: 24px; }
+  .question { font-size: 14px; font-weight: 600; margin-bottom: 14px; padding: 10px 14px; background: #f5f5f5; border-radius: 8px; }
+  .answer { font-size: 13px; margin-bottom: 18px; }
+  .answer p { margin: 0 0 10px; }
+  .answer ul { margin: 0 0 10px; padding-left: 20px; }
+  .disclaimer { font-size: 11px; color: #666; border-top: 1px solid #ccc; padding-top: 12px; margin-top: 20px; }
+  @media print {
+    body { margin: 12mm; }
+  }
+</style>
+</head>
+<body>
+  <h1>Uklidni To – Rady a poradna</h1>
+  <div class="subtitle">Export ze dne ${poradnaEscapeHtml(todayStr)}</div>
+  <div class="question">Dotaz: ${poradnaEscapeHtml(lastPoradnaQuestion)}</div>
+  <div class="answer">${poradnaFormatAnswer(lastPoradnaAnswerText)}</div>
+  <div class="disclaimer">Odpověď vygenerovala umělá inteligence (Google Gemini) a je jen obecná informace, ne lékařská rada ani diagnóza. Před rozhodnutím o zdraví, doplňcích nebo léčbě se poraď s lékařem či jiným kvalifikovaným odborníkem.</div>
+  <script>
+    window.onload = function () {
+      window.focus();
+      window.print();
+    };
+  <\/script>
+</body>
+</html>`;
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Prohlížeč zablokoval otevření okna pro export. Povol prosím vyskakovací okna pro tuto stránku a zkus to znovu.');
+      return;
+    }
+    printWindow.document.open();
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
+  window.sharePoradnaAnswer = async function () {
+    if (!lastPoradnaAnswerText) return;
+    const statusEl = document.getElementById('poradna-share-status');
+    const shareText = 'Dotaz: ' + lastPoradnaQuestion + '\n\n' + lastPoradnaAnswerText +
+      '\n\n(Odpověď z AI poradny na Uklidni To — obecná informace, ne lékařská rada.)';
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Uklidni To – Rady a poradna',
+          text: shareText,
+          url: location.href
+        });
+        return;
+      } catch (e) {
+        // Uživatel sdílení zrušil nebo to selhalo - zkusíme kopírování do schránky níže.
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareText);
+      if (statusEl) {
+        statusEl.textContent = '✓ Zkopírováno do schránky';
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+      }
+    } catch (e) {
+      if (statusEl) statusEl.textContent = 'Kopírování se nezdařilo, zkus to prosím ručně.';
+    }
+  };
+
+  window.togglePoradnaClearBtn = function () {
+    const input = document.getElementById('poradna-input');
+    const clearBtn = document.getElementById('poradna-clear-btn');
+    if (!input || !clearBtn) return;
+    clearBtn.hidden = !input.value;
+  };
+
+  window.clearPoradnaInput = function () {
+    const input = document.getElementById('poradna-input');
+    if (input) { input.value = ''; input.focus(); }
+    togglePoradnaClearBtn();
   };
 
   window.handlePoradnaSubmit = function (event) {
