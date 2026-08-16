@@ -495,6 +495,79 @@
   .faq-item h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
   .faq-item p { font-size: 13px; opacity: 0.72; margin: 0; }
 
+  /* ---------- Rady a poradna (AI search, Gemini) ---------- */
+  .poradna-intro { font-size: 13px; line-height: 1.8; opacity: 0.78; margin: 0 0 18px; }
+  .poradna-disclaimer-top {
+    font-size: 11.5px; line-height: 1.7; opacity: 0.6; margin: 0 0 22px;
+    padding: 12px 14px; border: 1px solid rgba(255,119,0,0.3); border-radius: 10px;
+    background: rgba(255,119,0,0.05);
+  }
+  .poradna-search-form {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 30px; padding: 6px 8px 6px 20px; transition: 0.25s;
+  }
+  .poradna-search-form:focus-within { border-color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
+  .poradna-search-icon { flex-shrink: 0; opacity: 0.55; font-size: 15px; }
+  .poradna-search-input {
+    flex: 1; background: none; border: none; outline: none; color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 14px; padding: 10px 0;
+  }
+  .poradna-search-input::placeholder { color: rgba(255,255,255,0.4); }
+  .poradna-search-submit {
+    flex-shrink: 0; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 1px;
+    background: var(--accent-color); color: #1a0500; border: none; border-radius: 24px;
+    padding: 10px 20px; cursor: pointer; transition: 0.2s; font-weight: 600;
+  }
+  .poradna-search-submit:hover { box-shadow: 0 0 14px var(--accent-color); }
+  .poradna-search-submit:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+
+  .poradna-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+  .poradna-chip {
+    font-size: 11.5px; letter-spacing: 0.3px; color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; padding: 7px 14px; cursor: pointer; transition: 0.2s;
+    font-family: 'Poppins', sans-serif;
+  }
+  .poradna-chip:hover { border-color: var(--accent-color); color: var(--accent-color); background: rgba(255,119,0,0.08); }
+
+  .poradna-result-wrap { margin-top: 26px; min-height: 10px; }
+  .poradna-loading {
+    display: flex; align-items: center; gap: 10px; font-size: 12.5px; opacity: 0.6; padding: 10px 0;
+  }
+  .poradna-loading .spin {
+    width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+    border: 2px solid rgba(255,119,0,0.25); border-top-color: var(--accent-color);
+    animation: poradnaSpin 0.8s linear infinite;
+  }
+  @keyframes poradnaSpin { to { transform: rotate(360deg); } }
+
+  .poradna-answer-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 20px 20px 16px; animation: poradnaFadeIn 0.4s ease;
+  }
+  @keyframes poradnaFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .poradna-answer-card h4 { margin: 0 0 12px; font-size: 13px; letter-spacing: 0.5px; color: var(--accent-color); }
+  .poradna-answer-body { font-size: 13.5px; line-height: 1.8; opacity: 0.88; }
+  .poradna-answer-body p { margin: 0 0 12px; }
+  .poradna-answer-body ul { margin: 0 0 12px; padding-left: 20px; }
+  .poradna-answer-body li { margin-bottom: 6px; }
+  .poradna-answer-body strong { color: #fff; }
+  .poradna-answer-source {
+    font-size: 10.5px; opacity: 0.45; margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08); line-height: 1.6;
+  }
+  .poradna-error {
+    font-size: 12.5px; color: #ff8a8a; background: rgba(255,80,80,0.08);
+    border: 1px solid rgba(255,80,80,0.3); border-radius: 10px; padding: 12px 14px;
+  }
+  .poradna-history { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .poradna-history-item {
+    font-size: 12px; opacity: 0.55; cursor: pointer; padding: 8px 12px;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; transition: 0.2s;
+  }
+  .poradna-history-item:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); }
+
   .benefits-list { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
   .benefits-list li { font-size: 13.5px; opacity: 0.82; padding-left: 22px; position: relative; line-height: 1.6; }
   .benefits-list li::before { content: "○"; position: absolute; left: 0; color: var(--accent-color); }
@@ -780,6 +853,7 @@
   <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
   <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
+  <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Rady a poradna</a>
 
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
@@ -1312,6 +1386,33 @@
       <p>Ano, stránka je plně responzivní a na podporovaných telefonech při cvičení jemně vibruje.</p>
     </div>
   </section>
+
+  <section class="content" id="poradna" aria-labelledby="poradna-nadpis">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
+    </div>
+    <h2 id="poradna-nadpis">Rady a poradna</h2>
+    <p class="poradna-intro">Zeptej se na cokoliv ohledně klidu, zvládání stresu, zdravého životního stylu, doplňků stravy, spánku nebo kondice. Odpověď generuje umělá inteligence (Google Gemini) a hledá jen v těchto tématech.</p>
+    <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, over si to prosím u lékaře nebo jiného kvalifikovaného odborníka.</p>
+
+    <form class="poradna-search-form" id="poradna-form" onsubmit="return handlePoradnaSubmit(event);">
+      <span class="poradna-search-icon" aria-hidden="true">🔍</span>
+      <input type="text" class="poradna-search-input" id="poradna-input" maxlength="300"
+             placeholder="Např. jak zvládnout stres před zkouškou…" autocomplete="off">
+      <button type="submit" class="poradna-search-submit" id="poradna-submit-btn">Zeptat se</button>
+    </form>
+
+    <div class="poradna-chips">
+      <button type="button" class="poradna-chip" onclick="askPoradna('Jak přirozeně snížit stres a úzkost během dne?')">Jak snížit stres</button>
+      <button type="button" class="poradna-chip" onclick="askPoradna('Jaké doplňky stravy mohou pomoct s klidnějším spánkem?')">Doplňky na spánek</button>
+      <button type="button" class="poradna-chip" onclick="askPoradna('Jak si nastavit zdravý životní styl bez extrémů?')">Zdravý životní styl</button>
+      <button type="button" class="poradna-chip" onclick="askPoradna('Jak zlepšit fyzickou kondici, když mám sedavé zaměstnání?')">Kondice</button>
+      <button type="button" class="poradna-chip" onclick="askPoradna('Jaké návyky pomáhají proti úzkosti při výkonu pod tlakem?')">Úzkost pod tlakem</button>
+    </div>
+
+    <div class="poradna-result-wrap" id="poradna-result-wrap"></div>
+  </section>
+
 </main>
 
 <footer>
@@ -1453,7 +1554,7 @@
   })();
 
   // ---------- Rozklikávací panely (sekce z bočního menu) ----------
-  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq'];
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'poradna'];
 
   function renderPanel(id, subId) {
     const hero = document.getElementById('cviceni');
@@ -3663,6 +3764,156 @@
       });
     }
   })();
+</script>
+
+<!-- ============================================
+     RADY A PORADNA — vyhledávání s odpověďmi z Gemini (Google AI)
+     přes Firebase AI Logic. Kompletní návod na propojení najdeš
+     v souboru NAVOD-RADY-A-PORADNA.md, který dostaneš spolu s tímto webem.
+     Bez dokončeného nastavení v Firebase konzoli tahle sekce zobrazí
+     jen chybovou hlášku - zbytek webu funguje úplně normálně dál.
+     ============================================ -->
+<script type="module">
+  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app-check.js";
+  import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-ai.js";
+
+  // ==========================================
+  // 1) STEJNÁ FIREBASE KONFIGURACE JAKO VÝŠE (počítadlo návštěvnosti).
+  //    Pokud ji tam už máš vyplněnou, nic tu měnit nemusíš.
+  // ==========================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBrR762zSdiwycRd2qIOerkTuePQ1H6e74",
+    authDomain: "uklidnito-d580e.firebaseapp.com",
+    databaseURL: "https://uklidnito-d580e-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "uklidnito-d580e",
+    storageBucket: "uklidnito-d580e.firebasestorage.app",
+    messagingSenderId: "623488013540",
+    appId: "1:623488013540:web:f56b24bdf065ace0ce48f1"
+  };
+
+  // ==========================================
+  // 2) reCAPTCHA v3 SITE KEY - SEM VLOŽ SVOJI VLASTNÍ
+  //    (Firebase konzole -> Build -> App Check -> registruj webovou appku
+  //    s poskytovatelem reCAPTCHA v3, klíč zkopíruj sem).
+  //    Bez App Check appka Gemini nezavolá vůbec (od 2. 11. 2026 to
+  //    Firebase AI Logic vyžaduje povinně) - viz návod.
+  // ==========================================
+  const RECAPTCHA_V3_SITE_KEY = '6LdrdogtAAAAAGMWb-Hhx6SDa5D4k3ysJj9RY_qr';
+
+  // Název modelu - zkontroluj si ve Firebase konzoli (AI Logic -> Model
+  // Garden), který model má aktuálně řádek "Free", a případně uprav.
+  const GEMINI_MODEL_NAME = 'gemini-2.5-flash';
+
+  // Instrukce pro model - drží odpovědi jen u tématu klidu, zdraví
+  // a životního stylu a nutí model připomenout konzultaci s odborníkem.
+  const SYSTEM_INSTRUCTION = `Jsi poradní asistent na webu Uklidni To, který se věnuje dechovým
+cvičením a zklidnění. Odpovídáš výhradně na dotazy z těchto témat:
+zvládání stresu a úzkosti, techniky na uklidnění, zdravý životní styl,
+spánek a spánková hygiena, doplňky stravy a jejich obecně známé účinky,
+fyzická kondice a pohyb, mentální pohoda a prevence vyhoření.
+
+Pravidla:
+- Pokud dotaz s těmito tématy vůbec nesouvisí (např. programování,
+  politika, domácí úkoly, právní nebo finanční poradenství), zdvořile
+  odmítni a nasměruj uživatele zpět k tématům klidu a zdraví.
+- Nikdy nestanovuj diagnózu, nepředepisuj konkrétní dávkování léků
+  nebo doplňků a nenahrazuj lékaře, psychologa ani jiného odborníka.
+- Odpovídej věcně, stručně a v češtině, v krátkých odstavcích nebo
+  odrážkách, maximálně asi 200 slov.
+- Na konec KAŽDÉ odpovědi vždy připoj větu, že jde o obecnou informaci
+  a doporučuješ to konzultovat s lékařem nebo jiným kvalifikovaným
+  odborníkem, pokud se dotaz týká zdravotního stavu.`;
+
+  let aiModel = null;
+  let appCheckReady = false;
+
+  function poradnaShowError(msg) {
+    const wrap = document.getElementById('poradna-result-wrap');
+    if (!wrap) return;
+    wrap.innerHTML = '<div class="poradna-error">' + msg + '</div>';
+  }
+
+  try {
+    const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+
+    if (RECAPTCHA_V3_SITE_KEY && RECAPTCHA_V3_SITE_KEY.indexOf('SEM_VLOŽ') === -1) {
+      initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+        isTokenAutoRefreshEnabled: true
+      });
+      appCheckReady = true;
+    }
+
+    const ai = getAI(app, { backend: new GoogleAIBackend() });
+    aiModel = getGenerativeModel(ai, {
+      model: GEMINI_MODEL_NAME,
+      systemInstruction: SYSTEM_INSTRUCTION
+    });
+  } catch (e) {
+    console.warn('Rady a poradna: Firebase AI Logic se nepodařilo inicializovat.', e);
+  }
+
+  function poradnaFormatAnswer(text) {
+    // Jednoduché formátování: odstavce a odrážky (- nebo *) na začátku řádku.
+    const escaped = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const lines = escaped.split(/\n+/).map(l => l.trim()).filter(Boolean);
+    let html = '';
+    let inList = false;
+    lines.forEach(line => {
+      const isBullet = /^[-*]\s+/.test(line);
+      if (isBullet) {
+        if (!inList) { html += '<ul>'; inList = true; }
+        html += '<li>' + line.replace(/^[-*]\s+/, '')
+          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
+      } else {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p>' + line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>';
+      }
+    });
+    if (inList) html += '</ul>';
+    return html || '<p>' + escaped + '</p>';
+  }
+
+  window.askPoradna = async function (question) {
+    const input = document.getElementById('poradna-input');
+    const btn = document.getElementById('poradna-submit-btn');
+    const wrap = document.getElementById('poradna-result-wrap');
+    if (!question || !question.trim()) return;
+    if (input) input.value = question;
+
+    if (!aiModel) {
+      poradnaShowError('Vyhledávání zatím není nastavené. Dokonči prosím propojení s Gemini podle návodu (NAVOD-RADY-A-PORADNA.md) — vlož Firebase a reCAPTCHA klíče do kódu stránky.');
+      return;
+    }
+
+    if (btn) btn.disabled = true;
+    wrap.innerHTML = '<div class="poradna-loading"><span class="spin"></span> Hledám odpověď…</div>';
+
+    try {
+      const result = await aiModel.generateContent(question.trim());
+      const text = result.response.text();
+      wrap.innerHTML =
+        '<div class="poradna-answer-card">' +
+          '<h4>Odpověď</h4>' +
+          '<div class="poradna-answer-body">' + poradnaFormatAnswer(text) + '</div>' +
+          '<div class="poradna-answer-source">Odpověď vygenerovala umělá inteligence (Google Gemini) a je jen obecná informace, ne lékařská rada ani diagnóza. Před rozhodnutím o zdraví, doplňcích nebo léčbě se poraď s lékařem či jiným kvalifikovaným odborníkem.</div>' +
+        '</div>';
+    } catch (e) {
+      console.error('Rady a poradna: chyba při volání Gemini:', e);
+      poradnaShowError('Odpověď se teď nepodařilo získat. Zkus to prosím za chvíli znovu — pokud to nepomůže, zkontroluj nastavení podle návodu (klíče, App Check, kvóta zdarma).');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+
+  window.handlePoradnaSubmit = function (event) {
+    event.preventDefault();
+    const input = document.getElementById('poradna-input');
+    if (input) askPoradna(input.value);
+    return false;
+  };
 </script>
 
 <script>
