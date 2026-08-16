@@ -3801,9 +3801,29 @@
   // ==========================================
   const RECAPTCHA_V3_SITE_KEY = 'SEM_VLOŽ_RECAPTCHA_V3_SITE_KEY';
 
-  // Název modelu - zkontroluj si ve Firebase konzoli (AI Logic -> Model
-  // Garden), který model má aktuálně řádek "Free", a případně uprav.
+  // Název modelu - řádek dole je jen ZÁLOŽNÍ/výchozí volba. Appka si
+  // ve skutečnosti automaticky projíždí seznam MODEL_CANDIDATES (viz
+  // níže) a první funkční si zapamatuje, takže tenhle řádek většinou
+  // nemusíš vůbec sledovat ani upravovat.
   const GEMINI_MODEL_NAME = 'gemini-3.5-flash';
+
+  // Seznam modelů, které appka zkusí PO SOBĚ, pokud první selže s chybou
+  // typu "model už není dostupný" (Google modely poměrně často mění).
+  // Pořadí od nejnovějšího k nejstaršímu - jakmile jeden zafunguje,
+  // appka si ho zapamatuje v prohlížeči (localStorage) a příště zkusí
+  // rovnou jeho, teprve když přestane fungovat i on, projede seznam
+  // znovu. Klidně sem časem přidej nové názvy, jak je Google zveřejní -
+  // stačí je připsat do pole níže, nic jiného upravovat nemusíš.
+  const MODEL_CANDIDATES = [
+    'gemini-flash-latest',
+    'gemini-3.6-flash',
+    'gemini-3.5-flash',
+    'gemini-3.1-flash-lite',
+    'gemini-2.5-flash-lite',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash'
+  ];
+  const PORADNA_MODEL_STORAGE_KEY = 'poradnaWorkingModel';
 
   // Instrukce pro model - drží odpovědi jen u tématu klidu, zdraví
   // a životního stylu a nutí model připomenout konzultaci s odborníkem.
@@ -3825,13 +3845,46 @@ Pravidla:
   a doporučuješ to konzultovat s lékařem nebo jiným kvalifikovaným
   odborníkem, pokud se dotaz týká zdravotního stavu.`;
 
-  let aiModel = null;
+  let aiInstance = null;
   let appCheckReady = false;
+  const modelCache = {}; // model name -> GenerativeModel instance (nevytváříme opakovaně)
 
   function poradnaShowError(msg) {
     const wrap = document.getElementById('poradna-result-wrap');
     if (!wrap) return;
     wrap.innerHTML = '<div class="poradna-error">' + msg + '</div>';
+  }
+
+  function getModelInstance(name) {
+    if (!aiInstance) return null;
+    if (!modelCache[name]) {
+      modelCache[name] = getGenerativeModel(aiInstance, {
+        model: name,
+        systemInstruction: SYSTEM_INSTRUCTION
+      });
+    }
+    return modelCache[name];
+  }
+
+  // Sestaví pořadí, ve kterém se modely zkoušejí: nejdřív ten, co
+  // naposledy fungoval (uložený v localStorage), pak zbytek seznamu.
+  function getModelOrder() {
+    let remembered = null;
+    try { remembered = localStorage.getItem(PORADNA_MODEL_STORAGE_KEY); } catch (e) {}
+    const rest = MODEL_CANDIDATES.filter(m => m !== remembered);
+    return remembered ? [remembered, ...rest] : MODEL_CANDIDATES.slice();
+  }
+
+  // Pozná, jestli chyba znamená "tenhle konkrétní model už není k
+  // dispozici" (pak má smysl zkusit další v seznamu), nebo jde o jiný
+  // typ problému (klíče, kvóta, síť) - tam by zkoušení dalších modelů
+  // nepomohlo.
+  function isModelUnavailableError(e) {
+    const msg = ((e && e.message) || '').toLowerCase();
+    return msg.includes('no longer available') ||
+      msg.includes('not_found') ||
+      msg.includes('is not found') ||
+      msg.includes('404');
   }
 
   try {
@@ -3845,11 +3898,7 @@ Pravidla:
       appCheckReady = true;
     }
 
-    const ai = getAI(app, { backend: new GoogleAIBackend() });
-    aiModel = getGenerativeModel(ai, {
-      model: GEMINI_MODEL_NAME,
-      systemInstruction: SYSTEM_INSTRUCTION
-    });
+    aiInstance = getAI(app, { backend: new GoogleAIBackend() });
   } catch (e) {
     console.warn('Rady a poradna: Firebase AI Logic se nepodařilo inicializovat.', e);
   }
@@ -3883,7 +3932,7 @@ Pravidla:
     if (!question || !question.trim()) return;
     if (input) input.value = question;
 
-    if (!aiModel) {
+    if (!aiInstance) {
       poradnaShowError('Vyhledávání zatím není nastavené. Dokonči prosím propojení s Gemini podle návodu (NAVOD-RADY-A-PORADNA.md) — vlož Firebase a reCAPTCHA klíče do kódu stránky.');
       return;
     }
@@ -3891,21 +3940,41 @@ Pravidla:
     if (btn) btn.disabled = true;
     wrap.innerHTML = '<div class="poradna-loading"><span class="spin"></span> Hledám odpověď…</div>';
 
-    try {
-      const result = await aiModel.generateContent(question.trim());
-      const text = result.response.text();
-      wrap.innerHTML =
-        '<div class="poradna-answer-card">' +
-          '<h4>Odpověď</h4>' +
-          '<div class="poradna-answer-body">' + poradnaFormatAnswer(text) + '</div>' +
-          '<div class="poradna-answer-source">Odpověď vygenerovala umělá inteligence (Google Gemini) a je jen obecná informace, ne lékařská rada ani diagnóza. Před rozhodnutím o zdraví, doplňcích nebo léčbě se poraď s lékařem či jiným kvalifikovaným odborníkem.</div>' +
-        '</div>';
-    } catch (e) {
-      console.error('Rady a poradna: chyba při volání Gemini:', e);
-      poradnaShowError('Odpověď se teď nepodařilo získat. Zkus to prosím za chvíli znovu — pokud to nepomůže, zkontroluj nastavení podle návodu (klíče, App Check, kvóta zdarma).');
-    } finally {
-      if (btn) btn.disabled = false;
+    const order = getModelOrder();
+    let lastError = null;
+
+    for (let i = 0; i < order.length; i++) {
+      const modelName = order[i];
+      try {
+        const model = getModelInstance(modelName);
+        const result = await model.generateContent(question.trim());
+        const text = result.response.text();
+
+        // Tenhle model funguje - zapamatuj si ho pro příště.
+        try { localStorage.setItem(PORADNA_MODEL_STORAGE_KEY, modelName); } catch (e) {}
+
+        wrap.innerHTML =
+          '<div class="poradna-answer-card">' +
+            '<h4>Odpověď</h4>' +
+            '<div class="poradna-answer-body">' + poradnaFormatAnswer(text) + '</div>' +
+            '<div class="poradna-answer-source">Odpověď vygenerovala umělá inteligence (Google Gemini) a je jen obecná informace, ne lékařská rada ani diagnóza. Před rozhodnutím o zdraví, doplňcích nebo léčbě se poraď s lékařem či jiným kvalifikovaným odborníkem.</div>' +
+          '</div>';
+        if (btn) btn.disabled = false;
+        return;
+      } catch (e) {
+        lastError = e;
+        if (isModelUnavailableError(e)) {
+          console.warn('Rady a poradna: model "' + modelName + '" už není dostupný, zkouším další…', e);
+          continue; // zkus další model v seznamu
+        }
+        // Jiný typ chyby (klíče, App Check, kvóta, síť) - další modely by nepomohly.
+        break;
+      }
     }
+
+    console.error('Rady a poradna: chyba při volání Gemini:', lastError);
+    poradnaShowError('Odpověď se teď nepodařilo získat. Zkus to prosím za chvíli znovu — pokud to nepomůže, zkontroluj nastavení podle návodu (klíče, App Check, kvóta zdarma).');
+    if (btn) btn.disabled = false;
   };
 
   window.handlePoradnaSubmit = function (event) {
