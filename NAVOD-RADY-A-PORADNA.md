@@ -20,7 +20,7 @@ bez zadávání platební karty, na plánu **Spark**.
   Firebase AI Logic to řeší jinak (přes tzv. service agenta), takže
   nehrozí, že by ho někdo „ukradl" z JavaScriptu.
 - Aby appku nemohl zneužívat někdo cizí (a nevyčerpal tvoji zdarma kvótu),
-  přidáme **App Check** s reCAPTCHA v3 — taky zdarma.
+  přidáme **App Check** s reCAPTCHA Enterprise — taky zdarma.
 - Bezpečnostní a tematické mantinely (jen témata klidu/zdraví, žádné
   diagnózy, vždy doporučení konzultovat odborníka) už jsou napsané přímo
   v kódu stránky (tzv. system instruction) — nemusíš nic programovat.
@@ -82,23 +82,39 @@ Bez App Check ti od 2. 11. 2026 Firebase AI Logic přestane fungovat úplně
 to zabrání robotům/skriptům volat tvého Gemini bota načerno a vyčerpat
 kvótu za tebe.
 
-1. Ve Firebase konzoli jdi na **Build → App Check**.
-2. Klikni na **Get started**, vyber svou webovou aplikaci (tu, kterou už
-   máš registrovanou pro `uklidnito-d580e`).
-3. Jako poskytovatele zvol **reCAPTCHA v3**.
-4. Firebase tě buď propojí přímo s Google reCAPTCHA, nebo tě odkáže na
-   [google.com/recaptcha/admin](https://www.google.com/recaptcha/admin) —
-   tam:
-   - Zaregistruj novou stránku, typ **reCAPTCHA v3**.
+> ⚠️ Google mezitím ruší klasické reCAPTCHA v3 klíče a migruje je na
+> **reCAPTCHA Enterprise** (nová platforma přes Google Cloud konzoli).
+> Tenhle návod a kód appky proto rovnou počítají s Enterprise verzí —
+> pokud bys ve Firebase konzoli přesto viděl/a možnost „reCAPTCHA v3",
+> radši zvol Enterprise, ať se nedostaneš do stejné situace jako dřív
+> (kód appky teď čeká klíč z Enterprise, ne z klasické v3).
+
+1. Otevři [Google Cloud konzoli](https://console.cloud.google.com/) a
+   vyber stejný projekt jako ve Firebase (`uklidnito-d580e`) — Firebase
+   projekty jsou zároveň Google Cloud projekty, takže tam bude i tady.
+2. V levém menu (nebo přes vyhledávací pole nahoře) najdi
+   **reCAPTCHA Enterprise**.
+3. Pokud tě Google vyzve k povolení „reCAPTCHA Enterprise API", potvrď to.
+4. Klikni na **Vytvořit klíč** (Create key):
+   - Typ klíče: **Website / Webová stránka**
    - Jako doménu zadej `uklidnito.github.io` (a případně i `uklidnito.eu`,
      pokud web běží i na vlastní doméně).
-   - Po vytvoření dostaneš **Site key** (veřejný, jde do kódu stránky) a
-     **Secret key** (ten zadáváš jen do Firebase konzole, nikam do webu).
-5. Site key zkopíruj — budeš ho potřebovat v Kroku 4.
-6. Ve Firebase App Check nastavení povol **enforcement** (vynucování) pro
-   AI Logic / Gemini API, až budeš mít vše otestované (viz Krok 6) — než
-   to otestuješ, nech to spíš v režimu „monitorování", ať se sám sobě
-   omylem nezablokuješ.
+   - Volbu „Use checkbox challenge" / „Použít zaškrtávací test" **nech
+     nezaškrtnutou** — chceme neviditelnou verzi bez klikání pro
+     návštěvníky.
+5. Po vytvoření dostaneš **Site key** — ten zkopíruj, budeš ho potřebovat
+   v Kroku 4. (Na rozdíl od klasické reCAPTCHA v3 tu žádný samostatný
+   Secret key neřešíš — ověřování si mezi sebou domlouvají přímo Google
+   Cloud a Firebase.)
+6. Přepni se do **Firebase konzole → Build → App Check**.
+7. Klikni na **Get started**, vyber svou webovou aplikaci (tu, kterou už
+   máš registrovanou pro `uklidnito-d580e`).
+8. Jako poskytovatele zvol **reCAPTCHA Enterprise** (ne „reCAPTCHA v3").
+9. Vlož Site key z kroku 5 a registraci dokonči.
+10. Ve Firebase App Check nastavení povol **enforcement** (vynucování) pro
+    AI Logic / Gemini API, až budeš mít vše otestované (viz Krok 6) — než
+    to otestuješ, nech to spíš v režimu „monitorování", ať se sám sobě
+    omylem nezablokuješ.
 
 ---
 
@@ -117,18 +133,18 @@ Pokud bys v budoucnu měnil/a Firebase projekt, over si, že jsou
 
 ---
 
-## Krok 4 — Vlož reCAPTCHA klíč do kódu
+## Krok 4 — Vlož reCAPTCHA Enterprise klíč do kódu
 
 1. Otevři `index.html`.
-2. Najdi (Ctrl+F) text `SEM_VLOŽ_RECAPTCHA_V3_SITE_KEY`.
+2. Najdi (Ctrl+F) text `SEM_VLOŽ_RECAPTCHA_SITE_KEY`.
 3. Nahraď ho svým Site key z Kroku 2, například:
 
    ```js
-   const RECAPTCHA_V3_SITE_KEY = '6Lc1234567890abcdefgHIJKLMNOP';
+   const RECAPTCHA_SITE_KEY = '6Lc1234567890abcdefgHIJKLMNOP';
    ```
 
 4. Stejnou úpravu udělej i v `index-en.html` (tam hledej
-   `PUT_YOUR_RECAPTCHA_V3_SITE_KEY_HERE`).
+   `PUT_YOUR_RECAPTCHA_SITE_KEY_HERE`).
 5. Pokud jsi v Kroku 1 zjistil/a, že chceš jiný model než
    `gemini-3.5-flash`, uprav na stejném místě i řádek:
 
@@ -160,7 +176,7 @@ napojený na stejnou webovou appku, kterou máš registrovanou v projektu
 4. Co může (ne)fungovat:
    - **Objeví se odpověď od AI** → hotovo, funguje to! 🎉
    - **„Vyhledávání zatím není nastavené…"** → zkontroluj, že jsi opravdu
-     nahradil/a placeholder textu `SEM_VLOŽ_RECAPTCHA_V3_SITE_KEY` reálným
+     nahradil/a placeholder textu `SEM_VLOŽ_RECAPTCHA_SITE_KEY` reálným
      klíčem a že je AI Logic zapnuté (Krok 1).
    - **„Odpověď se teď nepodařilo získat…"** → otevři si v prohlížeči
      konzoli (F12 → Console) a podívej se na chybovou hlášku:
@@ -189,7 +205,7 @@ odpovídat komukoliv, kdo nejde přes tvou skutečnou webovou stránku.
   [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models).
 - **Zkus to bez App Check nejdřív.** Pokud chceš rychle otestovat, jestli
   vůbec funguje samotné volání Gemini, můžeš dočasně nechat
-  `RECAPTCHA_V3_SITE_KEY` prázdný (placeholder) — appka pak App Check
+  `RECAPTCHA_SITE_KEY` prázdný (placeholder) — appka pak App Check
   vynechá. Nezapomeň to ale před ostrým nasazením doplnit, jinak (hlavně
   po listopadu 2026) přestane fungovat úplně a navíc bude kvóta
   nechráněná.
@@ -231,6 +247,6 @@ na 100 %. Doporučuju:
 | HTML sekce s vyhledáváním | `<section class="content" id="poradna" ...>` |
 | CSS styly | blok začínající komentářem `/* ---------- Rady a poradna (AI search, Gemini) ---------- */` |
 | JS modul s Firebase AI Logic | `<script type="module">` blok s komentářem `RADY A PORADNA` / `ADVICE & GUIDANCE`, těsně před registrací Service Workera |
-| Místo pro reCAPTCHA klíč | proměnná `RECAPTCHA_V3_SITE_KEY` |
+| Místo pro reCAPTCHA klíč | proměnná `RECAPTCHA_SITE_KEY` |
 | Místo pro název modelu | proměnná `GEMINI_MODEL_NAME` |
 | Tematické/bezpečnostní mantinely | proměnná `SYSTEM_INSTRUCTION` |

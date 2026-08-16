@@ -3775,7 +3775,7 @@
      ============================================ -->
 <script type="module">
   import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-  import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app-check.js";
+  import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app-check.js";
   import { getAI, getGenerativeModel, GoogleAIBackend } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-ai.js";
 
   // ==========================================
@@ -3793,13 +3793,18 @@
   };
 
   // ==========================================
-  // 2) reCAPTCHA v3 SITE KEY - SEM VLOŽ SVOJI VLASTNÍ
-  //    (Firebase konzole -> Build -> App Check -> registruj webovou appku
-  //    s poskytovatelem reCAPTCHA v3, klíč zkopíruj sem).
+  // 2) reCAPTCHA ENTERPRISE SITE KEY - SEM VLOŽ SVOJI VLASTNÍ
+  //    Google mezitím klasické reCAPTCHA v3 klíče ruší a migruje je na
+  //    reCAPTCHA Enterprise (přes Google Cloud konzoli), proto tady
+  //    používáme ReCaptchaEnterpriseProvider, ne starou ReCaptchaV3Provider.
+  //    Postup: Google Cloud konzole -> reCAPTCHA Enterprise -> vytvoř
+  //    klíč typu "Website" (bez zaškrtnuté "checkbox challenge") ->
+  //    Firebase konzole -> Build -> App Check -> registruj webovou appku
+  //    s poskytovatelem reCAPTCHA Enterprise -> klíč zkopíruj sem.
   //    Bez App Check appka Gemini nezavolá vůbec (od 2. 11. 2026 to
   //    Firebase AI Logic vyžaduje povinně) - viz návod.
   // ==========================================
-  const RECAPTCHA_V3_SITE_KEY = 'SEM_VLOŽ_RECAPTCHA_V3_SITE_KEY';
+  const RECAPTCHA_SITE_KEY = 'SEM_VLOŽ_RECAPTCHA_SITE_KEY';
 
   // Název modelu - řádek dole je jen ZÁLOŽNÍ/výchozí volba. Appka si
   // ve skutečnosti automaticky projíždí seznam MODEL_CANDIDATES (viz
@@ -3890,9 +3895,9 @@ Pravidla:
   try {
     const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
-    if (RECAPTCHA_V3_SITE_KEY && RECAPTCHA_V3_SITE_KEY.indexOf('SEM_VLOŽ') === -1) {
+    if (RECAPTCHA_SITE_KEY && RECAPTCHA_SITE_KEY.indexOf('SEM_VLOŽ') === -1) {
       initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(RECAPTCHA_V3_SITE_KEY),
+        provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_SITE_KEY),
         isTokenAutoRefreshEnabled: true
       });
       appCheckReady = true;
