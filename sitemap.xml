@@ -1,50 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
   <url>
     <loc>https://uklidnito.eu/</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/index-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/index-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/index-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/jak-funguje-dechove-cviceni.html</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/jak-funguje-dechove-cviceni.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/jak-funguje-dechove-cviceni-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/jak-funguje-dechove-cviceni.html" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/jak-funguje-dechove-cviceni-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/jak-funguje-dechove-cviceni.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/jak-funguje-dechove-cviceni-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/jak-funguje-dechove-cviceni.html" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/techniky-dechu.html</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/techniky-dechu.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/techniky-dechu-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/techniky-dechu.html" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/techniky-dechu-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/techniky-dechu.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/techniky-dechu-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/techniky-dechu.html" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/clanky-o-dychani.html</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/clanky-o-dychani.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/clanky-o-dychani-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/clanky-o-dychani.html" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/clanky-o-dychani-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/clanky-o-dychani.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/clanky-o-dychani-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/clanky-o-dychani.html" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/doplnky.html</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/doplnky.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/doplnky-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/doplnky.html" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/doplnky-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/doplnky.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/doplnky-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/doplnky.html" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/caste-dotazy.html</loc>
-    <lastmod>2026-08-14</lastmod>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/caste-dotazy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/caste-dotazy-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/caste-dotazy.html" />
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/caste-dotazy-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/caste-dotazy.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/caste-dotazy-en.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/caste-dotazy.html" />
   </url>
 
   <url>
     <loc>https://uklidnito.eu/privacy.html</loc>
     <lastmod>2026-08-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>https://uklidnito.eu/privacy-en.html</loc>
+    <lastmod>2026-08-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
