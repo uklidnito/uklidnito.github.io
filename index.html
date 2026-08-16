@@ -3853,6 +3853,7 @@
   // stačí je připsat do pole níže, nic jiného upravovat nemusíš.
   const MODEL_CANDIDATES = [
     'gemini-flash-latest',
+    'gemini-3.7-flash',
     'gemini-3.6-flash',
     'gemini-3.5-flash',
     'gemini-3.1-flash-lite',
@@ -3923,7 +3924,19 @@ Pravidla:
     return msg.includes('no longer available') ||
       msg.includes('not_found') ||
       msg.includes('is not found') ||
-      msg.includes('404');
+      msg.includes('404') ||
+      // Model existuje, ale právě teď ho nejde použít (přetížení,
+      // dočasný výpadek) - i tady má smysl zkusit další model v seznamu.
+      msg.includes('500') ||
+      msg.includes('503') ||
+      msg.includes('overloaded') ||
+      msg.includes('unavailable') ||
+      msg.includes('high demand') ||
+      msg.includes('try again later') ||
+      msg.includes('internal error') ||
+      msg.includes('resource_exhausted') ||
+      msg.includes('429') ||
+      msg.includes('too many requests');
   }
 
   try {

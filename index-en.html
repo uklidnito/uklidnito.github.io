@@ -3858,6 +3858,7 @@
   // else needs to change.
   const MODEL_CANDIDATES = [
     'gemini-flash-latest',
+    'gemini-3.7-flash',
     'gemini-3.6-flash',
     'gemini-3.5-flash',
     'gemini-3.1-flash-lite',
@@ -3929,7 +3930,19 @@ Rules:
     return msg.includes('no longer available') ||
       msg.includes('not_found') ||
       msg.includes('is not found') ||
-      msg.includes('404');
+      msg.includes('404') ||
+      // The model exists but just can't be used right now (overloaded,
+      // temporary outage) - worth trying the next model in the list too.
+      msg.includes('500') ||
+      msg.includes('503') ||
+      msg.includes('overloaded') ||
+      msg.includes('unavailable') ||
+      msg.includes('high demand') ||
+      msg.includes('try again later') ||
+      msg.includes('internal error') ||
+      msg.includes('resource_exhausted') ||
+      msg.includes('429') ||
+      msg.includes('too many requests');
   }
 
   try {
