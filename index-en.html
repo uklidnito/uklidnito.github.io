@@ -475,6 +475,34 @@
   .progress-data-table th { opacity: 0.55; font-weight: 500; letter-spacing: 0.3px; font-size: 10px; }
   .progress-data-table tr:last-child td { border-bottom: none; }
   .progress-data-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .progress-data-table td.col-overall { font-weight: 600; }
+
+  /* Below 640px, table rows become stacked cards instead of a side-scrolling table. */
+  @media (max-width: 640px) {
+    .progress-data-table-wrap { overflow-x: visible; }
+    .progress-data-table { border: none; }
+    .progress-data-table thead { display: none; }
+    .progress-data-table, .progress-data-table tbody, .progress-data-table tr, .progress-data-table td { display: block; width: 100%; }
+    .progress-data-table tr {
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 4px 12px; margin-bottom: 10px; background: rgba(255,255,255,0.03);
+    }
+    .progress-data-table tr:last-child { margin-bottom: 0; }
+    .progress-data-table td {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 7px 0; white-space: normal; text-align: right;
+    }
+    .progress-data-table td::before {
+      content: attr(data-label); opacity: 0.55; font-size: 10px; letter-spacing: 0.4px;
+      text-align: left; flex-shrink: 0;
+    }
+    .progress-data-table tr td:first-child {
+      font-family: 'Orbitron', sans-serif; font-size: 12.5px; text-align: left;
+      flex-direction: row-reverse; justify-content: flex-end;
+    }
+    .progress-data-table td:last-child { border-bottom: none; flex-direction: column; align-items: flex-start; gap: 3px; }
+  }
   .progress-data-empty { font-size: 11.5px; opacity: 0.5; text-align: center; padding: 10px 0; }
 
   .progress-save-wrap { text-align: center; margin: 4px 0 22px; }
@@ -1201,7 +1229,7 @@
         <div class="progress-data-table-wrap">
           <table class="progress-data-table" id="progress-data-table">
             <thead>
-              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Note</th></tr>
+              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Overall</th><th>Note</th></tr>
             </thead>
             <tbody id="progress-data-tbody"></tbody>
           </table>
@@ -1212,8 +1240,8 @@
 
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Clear my progress</button>
-      <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Exportovat data (CSV)</button>
-      <button class="progress-reset-btn" id="progress-export-pdf-btn" onclick="exportProgressPDF()">Exportovat data (PDF)</button>
+      <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Export data (CSV)</button>
+      <button class="progress-reset-btn" id="progress-export-pdf-btn" onclick="exportProgressPDF()">Export data (PDF)</button>
     </div>
   </section>
 
@@ -2505,12 +2533,13 @@
 
     tbody.innerHTML = rows.map(r =>
       '<tr>' +
-      '<td>' + esc(r.date) + '</td>' +
-      '<td>' + esc(r.sessions) + '</td>' +
-      '<td>' + esc(r.stress) + '</td>' +
-      '<td>' + esc(r.mood) + '</td>' +
-      '<td>' + esc(r.energy) + '</td>' +
-      '<td>' + esc(r.note) + '</td>' +
+      '<td data-label="Date">' + esc(r.date) + '</td>' +
+      '<td data-label="Sessions">' + esc(r.sessions) + '</td>' +
+      '<td data-label="Stress">' + esc(r.stress) + '</td>' +
+      '<td data-label="Mood">' + esc(r.mood) + '</td>' +
+      '<td data-label="Energy">' + esc(r.energy) + '</td>' +
+      '<td data-label="Overall" class="col-overall">' + esc(r.overall ? r.overall + '/10' : '') + '</td>' +
+      '<td data-label="Note">' + esc(r.note) + '</td>' +
       '</tr>'
     ).join('');
 
@@ -2600,6 +2629,19 @@
       '<div class="mood-gauge-status" style="color:' + status.color + ';">' + value + '/10<span class="mood-gauge-status-sub">' + status.text + '</span></div>';
 
     animateGaugeNeedle(needleId, dial.targetAngle);
+  }
+
+  // ---------- Overall score for any given day (combines stress, mood, energy) ----------
+  // Same formula as "Overall day rating": stress is inverted (lower = better),
+  // then averaged with whichever ratings exist for that day.
+  // Returns { avg, count } or null if there are no ratings for that day.
+  function computeDayOverallScore(dateStr, stressByDate, moodByDate, energyByDate) {
+    const parts = [];
+    if (stressByDate[dateStr] !== undefined) parts.push(11 - stressByDate[dateStr]);
+    if (moodByDate[dateStr] !== undefined) parts.push(moodByDate[dateStr]);
+    if (energyByDate[dateStr] !== undefined) parts.push(energyByDate[dateStr]);
+    if (parts.length === 0) return null;
+    return { avg: parts.reduce((a, b) => a + b, 0) / parts.length, count: parts.length };
   }
 
   // ---------- Final gauge: overall day rating (combines stress, mood, energy) ----------
@@ -3287,20 +3329,24 @@
     const energyByDate = {};
     progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
 
-    return sortedDates.map(d => ({
-      date: d,
-      sessions: progressData.days[d] ? (progressData.days[d].sessions || 0) : '',
-      stress: stressByDate[d] !== undefined ? stressByDate[d] : '',
-      mood: moodByDate[d] !== undefined ? moodByDate[d] : '',
-      energy: energyByDate[d] !== undefined ? energyByDate[d] : '',
-      note: Array.isArray(progressData.journal[d]) ? progressData.journal[d].join(' | ') : ''
-    }));
+    return sortedDates.map(d => {
+      const overall = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+      return {
+        date: d,
+        sessions: progressData.days[d] ? (progressData.days[d].sessions || 0) : '',
+        stress: stressByDate[d] !== undefined ? stressByDate[d] : '',
+        mood: moodByDate[d] !== undefined ? moodByDate[d] : '',
+        energy: energyByDate[d] !== undefined ? energyByDate[d] : '',
+        overall: overall ? overall.avg.toFixed(1) : '',
+        note: Array.isArray(progressData.journal[d]) ? progressData.journal[d].join(' | ') : ''
+      };
+    });
   }
 
   function exportProgressCSV() {
-    const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu', 'hodnoceni_nalady', 'hodnoceni_energie', 'poznamka']];
+    const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'overall_score', 'note']];
     getProgressExportRows().forEach(r => {
-      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.note].map(csvField));
+      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.note].map(csvField));
     });
 
     const csv = rows.map(r => r.join(';')).join('\n');
@@ -3325,7 +3371,7 @@
 
   function exportProgressPDF() {
     const rows = getProgressExportRows();
-    const todayStr = new Date().toLocaleDateString('cs-CZ');
+    const todayStr = new Date().toLocaleDateString('en-US');
 
     const tableRows = rows.length
       ? rows.map(r => `
@@ -3335,9 +3381,10 @@
           <td>${pdfEscapeHtml(r.stress)}</td>
           <td>${pdfEscapeHtml(r.mood)}</td>
           <td>${pdfEscapeHtml(r.energy)}</td>
+          <td>${pdfEscapeHtml(r.overall)}</td>
           <td>${pdfEscapeHtml(r.note)}</td>
         </tr>`).join('')
-      : `<tr><td colspan="6" class="empty">No data recorded yet.</td></tr>`;
+      : `<tr><td colspan="7" class="empty">No data recorded yet.</td></tr>`;
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -3363,7 +3410,7 @@
   <div class="subtitle">Export from ${pdfEscapeHtml(todayStr)}</div>
   <table>
     <thead>
-      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Note</th></tr>
+      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Note</th></tr>
     </thead>
     <tbody>
       ${tableRows}
