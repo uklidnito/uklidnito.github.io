@@ -459,6 +459,27 @@
   }
   .progress-reminder-hint { font-size: 10.5px; opacity: 0.45; margin: 10px 0 0; line-height: 1.5; }
 
+  /* ---------- Vizuální oddělení sekcí v "Tvůj pokrok" ---------- */
+  .progress-group { margin: 34px 0 0; }
+  .progress-group-title {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Poppins', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-color);
+    margin: 0 0 14px;
+  }
+  .progress-group-title .icon { font-size: 15px; letter-spacing: 0; }
+  .progress-group-title::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, rgba(255,119,0,0.45), transparent);
+  }
+  .progress-feel-group .progress-stress-wrap { border-left: 3px solid var(--accent-color); }
+  .progress-feel-group .progress-stress-wrap.mood-block { border-left-color: #9b8cff; }
+  .progress-feel-group .progress-stress-wrap.energy-block { border-left-color: #33c17a; }
+  .progress-feel-group .progress-stress-wrap h3 { font-size: 14.5px; }
+  .progress-feel-group .progress-stress-wrap + .progress-stress-wrap { margin-top: 14px; }
+
+  .progress-actions-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0 22px; }
+
   .progress-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
   .progress-data-table-wrap { overflow-x: auto; }
@@ -1031,14 +1052,17 @@
     </div>
 
 
-    <div class="progress-summary-wrap" id="progress-summary-wrap">
-      <div class="progress-summary-col">
-        <h4>Tento týden</h4>
-        <p id="progress-summary-week">–</p>
-      </div>
-      <div class="progress-summary-col">
-        <h4>Tento měsíc</h4>
-        <p id="progress-summary-month">–</p>
+    <div class="progress-group">
+      <div class="progress-group-title"><span class="icon">🗓️</span> Přehled</div>
+      <div class="progress-summary-wrap" id="progress-summary-wrap">
+        <div class="progress-summary-col">
+          <h4>Tento týden</h4>
+          <p id="progress-summary-week">–</p>
+        </div>
+        <div class="progress-summary-col">
+          <h4>Tento měsíc</h4>
+          <p id="progress-summary-month">–</p>
+        </div>
       </div>
     </div>
 
@@ -1057,25 +1081,29 @@
       <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
     </div>
 
-    <div class="progress-stats" id="progress-stats" aria-live="polite">
-      <div class="progress-stat">
-        <div class="progress-stat-value" id="stat-streak">0</div>
-        <div class="progress-stat-label">Aktuální série (dní)</div>
-      </div>
-      <div class="progress-stat">
-        <div class="progress-stat-value" id="stat-longest">0</div>
-        <div class="progress-stat-label">Nejdelší série</div>
-      </div>
-      <div class="progress-stat">
-        <div class="progress-stat-value" id="stat-days">0</div>
-        <div class="progress-stat-label">Celkem dní</div>
-      </div>
-      <div class="progress-stat">
-        <div class="progress-stat-value" id="stat-sessions">0</div>
-        <div class="progress-stat-label">Celkem cvičení</div>
+    <div class="progress-group">
+      <div class="progress-group-title"><span class="icon">📈</span> Statistiky</div>
+      <div class="progress-stats" id="progress-stats" aria-live="polite">
+        <div class="progress-stat">
+          <div class="progress-stat-value" id="stat-streak">0</div>
+          <div class="progress-stat-label">Aktuální série (dní)</div>
+        </div>
+        <div class="progress-stat">
+          <div class="progress-stat-value" id="stat-longest">0</div>
+          <div class="progress-stat-label">Nejdelší série</div>
+        </div>
+        <div class="progress-stat">
+          <div class="progress-stat-value" id="stat-days">0</div>
+          <div class="progress-stat-label">Celkem dní</div>
+        </div>
+        <div class="progress-stat">
+          <div class="progress-stat-value" id="stat-sessions">0</div>
+          <div class="progress-stat-label">Celkem cvičení</div>
+        </div>
       </div>
     </div>
 
+    <div class="progress-group">
     <div class="progress-calendar-wrap">
       <button type="button" class="progress-calendar-toggle" id="progress-calendar-toggle" onclick="toggleProgressCalendar()" aria-expanded="false" aria-controls="progress-calendar-body">
         <span>📅 Kalendář odcvičených dní</span>
@@ -1104,9 +1132,12 @@
         <div class="progress-calendar" id="progress-calendar" role="group" aria-label="Kalendář odcvičených dní"></div>
       </div>
     </div>
+    </div>
 
+    <div class="progress-group progress-feel-group">
+      <div class="progress-group-title"><span class="icon">📋</span> Denní check-in</div>
     <div class="progress-stress-wrap">
-      <h3>Jak se dnes cítíš?</h3>
+      <h3>🌡️ Jak se dnes cítíš?</h3>
       <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň stresu (1 = úplný klid, 10 = velký stres). Zaznamenáváním v čase uvidíš, jestli se ti daří stres postupně snižovat. Ukládá se jen v tomto prohlížeči, nikam se neposílá.</p>
       <div class="progress-stress-scale" id="progress-stress-scale" role="group" aria-label="Ohodnoť úroveň stresu 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-stress-feedback"></p>
@@ -1141,8 +1172,8 @@
       </div>
     </div>
 
-    <div class="progress-stress-wrap">
-      <h3>Jaká je dnešní nálada?</h3>
+    <div class="progress-stress-wrap mood-block">
+      <h3>🙂 Jaká je dnešní nálada?</h3>
       <p class="progress-stress-hint">Volitelné — ohodnoť teď svou náladu (1 = velmi špatná, 10 = výborná). Zaznamenáváním v čase uvidíš, jak se ti nálada postupně vyvíjí. Ukládá se jen v tomto prohlížeči, nikam se neposílá.</p>
       <div class="progress-stress-scale" id="progress-mood-scale" role="group" aria-label="Ohodnoť náladu 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-mood-feedback"></p>
@@ -1169,8 +1200,8 @@
       </div>
     </div>
 
-    <div class="progress-stress-wrap">
-      <h3>Jaká je dnešní energie?</h3>
+    <div class="progress-stress-wrap energy-block">
+      <h3>⚡ Jaká je dnešní energie?</h3>
       <p class="progress-stress-hint">Volitelné — ohodnoť teď svou úroveň energie (1 = úplně vyčerpaný/á, 10 = plný/á energie). Zaznamenáváním v čase uvidíš, jak se ti energie postupně vyvíjí. Ukládá se jen v tomto prohlížeči, nikam se neposílá.</p>
       <div class="progress-stress-scale" id="progress-energy-scale" role="group" aria-label="Ohodnoť energii 1 až 10"></div>
       <p class="progress-stress-feedback" id="progress-energy-feedback"></p>
@@ -1196,25 +1227,32 @@
         <p class="progress-stress-trend" id="progress-energy-trend"></p>
       </div>
     </div>
+    </div>
 
+    <div class="progress-group">
     <div class="overall-gauge-card" id="overall-gauge-card">
       <h3>🎯 Celkové zhodnocení dne</h3>
       <p class="overall-gauge-hint">Spojí dnešní hodnocení stresu, nálady a energie do jednoho celkového ukazatele.</p>
       <div id="overall-gauge-content"></div>
     </div>
-
-    <div class="progress-reminder-wrap">
-      <label class="progress-reminder-label">
-        <input type="checkbox" id="progress-reminder-toggle" onchange="toggleProgressReminder(this.checked)">
-        Připomenout mi večer, pokud dnes ještě necvičím
-      </label>
-      <div class="progress-reminder-time-row" id="progress-reminder-time-row" style="display:none;">
-        <span>Čas připomínky:</span>
-        <input type="time" id="progress-reminder-time" value="20:00" onchange="saveProgressReminderTime(this.value)">
-      </div>
-      <p class="progress-reminder-hint">Funguje jen dokud máš tuto stránku otevřenou v prohlížeči (nejde o skutečné push notifikace).</p>
     </div>
 
+    <div class="progress-group">
+      <div class="progress-group-title"><span class="icon">🔔</span> Připomínka</div>
+      <div class="progress-reminder-wrap">
+        <label class="progress-reminder-label">
+          <input type="checkbox" id="progress-reminder-toggle" onchange="toggleProgressReminder(this.checked)">
+          Připomenout mi večer, pokud dnes ještě necvičím
+        </label>
+        <div class="progress-reminder-time-row" id="progress-reminder-time-row" style="display:none;">
+          <span>Čas připomínky:</span>
+          <input type="time" id="progress-reminder-time" value="20:00" onchange="saveProgressReminderTime(this.value)">
+        </div>
+        <p class="progress-reminder-hint">Funguje jen dokud máš tuto stránku otevřenou v prohlížeči (nejde o skutečné push notifikace).</p>
+      </div>
+    </div>
+
+    <div class="progress-group">
     <div class="progress-calendar-wrap" id="progress-data-wrap">
       <button type="button" class="progress-calendar-toggle" id="progress-data-toggle" onclick="toggleProgressDataTable()" aria-expanded="false" aria-controls="progress-data-body">
         <span>📋 Uložená data</span>
@@ -1233,7 +1271,9 @@
         </div>
       </div>
     </div>
+    </div>
 
+    <hr class="progress-actions-divider">
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Vymazat můj pokrok</button>
       <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Exportovat data (CSV)</button>
