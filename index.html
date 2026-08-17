@@ -522,6 +522,26 @@
     .progress-data-table td:last-child { border-bottom: none; flex-direction: column; align-items: flex-start; gap: 3px; }
   }
 
+  /* ---------- Rychlá navigace v sekci "Tvůj pokrok" ---------- */
+  .progress-quicknav-wrap { margin: 4px 0 26px; }
+  .progress-quicknav {
+    display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .progress-quicknav::-webkit-scrollbar { display: none; }
+  .progress-quicknav-btn {
+    flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; font-size: 11.5px; letter-spacing: 0.3px; padding: 9px 15px;
+    border-radius: 20px; cursor: pointer; font-family: 'Poppins', sans-serif;
+    white-space: nowrap; opacity: 0.85; transition: 0.2s;
+  }
+  .progress-quicknav-btn:hover, .progress-quicknav-btn:active {
+    border-color: var(--accent-color); color: var(--accent-color); opacity: 1;
+    box-shadow: 0 0 12px rgba(255,119,0,0.3);
+  }
+  .progress-quicknav-btn .icon { font-size: 13px; letter-spacing: 0; }
+
   .progress-save-wrap { text-align: center; margin: 4px 0 22px; }
   .progress-save-btn {
     display: inline-flex; align-items: center; gap: 8px;
@@ -1046,13 +1066,19 @@
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Vše — kalendář, hodnocení stresu, nálady i energie, deníček i týdenní/měsíční souhrny — se ukládá jen lokálně v tomto prohlížeči (localStorage), nikam se to neodesílá ani neanalyzuje. Při vymazání dat prohlížeče nebo na jiném zařízení pokrok neuvidíš.</p>
 
-    <div class="progress-save-wrap">
-      <button type="button" class="progress-save-btn" id="progress-save-btn" onclick="manualSaveProgress()">💾 Uložit pokrok</button>
-      <p class="progress-save-status" id="progress-save-status" aria-live="polite"></p>
+    <div class="progress-quicknav-wrap">
+      <div class="progress-quicknav" role="group" aria-label="Rychlý přechod na sekci">
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-overview').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🗓️</span> Přehled</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-stats').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">📈</span> Statistiky</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-calendar').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">📅</span> Kalendář</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-checkin').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">📋</span> Check-in</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-overall').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🎯</span> Zhodnocení</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-reminder').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🔔</span> Připomínka</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-data').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🗃️</span> Data</button>
+      </div>
     </div>
 
-
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-overview">
       <div class="progress-group-title"><span class="icon">🗓️</span> Přehled</div>
       <div class="progress-summary-wrap" id="progress-summary-wrap">
         <div class="progress-summary-col">
@@ -1081,7 +1107,7 @@
       <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
     </div>
 
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-stats">
       <div class="progress-group-title"><span class="icon">📈</span> Statistiky</div>
       <div class="progress-stats" id="progress-stats" aria-live="polite">
         <div class="progress-stat">
@@ -1103,7 +1129,7 @@
       </div>
     </div>
 
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-calendar">
     <div class="progress-calendar-wrap">
       <button type="button" class="progress-calendar-toggle" id="progress-calendar-toggle" onclick="toggleProgressCalendar()" aria-expanded="false" aria-controls="progress-calendar-body">
         <span>📅 Kalendář odcvičených dní</span>
@@ -1134,7 +1160,7 @@
     </div>
     </div>
 
-    <div class="progress-group progress-feel-group">
+    <div class="progress-group progress-feel-group" id="progress-nav-checkin">
       <div class="progress-group-title"><span class="icon">📋</span> Denní check-in</div>
     <div class="progress-stress-wrap">
       <h3>🌡️ Jak se dnes cítíš?</h3>
@@ -1229,7 +1255,7 @@
     </div>
     </div>
 
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-overall">
     <div class="overall-gauge-card" id="overall-gauge-card">
       <h3>🎯 Celkové zhodnocení dne</h3>
       <p class="overall-gauge-hint">Spojí dnešní hodnocení stresu, nálady a energie do jednoho celkového ukazatele.</p>
@@ -1237,7 +1263,7 @@
     </div>
     </div>
 
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-reminder">
       <div class="progress-group-title"><span class="icon">🔔</span> Připomínka</div>
       <div class="progress-reminder-wrap">
         <label class="progress-reminder-label">
@@ -1252,7 +1278,7 @@
       </div>
     </div>
 
-    <div class="progress-group">
+    <div class="progress-group" id="progress-nav-data">
     <div class="progress-calendar-wrap" id="progress-data-wrap">
       <button type="button" class="progress-calendar-toggle" id="progress-data-toggle" onclick="toggleProgressDataTable()" aria-expanded="false" aria-controls="progress-data-body">
         <span>📋 Uložená data</span>
@@ -1271,6 +1297,11 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="progress-save-wrap">
+      <button type="button" class="progress-save-btn" id="progress-save-btn" onclick="manualSaveProgress()">💾 Uložit pokrok</button>
+      <p class="progress-save-status" id="progress-save-status" aria-live="polite"></p>
     </div>
 
     <hr class="progress-actions-divider">
