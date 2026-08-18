@@ -1,4 +1,5 @@
 {
+  "id": "/",
   "name": "Uklidni To – Dechové cvičení",
   "short_name": "Uklidni To",
   "description": "Bezplatné dechové cvičení online s pěti technikami a vizuální pulzující koulí pro zklidnění mysli.",
@@ -8,8 +9,17 @@
   "background_color": "#1a0033",
   "theme_color": "#1a0033",
   "lang": "cs",
+  "orientation": "any",
+  "categories": ["health", "lifestyle", "wellness"],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "screenshots/01-home-1920x1080.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Úvodní obrazovka" },
+    { "src": "screenshots/02-breathing-exercise-1920x1080.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Dechové cvičení" },
+    { "src": "screenshots/03-progress-stress-1920x1080.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Tvůj pokrok" },
+    { "src": "screenshots/05-advice-guidance-1920x1080.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide", "label": "Rady a poradna" }
   ]
 }
