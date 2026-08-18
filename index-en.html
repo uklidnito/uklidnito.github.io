@@ -190,6 +190,31 @@
   }
   .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
   .cta-icon { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); animation: breatheIconPulse 4s ease-in-out infinite; }
+
+  .hero-progress-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 14px; padding: 10px 20px; border-radius: 30px;
+    background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; font-size: 12px; letter-spacing: 1px; opacity: 0.85;
+    text-decoration: none; transition: 0.3s; font-family: 'Poppins', sans-serif; font-weight: 400;
+  }
+  .hero-progress-link:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
+
+  /* ---------- Floating scroll-to-top arrow (Your Progress section) ---------- */
+  .progress-scrolltop-btn {
+    position: fixed; right: 18px; bottom: 26px; z-index: 50;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(20,10,0,0.75); backdrop-filter: blur(6px);
+    border: 1px solid var(--accent-color); color: var(--accent-color);
+    font-size: 18px; line-height: 1; cursor: pointer;
+    opacity: 0; pointer-events: none; transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 14px rgba(255,119,0,0.25);
+  }
+  .progress-scrolltop-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .progress-scrolltop-btn:hover { box-shadow: 0 0 20px var(--accent-color); }
+  @media (max-width: 600px) { .progress-scrolltop-btn { right: 12px; bottom: 18px; width: 40px; height: 40px; font-size: 16px; } }
   @keyframes breatheIconPulse { 0%,100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.25); opacity: 1; } }
 
   .hero-orb-preview { width: 130px; height: 130px; margin: 0 auto 22px; position: relative; }
@@ -368,6 +393,18 @@
   .overall-gauge-msg { font-size: 12.5px; line-height: 1.6; opacity: 0.85; margin: 10px 0 0; max-width: 420px; margin-left: auto; margin-right: auto; }
   .overall-gauge-msg .cta-link { color: var(--accent-color); text-decoration: underline; cursor: pointer; background: none; border: none; font: inherit; padding: 0; }
   .overall-gauge-empty { font-size: 12.5px; opacity: 0.6; line-height: 1.7; }
+
+  /* ---------- Overall lifetime index (combines all data) ---------- */
+  .lifetime-gauge-card { border: 1px solid var(--accent-color); box-shadow: 0 0 24px rgba(255,119,0,0.12); }
+  .lifetime-gauge-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+  @media (min-width: 480px) { .lifetime-gauge-stats { grid-template-columns: repeat(4, 1fr); } }
+  .lifetime-stat { text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 6px; font-size: 10px; opacity: 0.75; letter-spacing: 0.2px; line-height: 1.4; }
+  .lifetime-stat span { display: block; font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--accent-color); margin-bottom: 4px; opacity: 1; }
+  .lifetime-info-toggle { margin-top: 16px; width: 100%; }
+  .lifetime-info-body .lifetime-info-text { font-size: 12px; line-height: 1.65; opacity: 0.8; margin: 0 0 10px; text-align: left; }
+  .lifetime-info-list { margin: 0 0 10px; padding-left: 18px; text-align: left; }
+  .lifetime-info-list li { font-size: 12px; line-height: 1.65; opacity: 0.8; margin-bottom: 8px; }
+  .lifetime-info-list strong { color: #fff; opacity: 1; }
   .progress-stress-unlock-hint { font-size: 11.5px; opacity: 0.55; margin: 6px 0 0; line-height: 1.6; font-style: italic; }
 
   .progress-summary-wrap { display: flex; gap: 12px; margin: 16px 0 20px; }
@@ -1002,6 +1039,9 @@
       <span class="cta-icon" aria-hidden="true"></span>
       Start breathing exercise
     </button>
+    <div>
+      <a href="#pokrok" class="hero-progress-link" onclick="showPanel('pokrok'); return false;"><span aria-hidden="true">📊</span> View your progress</a>
+    </div>
     <p style="font-size:11px; opacity:0.45; margin-top:16px; letter-spacing:0.3px;">Want music in the background while you breathe? Try <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA Relax Player</a>.</p>
   </section>
 
@@ -1067,6 +1107,7 @@
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
+    <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top of section" title="Back to top">↑</button>
     <h2 id="pokrok-nadpis">Your progress</h2>
     <p>Every completed session is automatically logged in the calendar below. You can also manually check or clear a day — say, if you breathed outside the app. Everything — the calendar, stress, mood and energy ratings, journal entries and weekly/monthly summaries — is stored only locally in this browser (localStorage); nothing is sent or analyzed elsewhere. If you clear your browser data or switch devices, you won’t see this progress.</p>
 
@@ -1079,6 +1120,7 @@
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-overall').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🎯</span> Rating</button>
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-reminder').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🔔</span> Reminder</button>
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-data').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🗃️</span> Data</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-lifetime').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🏆</span> Overall index</button>
       </div>
     </div>
 
@@ -1301,6 +1343,28 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="progress-group" id="progress-nav-lifetime">
+      <div class="progress-group-title"><span class="icon">🏆</span> Overall index</div>
+      <div class="overall-gauge-card lifetime-gauge-card" id="lifetime-gauge-card">
+        <h3>🏆 How you're doing overall</h3>
+        <p class="overall-gauge-hint">Combines absolutely all the data recorded so far — how consistently you practice, your longest streak, and how stress, mood and energy have developed over time.</p>
+        <div id="lifetime-gauge-content"></div>
+
+        <button type="button" class="progress-calendar-toggle lifetime-info-toggle" id="lifetime-info-toggle" onclick="toggleLifetimeInfo()" aria-expanded="false" aria-controls="lifetime-info-body">
+          <span>ℹ️ How the index is calculated</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="progress-calendar-body lifetime-info-body" id="lifetime-info-body">
+          <p class="lifetime-info-text">The 0–10 index is made of two equally weighted parts:</p>
+          <ul class="lifetime-info-list">
+            <li><strong>Consistency (50%)</strong> — the share of days, counted from your very first ever record, that you actually practiced on. For example, 15 practiced days out of 30 days since your first session = 50%.</li>
+            <li><strong>Average wellbeing (50%)</strong> — the average across every day you rated stress, mood or energy. Stress is inverted (lower stress = better score), then averaged with mood and energy for that day, and finally averaged across all days.</li>
+          </ul>
+          <p class="lifetime-info-text">If you only have one type of data (say, only sessions with no feeling ratings), the index is based on that alone. Everything recalculates automatically with every new entry and is included in the CSV/PDF export.</p>
+        </div>
+      </div>
     </div>
 
     <div class="progress-save-wrap">
@@ -1744,6 +1808,18 @@
     const id = e.state && e.state.panel ? e.state.panel : null;
     renderPanel(id);
   });
+
+  // ---------- Floating scroll-to-top arrow in "Your progress" section ----------
+  (function initProgressScrollTop() {
+    const btn = document.getElementById('progress-scrolltop-btn');
+    if (!btn) return;
+    const SHOW_AFTER = 400;
+    window.addEventListener('scroll', function () {
+      const pokrokEl = document.getElementById('pokrok');
+      const isPokrokActive = pokrokEl && pokrokEl.classList.contains('panel-active');
+      btn.classList.toggle('visible', !!isPokrokActive && window.scrollY > SHOW_AFTER);
+    }, { passive: true });
+  })();
 
   (function initPanelFromHash() {
     const hashId = location.hash ? location.hash.slice(1) : '';
@@ -2570,6 +2646,10 @@
     toggleCollapsibleBody('progress-data-body', 'progress-data-toggle', force);
   };
 
+  window.toggleLifetimeInfo = function(force) {
+    toggleCollapsibleBody('lifetime-info-body', 'lifetime-info-toggle', force);
+  };
+
   // After re-rendering the content (calendar, data table...) its height
   // may change - if the panel is currently expanded, we recalculate max-height so the
   // bottom of the content doesn't get clipped.
@@ -3375,6 +3455,109 @@
     banner.style.display = 'none';
   }
 
+  // ---------- Overall lifetime index: combines absolutely all data (not just today) ----------
+  // Combines two components, each 0-10:
+  // 1) consistency = share of days practiced from the first ever record until today
+  // 2) average wellbeing = average of daily "overall scores" (stress+mood+energy) across all rated days
+  // If only one component exists, that alone is used; if neither, returns null.
+  function computeLifetimeOverall() {
+    const days = progressData.days;
+    const totalDays = Object.keys(days).length;
+    const totalSessions = Object.values(days).reduce((sum, d) => sum + (d.sessions || 0), 0);
+    const { current, longest } = computeStreaks(days);
+
+    const stressByDate = {};
+    progressData.stressLog.forEach(e => { stressByDate[e.date] = e.value; });
+    const moodByDate = {};
+    progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
+    const energyByDate = {};
+    progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
+    const ratedDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate)]);
+
+    let wellbeingAvg = null;
+    if (ratedDates.size > 0) {
+      let sum = 0, cnt = 0;
+      ratedDates.forEach(d => {
+        const day = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+        if (day) { sum += day.avg; cnt++; }
+      });
+      wellbeingAvg = cnt > 0 ? sum / cnt : null;
+    }
+
+    let consistencyScore = null;
+    const allDateKeys = [...new Set([...Object.keys(days), ...ratedDates])];
+    if (allDateKeys.length > 0) {
+      const sortedAll = allDateKeys.slice().sort();
+      const firstDate = new Date(sortedAll[0] + 'T00:00:00');
+      const today = new Date(dateKey(new Date()) + 'T00:00:00');
+      const spanDays = Math.max(1, Math.round((today - firstDate) / 86400000) + 1);
+      const ratio = totalDays / spanDays;
+      consistencyScore = Math.max(0, Math.min(10, ratio * 10));
+    }
+
+    let overallScore = null;
+    if (wellbeingAvg !== null && consistencyScore !== null) {
+      overallScore = wellbeingAvg * 0.5 + consistencyScore * 0.5;
+    } else if (wellbeingAvg !== null) {
+      overallScore = wellbeingAvg;
+    } else if (consistencyScore !== null) {
+      overallScore = consistencyScore;
+    }
+
+    return { totalDays, totalSessions, current, longest, wellbeingAvg, consistencyScore, overallScore, ratedDaysCount: ratedDates.size };
+  }
+
+  function renderProgressLifetimeGauge() {
+    const container = document.getElementById('lifetime-gauge-content');
+    if (!container) return;
+    const stats = computeLifetimeOverall();
+
+    if (stats.overallScore === null) {
+      container.innerHTML = '<p class="overall-gauge-empty">Not enough data yet. Once you practice a few days or rate your stress, mood or energy, your overall lifetime index will appear here.</p>';
+      return;
+    }
+
+    const zoneValue = Math.round(stats.overallScore);
+    const status = gaugeStatus(zoneValue, false);
+
+    let verdictText, msg;
+    if (zoneValue >= 8) {
+      verdictText = 'You’re doing great';
+      msg = 'Over time you’re doing really well — both consistency and overall feelings look good. Keep it up!';
+    } else if (zoneValue >= 5) {
+      verdictText = 'You’re doing well';
+      msg = 'Overall things are heading in a good direction. Try to keep up the consistency and notice what helps you most.';
+    } else {
+      verdictText = 'There’s room to improve';
+      msg = 'It’s not quite there yet — try to find a more regular time to practice, even a few minutes a day can make a real difference.';
+    }
+
+    const needleId = 'lifetime-gauge-needle';
+    const dial = gaugeDialSvg(stats.overallScore, false, needleId);
+
+    const statCards = [];
+    statCards.push('<div class="lifetime-stat"><span>' + stats.totalSessions + '</span>sessions total</div>');
+    statCards.push('<div class="lifetime-stat"><span>' + stats.totalDays + '</span>days practiced</div>');
+    statCards.push('<div class="lifetime-stat"><span>' + stats.longest + '</span>longest streak</div>');
+    if (stats.consistencyScore !== null) {
+      statCards.push('<div class="lifetime-stat"><span>' + Math.round(stats.consistencyScore * 10) + '%</span>consistency</div>');
+    }
+    if (stats.wellbeingAvg !== null) {
+      statCards.push('<div class="lifetime-stat"><span>' + stats.wellbeingAvg.toFixed(1) + '/10</span>avg wellbeing</div>');
+    }
+
+    container.innerHTML =
+      '<div class="overall-gauge-wrap">' +
+        dial.svg.replace('class="mood-gauge-svg"', 'class="mood-gauge-svg overall-gauge-svg"') +
+        '<div class="overall-gauge-verdict" style="color:' + status.color + ';">' + verdictText + '</div>' +
+        '<div class="overall-gauge-score">Overall index: ' + stats.overallScore.toFixed(1) + '/10</div>' +
+        '<p class="overall-gauge-msg">' + msg + '</p>' +
+      '</div>' +
+      '<div class="lifetime-gauge-stats">' + statCards.join('') + '</div>';
+
+    animateGaugeNeedle(needleId, dial.targetAngle);
+  }
+
   function csvField(value) {
     if (value === undefined || value === null) return '';
     const s = String(value);
@@ -3415,12 +3598,25 @@
   }
 
   function exportProgressCSV() {
+    const lifetime = computeLifetimeOverall();
+    const summaryRows = [
+      ['overall_index_0_10', lifetime.overallScore !== null ? lifetime.overallScore.toFixed(1) : ''],
+      ['consistency_percent', lifetime.consistencyScore !== null ? Math.round(lifetime.consistencyScore * 10) : ''],
+      ['avg_wellbeing_0_10', lifetime.wellbeingAvg !== null ? lifetime.wellbeingAvg.toFixed(1) : ''],
+      ['sessions_total', lifetime.totalSessions],
+      ['days_practiced', lifetime.totalDays],
+      ['longest_streak', lifetime.longest],
+      ['current_streak', lifetime.current]
+    ];
+
     const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'overall_score', 'note']];
     getProgressExportRows().forEach(r => {
       rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.note].map(csvField));
     });
 
-    const csv = rows.map(r => r.join(';')).join('\n');
+    const summaryCsv = summaryRows.map(r => r.map(csvField).join(';')).join('\n');
+    const tableCsv = rows.map(r => r.join(';')).join('\n');
+    const csv = summaryCsv + '\n\n' + tableCsv;
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -3442,7 +3638,22 @@
 
   function exportProgressPDF() {
     const rows = getProgressExportRows();
+    const lifetime = computeLifetimeOverall();
     const todayStr = new Date().toLocaleDateString('en-US');
+
+    const summaryHtml = lifetime.overallScore !== null
+      ? `
+      <div class="summary-box">
+        <div class="summary-score">Overall index: ${pdfEscapeHtml(lifetime.overallScore.toFixed(1))}/10</div>
+        <div class="summary-stats">
+          <div><strong>${pdfEscapeHtml(lifetime.totalSessions)}</strong>sessions total</div>
+          <div><strong>${pdfEscapeHtml(lifetime.totalDays)}</strong>days practiced</div>
+          <div><strong>${pdfEscapeHtml(lifetime.longest)}</strong>longest streak</div>
+          ${lifetime.consistencyScore !== null ? `<div><strong>${pdfEscapeHtml(Math.round(lifetime.consistencyScore * 10))}%</strong>consistency</div>` : ''}
+          ${lifetime.wellbeingAvg !== null ? `<div><strong>${pdfEscapeHtml(lifetime.wellbeingAvg.toFixed(1))}/10</strong>avg wellbeing</div>` : ''}
+        </div>
+      </div>`
+      : `<div class="summary-box"><p class="empty">Not enough data yet for an overall index.</p></div>`;
 
     const tableRows = rows.length
       ? rows.map(r => `
@@ -3465,7 +3676,11 @@
 <style>
   body { font-family: 'Poppins', Arial, sans-serif; color: #111; margin: 32px; }
   h1 { font-family: 'Orbitron', Arial, sans-serif; font-size: 22px; margin-bottom: 2px; }
-  .subtitle { font-size: 12px; color: #555; margin-bottom: 24px; }
+  .subtitle { font-size: 12px; color: #555; margin-bottom: 20px; }
+  .summary-box { border: 1px solid #e08a3e; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; background: #fff8f2; }
+  .summary-score { font-family: 'Orbitron', Arial, sans-serif; font-size: 16px; margin-bottom: 10px; }
+  .summary-stats { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: #333; }
+  .summary-stats strong { display: block; font-family: 'Orbitron', Arial, sans-serif; font-size: 15px; color: #c8590c; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: #f0f0f0; }
@@ -3479,6 +3694,7 @@
 <body>
   <h1>Uklidni To – Your Progress</h1>
   <div class="subtitle">Export from ${pdfEscapeHtml(todayStr)}</div>
+  ${summaryHtml}
   <table>
     <thead>
       <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Note</th></tr>
@@ -3599,6 +3815,7 @@
     renderProgressEnergyScale();
     renderProgressEnergyChart();
     renderProgressOverallGauge();
+    renderProgressLifetimeGauge();
     renderProgressJournal();
     renderProgressSummary();
     renderProgressRiskBanner();

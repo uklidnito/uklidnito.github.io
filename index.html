@@ -188,6 +188,31 @@
   .cta-icon { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); animation: breatheIconPulse 4s ease-in-out infinite; }
   @keyframes breatheIconPulse { 0%,100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.25); opacity: 1; } }
 
+  .hero-progress-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 14px; padding: 10px 20px; border-radius: 30px;
+    background: transparent; border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; font-size: 12px; letter-spacing: 1px; opacity: 0.85;
+    text-decoration: none; transition: 0.3s; font-family: 'Poppins', sans-serif; font-weight: 400;
+  }
+  .hero-progress-link:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
+
+  /* ---------- Plovoucí šipka nahoru (sekce Tvůj pokrok) ---------- */
+  .progress-scrolltop-btn {
+    position: fixed; right: 18px; bottom: 26px; z-index: 50;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(20,10,0,0.75); backdrop-filter: blur(6px);
+    border: 1px solid var(--accent-color); color: var(--accent-color);
+    font-size: 18px; line-height: 1; cursor: pointer;
+    opacity: 0; pointer-events: none; transform: translateY(8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 0 14px rgba(255,119,0,0.25);
+  }
+  .progress-scrolltop-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .progress-scrolltop-btn:hover { box-shadow: 0 0 20px var(--accent-color); }
+  @media (max-width: 600px) { .progress-scrolltop-btn { right: 12px; bottom: 18px; width: 40px; height: 40px; font-size: 16px; } }
+
   .hero-orb-preview { width: 130px; height: 130px; margin: 0 auto 22px; position: relative; }
   .hero-orb-preview .ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--accent-color); opacity: 0; animation: breathRingPulse 4s ease-out infinite; }
   .hero-orb-preview .ring2 { animation-delay: 2s; }
@@ -364,6 +389,18 @@
   .overall-gauge-msg { font-size: 12.5px; line-height: 1.6; opacity: 0.85; margin: 10px 0 0; max-width: 420px; margin-left: auto; margin-right: auto; }
   .overall-gauge-msg .cta-link { color: var(--accent-color); text-decoration: underline; cursor: pointer; background: none; border: none; font: inherit; padding: 0; }
   .overall-gauge-empty { font-size: 12.5px; opacity: 0.6; line-height: 1.7; }
+
+  /* ---------- Celkový index (spojuje úplně všechna data) ---------- */
+  .lifetime-gauge-card { border: 1px solid var(--accent-color); box-shadow: 0 0 24px rgba(255,119,0,0.12); }
+  .lifetime-gauge-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+  @media (min-width: 480px) { .lifetime-gauge-stats { grid-template-columns: repeat(4, 1fr); } }
+  .lifetime-stat { text-align: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px 6px; font-size: 10px; opacity: 0.75; letter-spacing: 0.2px; line-height: 1.4; }
+  .lifetime-stat span { display: block; font-family: 'Orbitron', sans-serif; font-size: 16px; color: var(--accent-color); margin-bottom: 4px; opacity: 1; }
+  .lifetime-info-toggle { margin-top: 16px; width: 100%; }
+  .lifetime-info-body .lifetime-info-text { font-size: 12px; line-height: 1.65; opacity: 0.8; margin: 0 0 10px; text-align: left; }
+  .lifetime-info-list { margin: 0 0 10px; padding-left: 18px; text-align: left; }
+  .lifetime-info-list li { font-size: 12px; line-height: 1.65; opacity: 0.8; margin-bottom: 8px; }
+  .lifetime-info-list strong { color: #fff; opacity: 1; }
   .progress-stress-unlock-hint { font-size: 11.5px; opacity: 0.55; margin: 6px 0 0; line-height: 1.6; font-style: italic; }
 
   .progress-summary-wrap { display: flex; gap: 12px; margin: 16px 0 20px; }
@@ -998,6 +1035,9 @@
       <span class="cta-icon" aria-hidden="true"></span>
       Spustit dechové cvičení
     </button>
+    <div>
+      <a href="#pokrok" class="hero-progress-link" onclick="showPanel('pokrok'); return false;"><span aria-hidden="true">📊</span> Zobrazit tvůj pokrok</a>
+    </div>
     <p style="font-size:11px; opacity:0.45; margin-top:16px; letter-spacing:0.3px;">Chceš k dýchání i hudbu na pozadí? Zkus <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA Relax Player</a>.</p>
   </section>
 
@@ -1063,6 +1103,7 @@
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
     </div>
+    <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Nahoru na začátek sekce" title="Nahoru">↑</button>
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Vše — kalendář, hodnocení stresu, nálady i energie, deníček i týdenní/měsíční souhrny — se ukládá jen lokálně v tomto prohlížeči (localStorage), nikam se to neodesílá ani neanalyzuje. Při vymazání dat prohlížeče nebo na jiném zařízení pokrok neuvidíš.</p>
 
@@ -1075,6 +1116,7 @@
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-overall').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🎯</span> Zhodnocení</button>
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-reminder').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🔔</span> Připomínka</button>
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-data').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🗃️</span> Data</button>
+        <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-lifetime').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🏆</span> Celkový index</button>
       </div>
     </div>
 
@@ -1297,6 +1339,28 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="progress-group" id="progress-nav-lifetime">
+      <div class="progress-group-title"><span class="icon">🏆</span> Celkový index</div>
+      <div class="overall-gauge-card lifetime-gauge-card" id="lifetime-gauge-card">
+        <h3>🏆 Jak si celkově vedeš</h3>
+        <p class="overall-gauge-hint">Spojuje úplně všechna dosud zaznamenaná data — pravidelnost cvičení, nejdelší sérii i vývoj stresu, nálady a energie v čase.</p>
+        <div id="lifetime-gauge-content"></div>
+
+        <button type="button" class="progress-calendar-toggle lifetime-info-toggle" id="lifetime-info-toggle" onclick="toggleLifetimeInfo()" aria-expanded="false" aria-controls="lifetime-info-body">
+          <span>ℹ️ Jak se index počítá</span>
+          <span class="chevron">▾</span>
+        </button>
+        <div class="progress-calendar-body lifetime-info-body" id="lifetime-info-body">
+          <p class="lifetime-info-text">Index 0–10 vzniká ze dvou stejně vážených částí:</p>
+          <ul class="lifetime-info-list">
+            <li><strong>Pravidelnost (50 %)</strong> — kolik procent dní od tvého úplně prvního záznamu jsi opravdu odcvičil/a. Například 15 odcvičených dní z 30 dní od prvního cvičení = 50 %.</li>
+            <li><strong>Průměrná pohoda (50 %)</strong> — průměr ze všech dní, kdy sis ohodnotil/a stres, náladu nebo energii. U stresu se hodnota otáčí (nižší stres = lepší skóre), pak se zprůměruje s náladou a energií za daný den a nakonec napříč všemi dny.</li>
+          </ul>
+          <p class="lifetime-info-text">Pokud máš zaznamenaný jen jeden typ dat (třeba jen cvičení bez hodnocení pocitů), počítá se index jen z něj. Vše se přepočítává automaticky při každé nové aktivitě a je vidět i v exportu CSV/PDF.</p>
+        </div>
+      </div>
     </div>
 
     <div class="progress-save-wrap">
@@ -1740,6 +1804,18 @@
     const id = e.state && e.state.panel ? e.state.panel : null;
     renderPanel(id);
   });
+
+  // ---------- Plovoucí šipka nahoru v sekci "Tvůj pokrok" ----------
+  (function initProgressScrollTop() {
+    const btn = document.getElementById('progress-scrolltop-btn');
+    if (!btn) return;
+    const SHOW_AFTER = 400;
+    window.addEventListener('scroll', function () {
+      const pokrokEl = document.getElementById('pokrok');
+      const isPokrokActive = pokrokEl && pokrokEl.classList.contains('panel-active');
+      btn.classList.toggle('visible', !!isPokrokActive && window.scrollY > SHOW_AFTER);
+    }, { passive: true });
+  })();
 
   (function initPanelFromHash() {
     const hashId = location.hash ? location.hash.slice(1) : '';
@@ -2566,6 +2642,10 @@
     toggleCollapsibleBody('progress-data-body', 'progress-data-toggle', force);
   };
 
+  window.toggleLifetimeInfo = function(force) {
+    toggleCollapsibleBody('lifetime-info-body', 'lifetime-info-toggle', force);
+  };
+
   // Po přerenderování obsahu (kalendáře, tabulky dat...) se může změnit jeho
   // výška — pokud je panel právě rozbalený, max-height dorovnáme, ať se
   // spodek obsahu neořízne.
@@ -3371,6 +3451,109 @@
     banner.style.display = 'none';
   }
 
+  // ---------- Celkový index: spojuje úplně všechna data (ne jen dnešek) ----------
+  // Kombinuje dvě složky, každou 0-10:
+  // 1) pravidelnost = podíl odcvičených dní od prvního záznamu do dneška
+  // 2) průměrná pohoda = průměr denních "celkových skóre" (stres+nálada+energie) napříč všemi ohodnocenými dny
+  // Pokud existuje jen jedna složka, použije se samotná; pokud žádná, vrací se null.
+  function computeLifetimeOverall() {
+    const days = progressData.days;
+    const totalDays = Object.keys(days).length;
+    const totalSessions = Object.values(days).reduce((sum, d) => sum + (d.sessions || 0), 0);
+    const { current, longest } = computeStreaks(days);
+
+    const stressByDate = {};
+    progressData.stressLog.forEach(e => { stressByDate[e.date] = e.value; });
+    const moodByDate = {};
+    progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
+    const energyByDate = {};
+    progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
+    const ratedDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate)]);
+
+    let wellbeingAvg = null;
+    if (ratedDates.size > 0) {
+      let sum = 0, cnt = 0;
+      ratedDates.forEach(d => {
+        const day = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+        if (day) { sum += day.avg; cnt++; }
+      });
+      wellbeingAvg = cnt > 0 ? sum / cnt : null;
+    }
+
+    let consistencyScore = null;
+    const allDateKeys = [...new Set([...Object.keys(days), ...ratedDates])];
+    if (allDateKeys.length > 0) {
+      const sortedAll = allDateKeys.slice().sort();
+      const firstDate = new Date(sortedAll[0] + 'T00:00:00');
+      const today = new Date(dateKey(new Date()) + 'T00:00:00');
+      const spanDays = Math.max(1, Math.round((today - firstDate) / 86400000) + 1);
+      const ratio = totalDays / spanDays;
+      consistencyScore = Math.max(0, Math.min(10, ratio * 10));
+    }
+
+    let overallScore = null;
+    if (wellbeingAvg !== null && consistencyScore !== null) {
+      overallScore = wellbeingAvg * 0.5 + consistencyScore * 0.5;
+    } else if (wellbeingAvg !== null) {
+      overallScore = wellbeingAvg;
+    } else if (consistencyScore !== null) {
+      overallScore = consistencyScore;
+    }
+
+    return { totalDays, totalSessions, current, longest, wellbeingAvg, consistencyScore, overallScore, ratedDaysCount: ratedDates.size };
+  }
+
+  function renderProgressLifetimeGauge() {
+    const container = document.getElementById('lifetime-gauge-content');
+    if (!container) return;
+    const stats = computeLifetimeOverall();
+
+    if (stats.overallScore === null) {
+      container.innerHTML = '<p class="overall-gauge-empty">Zatím nemáš dost dat. Jakmile odcvičíš pár dní nebo si ohodnotíš stres, náladu či energii, objeví se tu celkový index za celou dobu používání.</p>';
+      return;
+    }
+
+    const zoneValue = Math.round(stats.overallScore);
+    const status = gaugeStatus(zoneValue, false);
+
+    let verdictText, msg;
+    if (zoneValue >= 8) {
+      verdictText = 'Vedeš si skvěle';
+      msg = 'Dlouhodobě si vedeš opravdu dobře — pravidelnost i celkové pocity jsou v pohodě. Jen tak dál!';
+    } else if (zoneValue >= 5) {
+      verdictText = 'Vedeš si dobře';
+      msg = 'Celkově to jde dobrým směrem. Zkus udržet pravidelnost a sleduj, co ti nejvíc pomáhá.';
+    } else {
+      verdictText = 'Je tu prostor ke zlepšení';
+      msg = 'Zatím to není úplně ono — zkus si najít pravidelnější čas na cvičení, i pár minut denně dokáže hodně změnit.';
+    }
+
+    const needleId = 'lifetime-gauge-needle';
+    const dial = gaugeDialSvg(stats.overallScore, false, needleId);
+
+    const statCards = [];
+    statCards.push('<div class="lifetime-stat"><span>' + stats.totalSessions + '</span>cvičení celkem</div>');
+    statCards.push('<div class="lifetime-stat"><span>' + stats.totalDays + '</span>odcvičených dní</div>');
+    statCards.push('<div class="lifetime-stat"><span>' + stats.longest + '</span>nejdelší série</div>');
+    if (stats.consistencyScore !== null) {
+      statCards.push('<div class="lifetime-stat"><span>' + Math.round(stats.consistencyScore * 10) + '%</span>pravidelnost</div>');
+    }
+    if (stats.wellbeingAvg !== null) {
+      statCards.push('<div class="lifetime-stat"><span>' + stats.wellbeingAvg.toFixed(1) + '/10</span>průměrná pohoda</div>');
+    }
+
+    container.innerHTML =
+      '<div class="overall-gauge-wrap">' +
+        dial.svg.replace('class="mood-gauge-svg"', 'class="mood-gauge-svg overall-gauge-svg"') +
+        '<div class="overall-gauge-verdict" style="color:' + status.color + ';">' + verdictText + '</div>' +
+        '<div class="overall-gauge-score">Celkový index: ' + stats.overallScore.toFixed(1) + '/10</div>' +
+        '<p class="overall-gauge-msg">' + msg + '</p>' +
+      '</div>' +
+      '<div class="lifetime-gauge-stats">' + statCards.join('') + '</div>';
+
+    animateGaugeNeedle(needleId, dial.targetAngle);
+  }
+
   function csvField(value) {
     if (value === undefined || value === null) return '';
     const s = String(value);
@@ -3411,12 +3594,25 @@
   }
 
   function exportProgressCSV() {
+    const lifetime = computeLifetimeOverall();
+    const summaryRows = [
+      ['celkovy_index_0_10', lifetime.overallScore !== null ? lifetime.overallScore.toFixed(1) : ''],
+      ['pravidelnost_procent', lifetime.consistencyScore !== null ? Math.round(lifetime.consistencyScore * 10) : ''],
+      ['prumerna_pohoda_0_10', lifetime.wellbeingAvg !== null ? lifetime.wellbeingAvg.toFixed(1) : ''],
+      ['cviceni_celkem', lifetime.totalSessions],
+      ['odcvicenych_dni', lifetime.totalDays],
+      ['nejdelsi_serie', lifetime.longest],
+      ['aktualni_serie', lifetime.current]
+    ];
+
     const rows = [['datum', 'cviceni_pocet', 'hodnoceni_stresu', 'hodnoceni_nalady', 'hodnoceni_energie', 'celkove_skore', 'poznamka']];
     getProgressExportRows().forEach(r => {
       rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.note].map(csvField));
     });
 
-    const csv = rows.map(r => r.join(';')).join('\n');
+    const summaryCsv = summaryRows.map(r => r.map(csvField).join(';')).join('\n');
+    const tableCsv = rows.map(r => r.join(';')).join('\n');
+    const csv = summaryCsv + '\n\n' + tableCsv;
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -3438,7 +3634,22 @@
 
   function exportProgressPDF() {
     const rows = getProgressExportRows();
+    const lifetime = computeLifetimeOverall();
     const todayStr = new Date().toLocaleDateString('cs-CZ');
+
+    const summaryHtml = lifetime.overallScore !== null
+      ? `
+      <div class="summary-box">
+        <div class="summary-score">Celkový index: ${pdfEscapeHtml(lifetime.overallScore.toFixed(1))}/10</div>
+        <div class="summary-stats">
+          <div><strong>${pdfEscapeHtml(lifetime.totalSessions)}</strong>cvičení celkem</div>
+          <div><strong>${pdfEscapeHtml(lifetime.totalDays)}</strong>odcvičených dní</div>
+          <div><strong>${pdfEscapeHtml(lifetime.longest)}</strong>nejdelší série</div>
+          ${lifetime.consistencyScore !== null ? `<div><strong>${pdfEscapeHtml(Math.round(lifetime.consistencyScore * 10))}%</strong>pravidelnost</div>` : ''}
+          ${lifetime.wellbeingAvg !== null ? `<div><strong>${pdfEscapeHtml(lifetime.wellbeingAvg.toFixed(1))}/10</strong>průměrná pohoda</div>` : ''}
+        </div>
+      </div>`
+      : `<div class="summary-box"><p class="empty">Zatím není dost dat na celkový index.</p></div>`;
 
     const tableRows = rows.length
       ? rows.map(r => `
@@ -3461,7 +3672,11 @@
 <style>
   body { font-family: 'Poppins', Arial, sans-serif; color: #111; margin: 32px; }
   h1 { font-family: 'Orbitron', Arial, sans-serif; font-size: 22px; margin-bottom: 2px; }
-  .subtitle { font-size: 12px; color: #555; margin-bottom: 24px; }
+  .subtitle { font-size: 12px; color: #555; margin-bottom: 20px; }
+  .summary-box { border: 1px solid #e08a3e; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; background: #fff8f2; }
+  .summary-score { font-family: 'Orbitron', Arial, sans-serif; font-size: 16px; margin-bottom: 10px; }
+  .summary-stats { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: #333; }
+  .summary-stats strong { display: block; font-family: 'Orbitron', Arial, sans-serif; font-size: 15px; color: #c8590c; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: #f0f0f0; }
@@ -3475,6 +3690,7 @@
 <body>
   <h1>Uklidni To – Tvůj pokrok</h1>
   <div class="subtitle">Export ze dne ${pdfEscapeHtml(todayStr)}</div>
+  ${summaryHtml}
   <table>
     <thead>
       <tr><th>Datum</th><th>Počet cvičení</th><th>Hodnocení stresu</th><th>Hodnocení nálady</th><th>Hodnocení energie</th><th>Celkové skóre</th><th>Poznámka</th></tr>
@@ -3595,6 +3811,7 @@
     renderProgressEnergyScale();
     renderProgressEnergyChart();
     renderProgressOverallGauge();
+    renderProgressLifetimeGauge();
     renderProgressJournal();
     renderProgressSummary();
     renderProgressRiskBanner();
