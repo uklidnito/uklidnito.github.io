@@ -875,7 +875,7 @@
     position: absolute; inset: 0; z-index: 6; display: none;
     background: rgba(5, 2, 10, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     flex-direction: column; align-items: center; justify-content: center; text-align: center;
-    padding: 64px 24px 40px;
+    padding: 64px 24px 40px; overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
   .breath-figure-panel.visible { display: flex; }
   .breath-figure-close {
@@ -1033,9 +1033,10 @@
   .btn-breath-ctrl:hover { border-color: var(--accent-color); background: rgba(255,255,255,0.1); }
   .btn-breath-ctrl.active { border-color: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); color: var(--accent-color); }
   .btn-breath-ctrl:disabled { opacity: 0.3; cursor: default; }
-  #breath-logo-btn { min-width: 96px; }
-  #breath-vibe-btn { min-width: 108px; }
-  #breath-save-btn { min-width: 62px; }
+  #breath-logo-btn, #breath-figure-logo-btn { min-width: 96px; }
+  #breath-vibe-btn, #breath-figure-vibe-btn { min-width: 108px; }
+  #breath-save-btn, #breath-figure-save-btn { min-width: 62px; }
+  .breath-figure-controls { margin-top: 18px; }
 
   /* ---------- Color theme picker (breathing exercise) ---------- */
   .breath-theme-picker {
@@ -1958,6 +1959,18 @@
         <span class="breath-stat-value breath-clock-value">--:--</span>
       </div>
     </div>
+
+    <div class="breath-controls breath-figure-controls">
+      <button class="btn-breath-ctrl" id="breath-figure-start-btn" onclick="resumeBreathCycle()">START</button>
+      <button class="btn-breath-ctrl" id="breath-figure-stop-btn" onclick="pauseBreathCycle()">STOP</button>
+      <button class="btn-breath-ctrl" id="breath-figure-logo-btn" onclick="toggleBreathLogo()">LOGO: ON</button>
+      <button class="btn-breath-ctrl" id="breath-figure-vibe-btn" onclick="toggleBreathVibration()">VIBRACE: ZAP</button>
+      <button class="btn-breath-ctrl" id="breath-figure-theme-btn" onclick="toggleThemePicker()" aria-haspopup="true" aria-expanded="false">THEME</button>
+      <button class="btn-breath-ctrl" id="breath-figure-save-btn" onclick="saveBreathSettings()">SAVE</button>
+
+      <div class="breath-theme-picker" id="breath-figure-theme-picker" role="menu" aria-label="Color theme picker"></div>
+    </div>
+
     <div class="breath-figure-hint">The figure breathes in the same rhythm as the sphere next to it — watch its chest rise and fall, and breathe at the same pace. You can switch technique while the demo is open.</div>
   </div>
 
@@ -2769,10 +2782,12 @@
   };
 
   function updateBreathControlsUI() {
-    const startBtn = document.getElementById('breath-start-btn');
-    const stopBtn = document.getElementById('breath-stop-btn');
-    if (startBtn) startBtn.classList.toggle('active', breathingActive && !breathingPaused);
-    if (stopBtn) stopBtn.classList.toggle('active', breathingActive && breathingPaused);
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn').forEach(function (btn) {
+      btn.classList.toggle('active', breathingActive && !breathingPaused);
+    });
+    document.querySelectorAll('#breath-stop-btn, #breath-figure-stop-btn').forEach(function (btn) {
+      btn.classList.toggle('active', breathingActive && breathingPaused);
+    });
   }
 
   // Logo toggle (hide/show) in the breathing exercise
@@ -2783,11 +2798,10 @@
 
   function applyBreathLogoVisibility() {
     breathLogoEl.style.display = breathLogoHidden ? 'none' : '';
-    const btn = document.getElementById('breath-logo-btn');
-    if (btn) {
+    document.querySelectorAll('#breath-logo-btn, #breath-figure-logo-btn').forEach(function (btn) {
       btn.innerText = breathLogoHidden ? 'LOGO: OFF' : 'LOGO: ON';
       btn.classList.toggle('active', !breathLogoHidden);
-    }
+    });
   }
 
   // Toggle vibration on breathing-phase change (inhale/exhale/hold)
@@ -2797,11 +2811,10 @@
   };
 
   function applyBreathVibrationVisibility() {
-    const btn = document.getElementById('breath-vibe-btn');
-    if (btn) {
+    document.querySelectorAll('#breath-vibe-btn, #breath-figure-vibe-btn').forEach(function (btn) {
       btn.innerText = vibrationEnabled ? 'VIBRACE: ZAP' : 'VIBRACE: VYP';
       btn.classList.toggle('active', vibrationEnabled);
-    }
+    });
   }
 
   // ---------- Breathing exercise color themes (orb, glow, accents across the page) ----------
@@ -2822,7 +2835,7 @@
   let currentThemeId = 'amber';
 
   function renderThemePicker() {
-    document.querySelectorAll('#breath-theme-picker, #side-nav-theme-picker').forEach(function (picker) {
+    document.querySelectorAll('#breath-theme-picker, #breath-figure-theme-picker, #side-nav-theme-picker').forEach(function (picker) {
       if (!picker || picker.childElementCount) return;
       BREATH_THEMES.forEach(function (theme) {
         const btn = document.createElement('button');
@@ -2841,24 +2854,30 @@
   }
 
   window.toggleThemePicker = function (force) {
-    const picker = document.getElementById('breath-theme-picker');
-    const btn = document.getElementById('breath-theme-btn');
-    if (!picker) return;
+    const pickers = document.querySelectorAll('#breath-theme-picker, #breath-figure-theme-picker');
+    if (!pickers.length) return;
     renderThemePicker();
-    const open = typeof force === 'boolean' ? force : !picker.classList.contains('open');
-    picker.classList.toggle('open', open);
-    if (btn) {
+    let anyOpen = false;
+    pickers.forEach(function (p) { if (p.classList.contains('open')) anyOpen = true; });
+    const open = typeof force === 'boolean' ? force : !anyOpen;
+    pickers.forEach(function (p) { p.classList.toggle('open', open); });
+    document.querySelectorAll('#breath-theme-btn, #breath-figure-theme-btn').forEach(function (btn) {
       btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       btn.classList.toggle('active', open);
-    }
+    });
   };
 
   // Close the theme menu when clicking outside it or pressing Escape
   document.addEventListener('click', function (e) {
-    const picker = document.getElementById('breath-theme-picker');
-    const btn = document.getElementById('breath-theme-btn');
-    if (!picker || !picker.classList.contains('open')) return;
-    if (picker.contains(e.target) || (btn && btn.contains(e.target))) return;
+    const pickers = document.querySelectorAll('#breath-theme-picker, #breath-figure-theme-picker');
+    const btns = document.querySelectorAll('#breath-theme-btn, #breath-figure-theme-btn');
+    let anyOpen = false;
+    pickers.forEach(function (p) { if (p.classList.contains('open')) anyOpen = true; });
+    if (!anyOpen) return;
+    let clickedInside = false;
+    pickers.forEach(function (p) { if (p.contains(e.target)) clickedInside = true; });
+    btns.forEach(function (b) { if (b.contains(e.target)) clickedInside = true; });
+    if (clickedInside) return;
     toggleThemePicker(false);
   });
   document.addEventListener('keydown', function (e) {
@@ -2896,17 +2915,16 @@
     settings.themeColor = currentThemeId;
     try { localStorage.setItem('uklidnito_settings', JSON.stringify(settings)); } catch (e) { /* ignore */ }
 
-    const btn = document.getElementById('breath-save-btn');
-    if (btn) {
-      if (breathSaveBtnResetTimer) clearTimeout(breathSaveBtnResetTimer);
+    document.querySelectorAll('#breath-save-btn, #breath-figure-save-btn').forEach(function (btn) {
+      if (btn._breathSaveResetTimer) clearTimeout(btn._breathSaveResetTimer);
       btn.innerText = 'SAVED!';
       btn.classList.add('active');
-      breathSaveBtnResetTimer = setTimeout(() => {
+      btn._breathSaveResetTimer = setTimeout(function () {
         btn.innerText = 'SAVE';
         btn.classList.remove('active');
-        breathSaveBtnResetTimer = null;
+        btn._breathSaveResetTimer = null;
       }, 2000);
-    }
+    });
   };
 
   // Slogans in the breathing exercise - custom shuffled order
