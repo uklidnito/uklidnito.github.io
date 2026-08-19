@@ -797,13 +797,30 @@
   }
   .breath-figure-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
   .breath-figure-tech-name { font-size: 18px; color: #fff; margin-bottom: 20px; }
-  .breath-figure-svg { width: 130px; height: auto; overflow: visible; }
+  .breath-figure-visual { position: relative; width: 150px; height: 220px; display: flex; align-items: center; justify-content: center; }
+  .breath-figure-glow {
+    position: absolute; width: 140px; height: 140px; border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-color) 0%, var(--accent-glow) 45%, transparent 72%);
+    filter: blur(14px); transform: scale(0.75); opacity: 0.22;
+    transition: opacity linear, transform linear; will-change: opacity, transform;
+  }
+  .breath-figure-glow.holding { animation: breathHoldShimmer 2.4s ease-in-out infinite; }
+  .breath-figure-ring {
+    position: absolute; width: 140px; height: 140px; border-radius: 50%;
+    border: 1px solid var(--accent-color); opacity: 0; pointer-events: none;
+    animation: breathRingPulse 4s ease-out infinite;
+  }
+  .breath-figure-ring.ring-2 { animation-delay: 2s; }
+  .breath-figure-svg { position: relative; z-index: 1; width: 130px; height: auto; overflow: visible; }
   .breath-figure-torso {
     transform-box: fill-box; transform-origin: 50% 100%; transition: transform linear;
-    fill: var(--accent-color); opacity: 0.85; filter: drop-shadow(0 0 14px var(--accent-color));
+    fill: url(#breathFigureGradient); opacity: 0.95; filter: drop-shadow(0 0 16px var(--accent-color));
   }
-  .breath-figure-head { fill: rgba(255,255,255,0.9); }
-  .breath-figure-leg { fill: rgba(255,255,255,0.3); }
+  .breath-figure-fg-stop-1 { stop-color: #fff; stop-opacity: 0.95; }
+  .breath-figure-fg-stop-2 { stop-color: var(--accent-color); }
+  .breath-figure-fg-stop-3 { stop-color: var(--accent-glow); }
+  .breath-figure-head { fill: rgba(255,255,255,0.92); filter: drop-shadow(0 0 6px rgba(255,255,255,0.35)); }
+  .breath-figure-leg { fill: rgba(255,255,255,0.28); }
   .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; }
   .breath-figure-count { margin-top: 6px; font-size: 34px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px var(--accent-color); }
   .breath-figure-hint { margin-top: 26px; font-size: 10px; opacity: 0.35; letter-spacing: 1px; text-transform: uppercase; max-width: 220px; }
@@ -892,9 +909,10 @@
   #breath-save-btn { min-width: 62px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .breath-orb-wrap, .breath-orb, .breath-core-mark { transition-duration: 0.6s !important; }
-    .breath-orb.holding, .cta-icon, .breath-ring, .breath-blob, .hero-orb-preview .ring { animation: none; }
-    .breath-ring, .hero-orb-preview .ring { display: none; }
+    .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow { transition-duration: 0.6s !important; }
+    .breath-orb.holding, .cta-icon, .breath-ring, .breath-blob, .hero-orb-preview .ring,
+    .breath-figure-glow.holding, .breath-figure-ring { animation: none; }
+    .breath-ring, .hero-orb-preview .ring, .breath-figure-ring { display: none; }
   }
 
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
@@ -1107,7 +1125,7 @@
     <h2 id="jak-funguje">Jak dechové cvičení funguje</h2>
     <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe.</p>
     <p>Kdykoli si můžeš vybrat jednu z osmi vědecky podložených technik podle toho, co zrovna potřebuješ: rychle se zklidnit, usnout, nebo naopak zůstat soustředěný/á pod tlakem. Na podporovaných telefonech cvičení navíc jemně vibruje při každé změně fáze, takže se můžeš soustředit i se zavřenýma očima.</p>
-    <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. A pokud si nejsi jistý/á, jak přesně u dané techniky dýchat, klepni na ikonku postavičky 🧍 vedle ikonky s návodem (ⓘ) — otevře se ukázka, kde se malé postavičce plynule zvedá a klesá hrudník přesně v rytmu zvolené techniky (nádech, zádrž, výdech), takže stačí dýchat podle ní. Ukázku můžeš mít puštěnou i bez spuštěného cvičení a technika se v ní přepíná spolu s tou, kterou máš zvolenou v hlavním cvičení.</p>
+    <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. Vedle ikonky s návodem (ⓘ) je ikonka postavičky 🧍 — je to živá ukázka tempa dýchání pro navíc, ne povinná součást cvičení. Po klepnutí se otevře malá zářící postavička, které se hrudník plynule zvedá a klesá přesně v rytmu zvolené techniky (nádech, zádrž, výdech) a k tomu odpočítává sekundy dané fáze, takže se stačí dívat a dýchat stejným tempem — ideální, když si nejsi jistý/á, jak přesně danou techniku dýchat. Ukázku můžeš mít otevřenou i bez spuštěného hlavního cvičení a technika se v ní automaticky přepíná spolu s tou, kterou máš zvolenou nahoře.</p>
     <ul class="benefits-list">
       <li>Zklidnění nervového systému a snížení pocitu úzkosti a stresu</li>
       <li>Rychlejší usínání a hlubší uvolnění před spaním</li>
@@ -1699,17 +1717,29 @@
 
   <div class="breath-figure-panel" id="breath-figure-panel">
     <button class="breath-figure-close" onclick="toggleBreathFigure()" aria-label="Zavřít ukázku dýchání">✖</button>
-    <div class="breath-figure-title">Ukázka dýchání</div>
+    <div class="breath-figure-title">Ukázka tempa dýchání</div>
     <div class="breath-figure-tech-name" id="breath-figure-tech-name">4-7-8</div>
-    <svg class="breath-figure-svg" viewBox="0 0 120 220" aria-hidden="true">
-      <ellipse cx="60" cy="108" rx="30" ry="52" class="breath-figure-torso" id="breath-figure-torso"></ellipse>
-      <circle cx="60" cy="34" r="20" class="breath-figure-head"></circle>
-      <rect x="45" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
-      <rect x="65" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
-    </svg>
+    <div class="breath-figure-visual">
+      <div class="breath-figure-ring" aria-hidden="true"></div>
+      <div class="breath-figure-ring ring-2" aria-hidden="true"></div>
+      <div class="breath-figure-glow" id="breath-figure-glow" aria-hidden="true"></div>
+      <svg class="breath-figure-svg" viewBox="0 0 120 220" aria-hidden="true">
+        <defs>
+          <radialGradient id="breathFigureGradient" cx="50%" cy="30%" r="75%">
+            <stop offset="0%" class="breath-figure-fg-stop-1"></stop>
+            <stop offset="45%" class="breath-figure-fg-stop-2"></stop>
+            <stop offset="100%" class="breath-figure-fg-stop-3"></stop>
+          </radialGradient>
+        </defs>
+        <ellipse cx="60" cy="108" rx="30" ry="52" class="breath-figure-torso" id="breath-figure-torso"></ellipse>
+        <circle cx="60" cy="34" r="20" class="breath-figure-head"></circle>
+        <rect x="45" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
+        <rect x="65" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
+      </svg>
+    </div>
     <div class="breath-figure-phase" id="breath-figure-phase">Nádech</div>
     <div class="breath-figure-count" id="breath-figure-count">4</div>
-    <div class="breath-figure-hint">Sleduj postavičku a dýchej stejným tempem — technika jde přepnout i s ukázkou otevřenou</div>
+    <div class="breath-figure-hint">Postavička dýchá za tebe — sleduj, jak se jí hrudník zvedá a klesá, a dýchej ve stejném tempu. Technika jde přepnout i s otevřenou ukázkou.</div>
   </div>
 
   <div class="breath-stats-row" id="breath-stats-row">
@@ -2158,24 +2188,33 @@
   let breathFigurePhaseIndex = 0;
   let breathFigurePhaseTimeout = null;
   let breathFigureCountdownInterval = null;
-  const FIGURE_OUT_TRANSFORM = 'scale(1, 1)';
-  const FIGURE_IN_TRANSFORM = 'scale(1.22, 1.12)';
-  let lastFigureTransform = FIGURE_OUT_TRANSFORM;
+  const FIGURE_OUT_VISUAL = { transform: 'scale(1, 1)', glowScale: 0.75, glowOpacity: 0.22, isHold: false };
+  const FIGURE_IN_VISUAL  = { transform: 'scale(1.22, 1.12)', glowScale: 1.05, glowOpacity: 0.55, isHold: false };
+  let lastFigureVisual = FIGURE_OUT_VISUAL;
 
   function setBreathFigureTransitionDuration(seconds) {
     const torso = document.getElementById('breath-figure-torso');
+    const glow = document.getElementById('breath-figure-glow');
     if (torso) torso.style.transitionDuration = seconds + 's';
+    if (glow) glow.style.transitionDuration = seconds + 's';
   }
 
-  function applyBreathFigureTransform(transform) {
+  function applyBreathFigureVisual(visual) {
     const torso = document.getElementById('breath-figure-torso');
-    if (torso) torso.style.transform = transform;
+    const glow = document.getElementById('breath-figure-glow');
+    if (torso) torso.style.transform = visual.transform;
+    if (glow) {
+      glow.style.transform = `scale(${visual.glowScale})`;
+      glow.style.opacity = visual.glowOpacity;
+      glow.classList.toggle('holding', visual.isHold);
+    }
   }
 
-  function getFigurePhaseTransform(phase) {
-    if (phase.type === 'in') return FIGURE_IN_TRANSFORM;
-    if (phase.type === 'out') return FIGURE_OUT_TRANSFORM;
-    return lastFigureTransform;
+  // Nádech/výdech mají pevný vzhled, zádrž si podrží vzhled poslední ne-hold fáze (shimmer navíc)
+  function getFigurePhaseVisual(phase) {
+    if (phase.type === 'in') return FIGURE_IN_VISUAL;
+    if (phase.type === 'out') return FIGURE_OUT_VISUAL;
+    return { transform: lastFigureVisual.transform, glowScale: lastFigureVisual.glowScale, glowOpacity: lastFigureVisual.glowOpacity, isHold: true };
   }
 
   function runBreathFigurePhase() {
@@ -2187,9 +2226,9 @@
     if (phaseEl) phaseEl.innerText = phase.label || DEFAULT_PHASE_LABELS[phase.type];
     setBreathFigureTransitionDuration(phase.duration);
 
-    const transform = getFigurePhaseTransform(phase);
-    if (phase.type !== 'hold') lastFigureTransform = transform;
-    requestAnimationFrame(() => applyBreathFigureTransform(transform));
+    const visual = getFigurePhaseVisual(phase);
+    if (phase.type !== 'hold') lastFigureVisual = visual;
+    requestAnimationFrame(() => applyBreathFigureVisual(visual));
 
     let secondsLeft = Math.ceil(phase.duration);
     if (countEl) countEl.innerText = secondsLeft;
@@ -2211,9 +2250,9 @@
     breathFigurePhaseIndex = 0;
     clearTimeout(breathFigurePhaseTimeout);
     clearInterval(breathFigureCountdownInterval);
-    lastFigureTransform = FIGURE_OUT_TRANSFORM;
+    lastFigureVisual = FIGURE_OUT_VISUAL;
     setBreathFigureTransitionDuration(0);
-    applyBreathFigureTransform(FIGURE_OUT_TRANSFORM);
+    applyBreathFigureVisual(FIGURE_OUT_VISUAL);
     requestAnimationFrame(() => requestAnimationFrame(runBreathFigurePhase));
   }
 
