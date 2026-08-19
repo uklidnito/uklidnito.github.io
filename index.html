@@ -2,6 +2,32 @@
 <html lang="cs" class="no-js">
 <head>
 <script>document.documentElement.classList.replace('no-js','js');</script>
+<script>
+  // Načtení uloženého barevného motivu co nejdřív (ještě před vykreslením
+  // stylů), aby stránka nenaskočila nejdřív ve výchozí jantarové barvě a pak
+  // "neproblikla" do zvolené barvy.
+  (function applySavedThemeEarly() {
+    var THEME_COLORS = {
+      amber:  ['#ff7700', '#993300'],
+      blue:   ['#2196f3', '#0d3d7a'],
+      purple: ['#9c27b0', '#4a0e59'],
+      green:  ['#43a047', '#1b5e20'],
+      pink:   ['#ff4d8d', '#85114a'],
+      teal:   ['#12c2c2', '#0a5c5c'],
+      red:    ['#ef4444', '#7f1d1d']
+    };
+    try {
+      var raw = localStorage.getItem('uklidnito_settings');
+      var id = raw && JSON.parse(raw).themeColor;
+      var pair = THEME_COLORS[id];
+      if (pair) {
+        var root = document.documentElement.style;
+        root.setProperty('--accent-color', pair[0]);
+        root.setProperty('--accent-glow', pair[1]);
+      }
+    } catch (e) { /* ignore */ }
+  })();
+</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2599270563466963"
      crossorigin="anonymous"></script>
 <meta charset="UTF-8">
@@ -949,7 +975,7 @@
   }
   .breath-slogan.visible { opacity: 0.8; }
 
-  .breath-controls { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 26px; padding: 0 20px; max-width: 320px; }
+  .breath-controls { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 26px; padding: 0 20px; max-width: 320px; position: relative; }
   .btn-breath-ctrl {
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
     color: #fff; padding: 5px 8px; border-radius: 5px; font-size: 8px; cursor: pointer; transition: 0.3s; white-space: nowrap;
@@ -957,6 +983,32 @@
   .btn-breath-ctrl:hover { border-color: var(--accent-color); background: rgba(255,255,255,0.1); }
   .btn-breath-ctrl.active { border-color: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); color: var(--accent-color); }
   .btn-breath-ctrl:disabled { opacity: 0.3; cursor: default; }
+
+  /* ---------- Výběr barevného motivu (dechové cvičení) ---------- */
+  .breath-theme-picker {
+    position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%) translateY(6px);
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    background: rgba(15,8,0,0.92); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
+    padding: 14px; width: 220px; z-index: 30;
+    opacity: 0; pointer-events: none; visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .breath-theme-picker.open { opacity: 1; pointer-events: auto; visibility: visible; transform: translateX(-50%) translateY(0); }
+  .breath-theme-swatch {
+    width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;
+    cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s ease, border-color 0.15s ease; -webkit-tap-highlight-color: transparent;
+  }
+  .breath-theme-swatch:hover { transform: scale(1.08); }
+  .breath-theme-swatch:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  .breath-theme-swatch.active { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+  .breath-theme-swatch .dot { width: 100%; height: 100%; border-radius: 50%; }
+  .breath-theme-swatch .check { color: #fff; font-size: 15px; text-shadow: 0 0 4px rgba(0,0,0,0.6); display: none; }
+  .breath-theme-swatch.active .check { display: block; }
+  .breath-theme-swatch.active .dot { display: none; }
+  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; } .breath-theme-swatch { width: 36px; height: 36px; } }
   #breath-logo-btn { min-width: 96px; }
   #breath-vibe-btn { min-width: 108px; }
   #breath-save-btn { min-width: 62px; }
@@ -1913,7 +1965,10 @@
     <button class="btn-breath-ctrl" id="breath-stop-btn" onclick="pauseBreathCycle()">STOP</button>
     <button class="btn-breath-ctrl" id="breath-logo-btn" onclick="toggleBreathLogo()">ZNAČKA: ZAP</button>
     <button class="btn-breath-ctrl" id="breath-vibe-btn" onclick="toggleBreathVibration()">VIBRACE: ZAP</button>
+    <button class="btn-breath-ctrl" id="breath-theme-btn" onclick="toggleThemePicker()" aria-haspopup="true" aria-expanded="false">MOTIV</button>
     <button class="btn-breath-ctrl" id="breath-save-btn" onclick="saveBreathSettings()">ULOŽIT</button>
+
+    <div class="breath-theme-picker" id="breath-theme-picker" role="menu" aria-label="Výběr barevného motivu"></div>
   </div>
 
   <div class="breath-hint">klepnutím na ✖ cvičení ukončíš</div>
@@ -2017,11 +2072,29 @@
     const btn = document.getElementById('progress-scrolltop-btn');
     if (!btn) return;
     const SHOW_AFTER = 400;
+    const BASE_BOTTOM = parseFloat(getComputedStyle(btn).bottom) || 26;
     window.addEventListener('scroll', function () {
       const pokrokEl = document.getElementById('pokrok');
       const isPokrokActive = pokrokEl && pokrokEl.classList.contains('panel-active');
       btn.classList.toggle('visible', !!isPokrokActive && window.scrollY > SHOW_AFTER);
     }, { passive: true });
+
+    // Na mobilu se u úplně dojetého konce stránky vysune zpět spodní lišta
+    // prohlížeče (adresní řádek), a protože leží nad position:fixed prvky,
+    // tlačítko je pod ní fyzicky "schované" a nejde kliknout - i když
+    // vizuálně vypadá stejně jako jindy. Proto pozici tlačítka průběžně
+    // dopočítáváme podle skutečně viditelné plochy (visualViewport), aby
+    // vždy zůstalo nad lištou a bylo klikatelné i na samém konci stránky.
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      const updateBtnOffset = function () {
+        const hiddenBottom = window.innerHeight - vv.height - vv.offsetTop;
+        btn.style.bottom = (BASE_BOTTOM + Math.max(0, hiddenBottom)) + 'px';
+      };
+      vv.addEventListener('resize', updateBtnOffset);
+      vv.addEventListener('scroll', updateBtnOffset);
+      updateBtnOffset();
+    }
   })();
 
   (function initPanelFromHash() {
@@ -2628,6 +2701,79 @@
     }
   }
 
+  // ---------- Barevné motivy dechového cvičení (koule, záře, akcenty v celé stránce) ----------
+  const BREATH_THEMES = [
+    { id: 'amber',  label: 'Jantarová',  accent: '#ff7700', glow: '#993300' },
+    { id: 'blue',   label: 'Modrá',      accent: '#2196f3', glow: '#0d3d7a' },
+    { id: 'teal',   label: 'Tyrkysová',  accent: '#12c2c2', glow: '#0a5c5c' },
+    { id: 'green',  label: 'Zelená',     accent: '#43a047', glow: '#1b5e20' },
+    { id: 'purple', label: 'Fialová',    accent: '#9c27b0', glow: '#4a0e59' },
+    { id: 'pink',   label: 'Růžová',     accent: '#ff4d8d', glow: '#85114a' },
+    { id: 'red',    label: 'Červená',    accent: '#ef4444', glow: '#7f1d1d' }
+  ];
+  let currentThemeId = 'amber';
+
+  function renderThemePicker() {
+    const picker = document.getElementById('breath-theme-picker');
+    if (!picker || picker.childElementCount) return;
+    BREATH_THEMES.forEach(function (theme) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'breath-theme-swatch';
+      btn.dataset.theme = theme.id;
+      btn.setAttribute('role', 'menuitemradio');
+      btn.setAttribute('aria-label', theme.label);
+      btn.title = theme.label;
+      btn.style.background = 'radial-gradient(circle at 35% 30%, ' + theme.accent + ', ' + theme.glow + ')';
+      btn.innerHTML = '<span class="dot"></span><span class="check">✓</span>';
+      btn.onclick = function () { selectBreathTheme(theme.id); };
+      picker.appendChild(btn);
+    });
+  }
+
+  window.toggleThemePicker = function (force) {
+    const picker = document.getElementById('breath-theme-picker');
+    const btn = document.getElementById('breath-theme-btn');
+    if (!picker) return;
+    renderThemePicker();
+    const open = typeof force === 'boolean' ? force : !picker.classList.contains('open');
+    picker.classList.toggle('open', open);
+    if (btn) {
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.classList.toggle('active', open);
+    }
+  };
+
+  // Zavření nabídky motivů kliknutím mimo ni nebo klávesou Esc
+  document.addEventListener('click', function (e) {
+    const picker = document.getElementById('breath-theme-picker');
+    const btn = document.getElementById('breath-theme-btn');
+    if (!picker || !picker.classList.contains('open')) return;
+    if (picker.contains(e.target) || (btn && btn.contains(e.target))) return;
+    toggleThemePicker(false);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') toggleThemePicker(false);
+  });
+
+  window.selectBreathTheme = function (id) {
+    const theme = BREATH_THEMES.find(function (t) { return t.id === id; }) || BREATH_THEMES[0];
+    currentThemeId = theme.id;
+    document.documentElement.style.setProperty('--accent-color', theme.accent);
+    document.documentElement.style.setProperty('--accent-glow', theme.glow);
+    document.querySelectorAll('.breath-theme-swatch').forEach(function (el) {
+      el.classList.toggle('active', el.dataset.theme === theme.id);
+    });
+    // Motiv se ukládá rovnou, není potřeba čekat na tlačítko "ULOŽIT"
+    let settings = {};
+    try {
+      const existing = localStorage.getItem('uklidnito_settings');
+      if (existing) settings = JSON.parse(existing);
+    } catch (e) { settings = {}; }
+    settings.themeColor = theme.id;
+    try { localStorage.setItem('uklidnito_settings', JSON.stringify(settings)); } catch (e) { /* ignore */ }
+  };
+
   // Uložení nastavení dechového cvičení (značka, vibrace, oblíbená technika) do localStorage
   window.saveBreathSettings = function() {
     let settings = {};
@@ -2638,6 +2784,7 @@
     settings.breathLogoHidden = breathLogoHidden;
     settings.vibrationEnabled = vibrationEnabled;
     settings.breathTechnique = currentBreathTechnique;
+    settings.themeColor = currentThemeId;
     try { localStorage.setItem('uklidnito_settings', JSON.stringify(settings)); } catch (e) { /* ignore */ }
 
     const btn = document.getElementById('breath-save-btn');
@@ -2740,11 +2887,16 @@
         }
         if (typeof settings.vibrationEnabled === 'boolean') vibrationEnabled = settings.vibrationEnabled;
         if (typeof settings.breathLogoHidden === 'boolean') breathLogoHidden = settings.breathLogoHidden;
+        if (settings.themeColor) currentThemeId = settings.themeColor;
       }
     } catch (e) { /* ignore */ }
     updateBreathTechniqueUI();
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
+    renderThemePicker();
+    document.querySelectorAll('.breath-theme-swatch').forEach(function (el) {
+      el.classList.toggle('active', el.dataset.theme === currentThemeId);
+    });
   })();
 
   // ---------- Tvůj pokrok: kalendář odcvičených dní + volitelný záznam stresu ----------
