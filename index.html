@@ -864,13 +864,19 @@
   }
   .figure-skin { fill: #f0b992; }
   .figure-hair { fill: #c9975b; }
+  .figure-sleeve { fill: var(--accent-color); opacity: 0.95; }
   .figure-pants { fill: #1c2340; }
   .figure-shoe { fill: #f4ede2; }
   .figure-eye { fill: #241b16; }
+  .figure-brow { stroke: #8a6238; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+  .figure-nose { stroke: #c98a5e; stroke-width: 1.3; fill: none; stroke-linecap: round; opacity: 0.65; }
   .figure-mouth { stroke: #c98a5e; stroke-width: 2; fill: none; stroke-linecap: round; }
   .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; }
   .breath-figure-count { margin-top: 6px; font-size: 34px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px var(--accent-color); }
   .breath-figure-hint { margin-top: 26px; font-size: 10px; opacity: 0.35; letter-spacing: 1px; text-transform: uppercase; max-width: 220px; }
+  .breath-figure-stats-row { display: flex; gap: 22px; margin-top: 18px; }
+  .breath-figure-stats-row .breath-stat-item { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .breath-figure-stats-row .breath-stat-value { font-size: 15px; letter-spacing: 0.5px; text-transform: none; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px var(--accent-color); }
 
   .breath-guide {
     position: absolute; inset: 0; z-index: 5; display: none;
@@ -1786,37 +1792,54 @@
       <div class="breath-figure-ring ring-2" aria-hidden="true"></div>
       <div class="breath-figure-glow" id="breath-figure-glow" aria-hidden="true"></div>
       <svg class="breath-figure-svg" viewBox="0 0 120 220" aria-hidden="true">
-        <rect x="20" y="60" width="15" height="50" rx="7.5" class="figure-skin" transform="rotate(10 27 60)"></rect>
-        <rect x="85" y="60" width="15" height="50" rx="7.5" class="figure-skin" transform="rotate(-10 93 60)"></rect>
-        <circle cx="27" cy="113" r="8.5" class="figure-skin"></circle>
-        <circle cx="93" cy="113" r="8.5" class="figure-skin"></circle>
-        <rect x="35" y="122" width="50" height="22" rx="8" class="figure-pants"></rect>
-        <rect x="40" y="139" width="16" height="56" rx="7" class="figure-pants"></rect>
-        <rect x="64" y="139" width="16" height="56" rx="7" class="figure-pants"></rect>
-        <rect x="35" y="191" width="26" height="14" rx="7" class="figure-shoe"></rect>
-        <rect x="59" y="191" width="26" height="14" rx="7" class="figure-shoe"></rect>
-        <rect x="32" y="56" width="56" height="72" rx="20" class="breath-figure-torso" id="breath-figure-torso"></rect>
-        <rect x="53" y="46" width="14" height="12" rx="4" class="figure-skin"></rect>
-        <path d="M40 18 Q60 2 80 18 Q85 33 78 40 Q72 27 60 27 Q48 27 42 40 Q35 33 40 18 Z" class="figure-hair"></path>
-        <circle cx="60" cy="33" r="18" class="figure-skin"></circle>
-        <circle cx="53" cy="32" r="2" class="figure-eye"></circle>
-        <circle cx="67" cy="32" r="2" class="figure-eye"></circle>
-        <path d="M54 40 Q60 44 66 40" class="figure-mouth"></path>
+        <rect x="38" y="140" width="17" height="54" rx="8.5" class="figure-pants" transform="rotate(-4 46.5 140)"></rect>
+        <rect x="65" y="140" width="17" height="54" rx="8.5" class="figure-pants" transform="rotate(4 73.5 140)"></rect>
+        <rect x="33" y="122" width="54" height="24" rx="12" class="figure-pants"></rect>
+        <ellipse cx="45" cy="200" rx="15" ry="8" class="figure-shoe"></ellipse>
+        <ellipse cx="75" cy="200" rx="15" ry="8" class="figure-shoe"></ellipse>
+        <path d="M30 76 Q31 60 46 58 L74 58 Q89 60 90 76 L86 128 Q60 137 34 128 Z" class="breath-figure-torso" id="breath-figure-torso"></path>
+        <rect x="15" y="62" width="16" height="28" rx="8" class="figure-sleeve" transform="rotate(14 23 62)"></rect>
+        <rect x="12" y="88" width="13" height="36" rx="6.5" class="figure-skin" transform="rotate(10 18.5 88)"></rect>
+        <circle cx="19" cy="128" r="7" class="figure-skin"></circle>
+        <rect x="89" y="62" width="16" height="28" rx="8" class="figure-sleeve" transform="rotate(-14 97 62)"></rect>
+        <rect x="95" y="88" width="13" height="36" rx="6.5" class="figure-skin" transform="rotate(-10 101.5 88)"></rect>
+        <circle cx="101" cy="128" r="7" class="figure-skin"></circle>
+        <rect x="53" y="48" width="14" height="14" rx="4" class="figure-skin"></rect>
+        <circle cx="60" cy="36" r="17" class="figure-skin"></circle>
+        <circle cx="43.5" cy="37" r="3.4" class="figure-skin"></circle>
+        <circle cx="76.5" cy="37" r="3.4" class="figure-skin"></circle>
+        <path d="M41 22 Q60 3 79 22 Q82 33 77 43 Q79 29 68 22 Q60 18 52 22 Q41 29 43 43 Q38 33 41 22 Z" class="figure-hair"></path>
+        <path d="M50 31 Q53.5 29 57 31" class="figure-brow"></path>
+        <path d="M63 31 Q66.5 29 70 31" class="figure-brow"></path>
+        <circle cx="53.5" cy="35.5" r="2" class="figure-eye"></circle>
+        <circle cx="66.5" cy="35.5" r="2" class="figure-eye"></circle>
+        <path d="M60 36 L58.7 41" class="figure-nose"></path>
+        <path d="M53 45 Q60 49.5 67 45" class="figure-mouth"></path>
       </svg>
     </div>
     <div class="breath-figure-phase" id="breath-figure-phase">Nádech</div>
     <div class="breath-figure-count" id="breath-figure-count">4</div>
+    <div class="breath-figure-stats-row">
+      <div class="breath-stat-item">
+        <span>Cvičíš</span>
+        <span class="breath-stat-value breath-stopwatch-value">00:00</span>
+      </div>
+      <div class="breath-stat-item">
+        <span>Čas</span>
+        <span class="breath-stat-value breath-clock-value">--:--</span>
+      </div>
+    </div>
     <div class="breath-figure-hint">Postavička dýchá ve stejném rytmu jako koule vedle ní — sleduj, jak se jí hrudník zvedá a klesá, a dýchej ve stejném tempu. Technika jde přepnout i s otevřenou ukázkou.</div>
   </div>
 
   <div class="breath-stats-row" id="breath-stats-row">
     <div class="breath-stat-item">
       <span>Cvičíš</span>
-      <span class="breath-stat-value" id="breath-stopwatch">00:00</span>
+      <span class="breath-stat-value breath-stopwatch-value" id="breath-stopwatch">00:00</span>
     </div>
     <div class="breath-stat-item">
       <span>Čas</span>
-      <span class="breath-stat-value" id="breath-clock">--:--</span>
+      <span class="breath-stat-value breath-clock-value" id="breath-clock">--:--</span>
     </div>
   </div>
 
@@ -2365,11 +2388,13 @@
         syncBreathFigureToMainPhase(phase, secondsNow);
       } else {
         restartBreathFigureLoop();
+        startBreathClock();
       }
     } else {
       breathFigureActive = false;
       clearTimeout(breathFigurePhaseTimeout);
       clearInterval(breathFigureCountdownInterval);
+      if (!breathingActive) stopBreathClock();
     }
   };
 
@@ -2464,17 +2489,19 @@
   }
 
   function updateBreathStopwatchDisplay() {
-    const el = document.getElementById('breath-stopwatch');
-    if (!el) return;
+    const els = document.querySelectorAll('.breath-stopwatch-value');
+    if (!els.length) return;
     const activeMs = breathingPaused ? 0 : (Date.now() - breathStopwatchResumeTime);
-    el.textContent = formatBreathStopwatch(breathStopwatchElapsedMs + activeMs);
+    const text = formatBreathStopwatch(breathStopwatchElapsedMs + activeMs);
+    els.forEach(el => { el.textContent = text; });
   }
 
   function updateBreathClockDisplay() {
-    const el = document.getElementById('breath-clock');
-    if (!el) return;
+    const els = document.querySelectorAll('.breath-clock-value');
+    if (!els.length) return;
     const now = new Date();
-    el.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    const text = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    els.forEach(el => { el.textContent = text; });
   }
 
   function startBreathStopwatch() {
