@@ -2370,6 +2370,7 @@
   let breathStopwatchResumeTime = 0;
   let breathStopwatchInterval = null;
   let breathClockInterval = null;
+  let breathXpLiveInterval = null;
 
   const DEFAULT_PHASE_LABELS = { in: 'Inhale', hold: 'Hold', out: 'Exhale' };
 
@@ -2801,6 +2802,8 @@
     breathSessionStartTime = Date.now();
     startBreathStopwatch();
     startBreathClock();
+    clearInterval(breathXpLiveInterval);
+    breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
     document.body.classList.add('breathing-active');
 
     lastBreathVisual = OUT_VISUAL;
@@ -3027,7 +3030,10 @@
   window.stopBreathing = function() {
     if (!breathingActive) return;
     const sessionDurationMs = breathSessionStartTime ? (Date.now() - breathSessionStartTime) : 0;
+    clearInterval(breathXpLiveInterval);
+    breathXpLiveInterval = null;
     if (sessionDurationMs >= 15000) recordBreathingSession(sessionDurationMs);
+    else animateXpBadgeTo(progressData.xp || 0);
     breathingActive = false;
     breathingPaused = false;
     stopBreathStopwatch();
@@ -3185,9 +3191,13 @@
     return { current: current, next: next, pct: pct };
   }
 
-  // Redraws the cup/XP/progress badge (in the main exercise and in the figure panel).
-  function renderXpBadge() {
-    const xp = progressData.xp || 0;
+  // Currently displayed XP value on the badge (used for the smooth increment animation - see animateXpBadgeTo).
+  let breathXpDisplayedXp = 0;
+  let breathXpAnimFrame = null;
+
+  // Renders the badge (cup, XP, progress bar) for a specific (displayed) XP value.
+  function renderXpBadgeValue(xp) {
+    breathXpDisplayedXp = xp;
     const info = getXpTierInfo(xp);
     document.querySelectorAll('.breath-xp-tier-name').forEach(function (el) { el.textContent = info.current.name; });
     document.querySelectorAll('.breath-xp-count').forEach(function (el) {
@@ -3205,6 +3215,49 @@
     document.querySelectorAll('.breath-xp-badge').forEach(function (el) {
       el.title = info.current.name + ' — ' + xp + ' XP';
     });
+  }
+
+  // Smoothly "collects" the badge from the currently displayed value toward the target - deliberately
+  // slower than an instant jump, so the real progress of collecting XP is visible (duration scales with
+  // the size of the increment, up to ~1.8s).
+  function animateXpBadgeTo(targetXp) {
+    const startXp = breathXpDisplayedXp;
+    const diff = targetXp - startXp;
+    if (breathXpAnimFrame) cancelAnimationFrame(breathXpAnimFrame);
+    if (diff === 0) { renderXpBadgeValue(targetXp); return; }
+    const duration = Math.max(500, Math.min(1800, Math.abs(diff) * 60));
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - t, 2);
+      renderXpBadgeValue(Math.round(startXp + diff * eased));
+      if (t < 1) {
+        breathXpAnimFrame = requestAnimationFrame(step);
+      } else {
+        breathXpAnimFrame = null;
+        renderXpBadgeValue(targetXp);
+      }
+    }
+    breathXpAnimFrame = requestAnimationFrame(step);
+  }
+
+  // Renders the badge (cup, XP, progress bar) from saved data (no animation - used on page load and
+  // when progress is reset).
+  function renderXpBadge() {
+    const xp = progressData.xp || 0;
+    breathXpDisplayedXp = xp;
+    renderXpBadgeValue(xp);
+  }
+
+  // Called periodically during an in-progress breathing session and shows the real, ongoing XP gain
+  // on the badge before the session is actually saved (see recordBreathingSession once it ends).
+  function updateLiveBreathXp() {
+    if (!breathingActive || !breathSessionStartTime) return;
+    const elapsedMs = Date.now() - breathSessionStartTime;
+    if (elapsedMs < 15000) return;
+    const minutes = elapsedMs / 60000;
+    const liveEarned = Math.max(2, Math.min(Math.round(minutes * 10), 100));
+    animateXpBadgeTo((progressData.xp || 0) + liveEarned);
   }
 
   // Short message shown when the user reaches a new cup.
@@ -3225,7 +3278,7 @@
     progressData.xp = (progressData.xp || 0) + earned;
     const after = getXpTierInfo(progressData.xp);
     saveProgressData(progressData);
-    renderXpBadge();
+    animateXpBadgeTo(progressData.xp);
     if (after.current.id !== before.current.id) showXpTierUpToast(after.current);
     return earned;
   }
