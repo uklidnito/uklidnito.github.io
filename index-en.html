@@ -3028,7 +3028,7 @@
 
   window.stopBreathing = function() {
     if (!breathingActive) return;
-    const sessionDurationMs = breathSessionStartTime ? (Date.now() - breathSessionStartTime) : 0;
+    const sessionDurationMs = breathSessionStartTime ? getBreathActiveMs() : 0;
     clearInterval(breathXpLiveInterval);
     breathXpLiveInterval = null;
     if (sessionDurationMs >= 15000) recordBreathingSession(sessionDurationMs);
@@ -3248,11 +3248,18 @@
     renderXpBadgeValue(xp);
   }
 
+  // Returns how many milliseconds the user has actually been breathing in the current session - i.e.
+  // excluding any time spent paused (STOP). Uses the same counter as the exercise stopwatch.
+  function getBreathActiveMs() {
+    return breathStopwatchElapsedMs + (breathingPaused ? 0 : (Date.now() - breathStopwatchResumeTime));
+  }
+
   // Called periodically during an in-progress breathing session and shows the real, ongoing XP gain
   // on the badge before the session is actually saved (see recordBreathingSession once it ends).
+  // Collecting XP stops while paused, same as the stopwatch.
   function updateLiveBreathXp() {
-    if (!breathingActive || !breathSessionStartTime) return;
-    const elapsedMs = Date.now() - breathSessionStartTime;
+    if (!breathingActive || breathingPaused || !breathSessionStartTime) return;
+    const elapsedMs = getBreathActiveMs();
     if (elapsedMs < 15000) return;
     const minutes = elapsedMs / 60000;
     const liveEarned = Math.max(2, Math.min(Math.round(minutes * 10), 100));

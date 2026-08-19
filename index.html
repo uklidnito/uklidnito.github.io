@@ -3023,7 +3023,7 @@
 
   window.stopBreathing = function() {
     if (!breathingActive) return;
-    const sessionDurationMs = breathSessionStartTime ? (Date.now() - breathSessionStartTime) : 0;
+    const sessionDurationMs = breathSessionStartTime ? getBreathActiveMs() : 0;
     clearInterval(breathXpLiveInterval);
     breathXpLiveInterval = null;
     if (sessionDurationMs >= 15000) recordBreathingSession(sessionDurationMs);
@@ -3242,11 +3242,18 @@
     renderXpBadgeValue(xp);
   }
 
+  // Vrátí, kolik milisekund uživatel v aktuální session skutečně aktivně dýchal - tedy bez času
+  // stráveného na pauze (STOP). Používá stejné počítadlo jako stopky u cvičení.
+  function getBreathActiveMs() {
+    return breathStopwatchElapsedMs + (breathingPaused ? 0 : (Date.now() - breathStopwatchResumeTime));
+  }
+
   // Zavolá se pravidelně během probíhajícího dechového cvičení a ukáže na odznaku reálný, průběžný
-  // nárůst XP ještě předtím, než se cvičení uloží (viz recordBreathingSession po skončení).
+  // nárůst XP ještě předtím, než se cvičení uloží (viz recordBreathingSession po skončení). Na pauze
+  // se sbírání XP zastaví stejně jako stopky.
   function updateLiveBreathXp() {
-    if (!breathingActive || !breathSessionStartTime) return;
-    const elapsedMs = Date.now() - breathSessionStartTime;
+    if (!breathingActive || breathingPaused || !breathSessionStartTime) return;
+    const elapsedMs = getBreathActiveMs();
     if (elapsedMs < 15000) return;
     const minutes = elapsedMs / 60000;
     const liveEarned = Math.max(2, Math.min(Math.round(minutes * 10), 100));
