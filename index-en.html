@@ -712,6 +712,15 @@
   .poradna-action-btn.report-btn { color: rgba(255,140,140,0.85); border-color: rgba(255,120,120,0.3); }
   .poradna-action-btn.report-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.08); }
 
+  .poradna-report-persistent-btn {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 22px;
+    font-family: 'Poppins', sans-serif; font-size: 12px; letter-spacing: 0.3px;
+    color: rgba(255,140,140,0.8); background: transparent;
+    border: 1px solid rgba(255,120,120,0.35); border-radius: 20px;
+    padding: 9px 16px; cursor: pointer; transition: 0.2s;
+  }
+  .poradna-report-persistent-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.08); }
+
   /* ---------- Report AI answer modal ---------- */
   .poradna-report-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px);
@@ -1728,11 +1737,13 @@
 
     <div class="poradna-result-wrap" id="poradna-result-wrap"></div>
 
+    <button type="button" class="poradna-report-persistent-btn" onclick="openPoradnaReportModal()">🚩 Report an issue with an AI answer</button>
+
     <div class="poradna-report-overlay" id="poradna-report-overlay" hidden onclick="if(event.target===this) closePoradnaReportModal();">
       <div class="poradna-report-modal" role="dialog" aria-modal="true" aria-labelledby="poradna-report-title">
         <h3 id="poradna-report-title">Report this AI answer</h3>
-        <p>If this answer seemed inappropriate, offensive, inaccurate or otherwise problematic, please let us know. The question and answer will be sent to the site operator for review.</p>
-        <textarea class="poradna-report-reason" id="poradna-report-reason" maxlength="500" placeholder="What was wrong with the answer? (optional)"></textarea>
+        <p id="poradna-report-intro">If this answer seemed inappropriate, offensive, inaccurate or otherwise problematic, please let us know. The question and answer will be sent to the site operator for review.</p>
+        <textarea class="poradna-report-reason" id="poradna-report-reason" maxlength="500" placeholder="What happened / what was wrong with the answer?"></textarea>
         <div class="poradna-report-actions">
           <button type="button" class="poradna-report-cancel" onclick="closePoradnaReportModal()">Cancel</button>
           <button type="button" class="poradna-report-submit" id="poradna-report-submit-btn" onclick="submitPoradnaReport()">Send report</button>
@@ -4760,7 +4771,6 @@ Rules:
             '<div class="poradna-answer-actions">' +
               '<button type="button" class="poradna-action-btn" onclick="exportPoradnaPDF()">📄 Export to PDF</button>' +
               '<button type="button" class="poradna-action-btn" onclick="sharePoradnaAnswer()">🔗 Share</button>' +
-              '<button type="button" class="poradna-action-btn report-btn" onclick="openPoradnaReportModal()">🚩 Report an issue</button>' +
               '<span class="poradna-share-status" id="poradna-share-status"></span>' +
             '</div>' +
           '</div>';
@@ -4874,15 +4884,20 @@ Rules:
   const PORADNA_REPORT_ENDPOINT = 'https://api.web3forms.com/submit';
 
   window.openPoradnaReportModal = function () {
-    if (!lastPoradnaAnswerText) return;
     const overlay = document.getElementById('poradna-report-overlay');
     const reasonEl = document.getElementById('poradna-report-reason');
     const statusEl = document.getElementById('poradna-report-status');
     const submitBtn = document.getElementById('poradna-report-submit-btn');
+    const introEl = document.getElementById('poradna-report-intro');
     if (!overlay) return;
     if (reasonEl) reasonEl.value = '';
     if (statusEl) { statusEl.textContent = ''; statusEl.className = 'poradna-report-status'; }
     if (submitBtn) submitBtn.disabled = false;
+    if (introEl) {
+      introEl.textContent = lastPoradnaAnswerText
+        ? 'If your last answer seemed inappropriate, offensive, inaccurate or otherwise problematic, please let us know. Your last question and answer will be sent to the site operator for review.'
+        : 'Ran into a problem with the Advice & Guidance section (inappropriate content, a bug, anything else)? Please briefly describe what happened — we\'ll send it to the site operator for review.';
+    }
     overlay.hidden = false;
   };
 
@@ -4895,9 +4910,14 @@ Rules:
     const submitBtn = document.getElementById('poradna-report-submit-btn');
     const statusEl = document.getElementById('poradna-report-status');
     const reasonEl = document.getElementById('poradna-report-reason');
-    if (!lastPoradnaAnswerText) return;
 
     const reason = reasonEl ? reasonEl.value.trim() : '';
+    const hasAnswer = !!lastPoradnaAnswerText;
+    if (!hasAnswer && !reason) {
+      if (statusEl) { statusEl.textContent = 'Please briefly describe what happened.'; statusEl.className = 'poradna-report-status error'; }
+      return;
+    }
+
     if (submitBtn) submitBtn.disabled = true;
     if (statusEl) { statusEl.textContent = 'Sending report…'; statusEl.className = 'poradna-report-status sending'; }
 
@@ -4905,12 +4925,12 @@ Rules:
     formData.append('access_key', PORADNA_REPORT_ACCESS_KEY);
     formData.append('subject', 'Report: problematic AI answer — Uklidni To');
     formData.append('name', 'Advice & Guidance – report');
-    formData.append('question', lastPoradnaQuestion);
-    formData.append('ai_answer', lastPoradnaAnswerText);
+    formData.append('question', lastPoradnaQuestion || '(no question asked yet)');
+    formData.append('ai_answer', lastPoradnaAnswerText || '(no AI answer generated yet)');
     formData.append('user_reason', reason || '(user did not give a reason)');
     formData.append('message',
-      'Question: ' + lastPoradnaQuestion +
-      '\n\nAI answer:\n' + lastPoradnaAnswerText +
+      'Question: ' + (lastPoradnaQuestion || '(no question asked yet)') +
+      '\n\nAI answer:\n' + (lastPoradnaAnswerText || '(no AI answer generated yet)') +
       '\n\nReason given by user:\n' + (reason || '(no reason given)'));
 
     try {

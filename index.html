@@ -708,6 +708,15 @@
   .poradna-action-btn.report-btn { color: rgba(255,140,140,0.85); border-color: rgba(255,120,120,0.3); }
   .poradna-action-btn.report-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.08); }
 
+  .poradna-report-persistent-btn {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 22px;
+    font-family: 'Poppins', sans-serif; font-size: 12px; letter-spacing: 0.3px;
+    color: rgba(255,140,140,0.8); background: transparent;
+    border: 1px solid rgba(255,120,120,0.35); border-radius: 20px;
+    padding: 9px 16px; cursor: pointer; transition: 0.2s;
+  }
+  .poradna-report-persistent-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.08); }
+
   /* ---------- Report AI answer modal ---------- */
   .poradna-report-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px);
@@ -1724,11 +1733,13 @@
 
     <div class="poradna-result-wrap" id="poradna-result-wrap"></div>
 
+    <button type="button" class="poradna-report-persistent-btn" onclick="openPoradnaReportModal()">🚩 Nahlásit problém s AI odpovědí</button>
+
     <div class="poradna-report-overlay" id="poradna-report-overlay" hidden onclick="if(event.target===this) closePoradnaReportModal();">
       <div class="poradna-report-modal" role="dialog" aria-modal="true" aria-labelledby="poradna-report-title">
         <h3 id="poradna-report-title">Nahlásit odpověď AI</h3>
-        <p>Pokud ti odpověď přišla nevhodná, urážlivá, nepravdivá nebo jinak problematická, dej nám prosím vědět. Dotaz i odpověď se pošlou provozovateli webu ke kontrole.</p>
-        <textarea class="poradna-report-reason" id="poradna-report-reason" maxlength="500" placeholder="Co bylo na odpovědi špatně? (nepovinné)"></textarea>
+        <p id="poradna-report-intro">Pokud ti odpověď přišla nevhodná, urážlivá, nepravdivá nebo jinak problematická, dej nám prosím vědět. Dotaz i odpověď se pošlou provozovateli webu ke kontrole.</p>
+        <textarea class="poradna-report-reason" id="poradna-report-reason" maxlength="500" placeholder="Co se stalo / co bylo na odpovědi špatně?"></textarea>
         <div class="poradna-report-actions">
           <button type="button" class="poradna-report-cancel" onclick="closePoradnaReportModal()">Zrušit</button>
           <button type="button" class="poradna-report-submit" id="poradna-report-submit-btn" onclick="submitPoradnaReport()">Odeslat nahlášení</button>
@@ -4754,7 +4765,6 @@ Pravidla:
             '<div class="poradna-answer-actions">' +
               '<button type="button" class="poradna-action-btn" onclick="exportPoradnaPDF()">📄 Export do PDF</button>' +
               '<button type="button" class="poradna-action-btn" onclick="sharePoradnaAnswer()">🔗 Sdílet</button>' +
-              '<button type="button" class="poradna-action-btn report-btn" onclick="openPoradnaReportModal()">🚩 Nahlásit problém</button>' +
               '<span class="poradna-share-status" id="poradna-share-status"></span>' +
             '</div>' +
           '</div>';
@@ -4867,15 +4877,20 @@ Pravidla:
   const PORADNA_REPORT_ENDPOINT = 'https://api.web3forms.com/submit';
 
   window.openPoradnaReportModal = function () {
-    if (!lastPoradnaAnswerText) return;
     const overlay = document.getElementById('poradna-report-overlay');
     const reasonEl = document.getElementById('poradna-report-reason');
     const statusEl = document.getElementById('poradna-report-status');
     const submitBtn = document.getElementById('poradna-report-submit-btn');
+    const introEl = document.getElementById('poradna-report-intro');
     if (!overlay) return;
     if (reasonEl) reasonEl.value = '';
     if (statusEl) { statusEl.textContent = ''; statusEl.className = 'poradna-report-status'; }
     if (submitBtn) submitBtn.disabled = false;
+    if (introEl) {
+      introEl.textContent = lastPoradnaAnswerText
+        ? 'Pokud ti poslední odpověď přišla nevhodná, urážlivá, nepravdivá nebo jinak problematická, dej nám prosím vědět. Tvůj poslední dotaz i odpověď se pošlou provozovateli webu ke kontrole.'
+        : 'Narazil/a jsi na problém se sekcí Rady a poradna (nevhodný obsah, chyba, cokoliv jiného)? Napiš nám prosím krátce co se stalo — pošleme to provozovateli webu ke kontrole.';
+    }
     overlay.hidden = false;
   };
 
@@ -4888,9 +4903,14 @@ Pravidla:
     const submitBtn = document.getElementById('poradna-report-submit-btn');
     const statusEl = document.getElementById('poradna-report-status');
     const reasonEl = document.getElementById('poradna-report-reason');
-    if (!lastPoradnaAnswerText) return;
 
     const reason = reasonEl ? reasonEl.value.trim() : '';
+    const hasAnswer = !!lastPoradnaAnswerText;
+    if (!hasAnswer && !reason) {
+      if (statusEl) { statusEl.textContent = 'Napiš prosím krátce, co se stalo.'; statusEl.className = 'poradna-report-status error'; }
+      return;
+    }
+
     if (submitBtn) submitBtn.disabled = true;
     if (statusEl) { statusEl.textContent = 'Odesílám nahlášení…'; statusEl.className = 'poradna-report-status sending'; }
 
@@ -4898,12 +4918,12 @@ Pravidla:
     formData.append('access_key', PORADNA_REPORT_ACCESS_KEY);
     formData.append('subject', 'Nahlášení problematické AI odpovědi — Uklidni To');
     formData.append('name', 'Rady a poradna – nahlášení');
-    formData.append('question', lastPoradnaQuestion);
-    formData.append('ai_answer', lastPoradnaAnswerText);
+    formData.append('question', lastPoradnaQuestion || '(žádný dotaz zatím nebyl položen)');
+    formData.append('ai_answer', lastPoradnaAnswerText || '(žádná AI odpověď zatím nebyla vygenerována)');
     formData.append('user_reason', reason || '(uživatel nenapsal důvod)');
     formData.append('message',
-      'Dotaz: ' + lastPoradnaQuestion +
-      '\n\nOdpověď AI:\n' + lastPoradnaAnswerText +
+      'Dotaz: ' + (lastPoradnaQuestion || '(žádný dotaz zatím nebyl položen)') +
+      '\n\nOdpověď AI:\n' + (lastPoradnaAnswerText || '(žádná AI odpověď zatím nebyla vygenerována)') +
       '\n\nDůvod nahlášení od uživatele:\n' + (reason || '(nenapsal důvod)'));
 
     try {
