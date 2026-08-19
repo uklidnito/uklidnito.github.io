@@ -902,6 +902,35 @@
     transform-box: fill-box; transform-origin: 50% 100%; transition: transform linear;
     fill: var(--accent-color); opacity: 0.95; filter: drop-shadow(0 0 10px var(--accent-glow));
   }
+  .breath-figure-arrows { position: absolute; right: -8px; top: 24%; width: 34px; height: 96px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
+  .breath-arrow-icon { position: absolute; inset: 0; width: 34px; height: 96px; opacity: 0; transition: opacity 0.3s ease; }
+  .breath-arrow-icon.visible { opacity: 1; }
+  .arrow-chevron { fill: none; stroke: var(--accent-color); stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 6px var(--accent-color)); opacity: 0; }
+  .breath-arrow-in .arrow-chevron { animation: arrowRiseFade 1.6s ease-in-out infinite; }
+  .breath-arrow-in .c1 { animation-delay: 0s; }
+  .breath-arrow-in .c2 { animation-delay: 0.25s; }
+  .breath-arrow-in .c3 { animation-delay: 0.5s; }
+  .breath-arrow-out .arrow-chevron { animation: arrowFallFade 1.6s ease-in-out infinite; }
+  .breath-arrow-out .c1 { animation-delay: 0s; }
+  .breath-arrow-out .c2 { animation-delay: 0.25s; }
+  .breath-arrow-out .c3 { animation-delay: 0.5s; }
+  @keyframes arrowRiseFade {
+    0% { opacity: 0; transform: translateY(14px); }
+    35% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 0.55; }
+    100% { opacity: 0; transform: translateY(-14px); }
+  }
+  @keyframes arrowFallFade {
+    0% { opacity: 0; transform: translateY(-14px); }
+    35% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 0.55; }
+    100% { opacity: 0; transform: translateY(14px); }
+  }
+  .breath-arrow-hold { position: absolute; display: flex; gap: 6px; opacity: 0; transition: opacity 0.3s ease; }
+  .breath-arrow-hold.visible { opacity: 1; }
+  .breath-arrow-hold span { width: 5px; height: 24px; border-radius: 3px; background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); animation: holdBarsPulse 2.2s ease-in-out infinite; }
+  .breath-arrow-hold span:nth-child(2) { animation-delay: 0.3s; }
+  @keyframes holdBarsPulse { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
   .figure-skin { fill: #f0b992; }
   .figure-hair { fill: #c9975b; }
   .figure-sleeve { fill: var(--accent-color); opacity: 0.95; }
@@ -1032,6 +1061,7 @@
     .breath-orb.holding, .cta-icon, .breath-ring, .breath-blob, .hero-orb-preview .ring,
     .breath-figure-glow.holding, .breath-figure-ring { animation: none; }
     .breath-ring, .hero-orb-preview .ring, .breath-figure-ring { display: none; }
+    .arrow-chevron, .breath-arrow-hold span { animation: none !important; opacity: 0.9 !important; transform: none !important; }
   }
 
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
@@ -1895,6 +1925,19 @@
         <path d="M60 36 L58.7 41" class="figure-nose"></path>
         <path d="M53 45 Q60 49.5 67 45" class="figure-mouth"></path>
       </svg>
+      <div class="breath-figure-arrows" id="breath-figure-arrows" aria-hidden="true">
+        <svg class="breath-arrow-icon breath-arrow-in" id="breath-arrow-in" viewBox="0 0 40 96">
+          <polyline points="6,70 20,54 34,70" class="arrow-chevron c1"></polyline>
+          <polyline points="6,46 20,30 34,46" class="arrow-chevron c2"></polyline>
+          <polyline points="6,22 20,6 34,22" class="arrow-chevron c3"></polyline>
+        </svg>
+        <svg class="breath-arrow-icon breath-arrow-out" id="breath-arrow-out" viewBox="0 0 40 96">
+          <polyline points="6,26 20,42 34,26" class="arrow-chevron c1"></polyline>
+          <polyline points="6,50 20,66 34,50" class="arrow-chevron c2"></polyline>
+          <polyline points="6,74 20,90 34,74" class="arrow-chevron c3"></polyline>
+        </svg>
+        <div class="breath-arrow-hold" id="breath-arrow-hold"><span></span><span></span></div>
+      </div>
     </div>
     <div class="breath-figure-phase" id="breath-figure-phase">Nádech</div>
     <div class="breath-figure-count" id="breath-figure-count">4</div>
@@ -2377,8 +2420,8 @@
   let breathFigurePhaseIndex = 0;
   let breathFigurePhaseTimeout = null;
   let breathFigureCountdownInterval = null;
-  const FIGURE_OUT_VISUAL = { transform: 'scale(1, 1)', glowScale: 0.75, glowOpacity: 0.22, isHold: false };
-  const FIGURE_IN_VISUAL  = { transform: 'scale(1.15, 1.08)', glowScale: 1.05, glowOpacity: 0.55, isHold: false };
+  const FIGURE_OUT_VISUAL = { transform: 'scale(1, 1) translateY(0)', glowScale: 0.75, glowOpacity: 0.22, isHold: false, type: 'out' };
+  const FIGURE_IN_VISUAL  = { transform: 'scale(1.26, 1.16) translateY(-6px)', glowScale: 1.1, glowOpacity: 0.55, isHold: false, type: 'in' };
   let lastFigureVisual = FIGURE_OUT_VISUAL;
 
   function setBreathFigureTransitionDuration(seconds) {
@@ -2397,13 +2440,19 @@
       glow.style.opacity = visual.glowOpacity;
       glow.classList.toggle('holding', visual.isHold);
     }
+    const arrowIn = document.getElementById('breath-arrow-in');
+    const arrowOut = document.getElementById('breath-arrow-out');
+    const arrowHold = document.getElementById('breath-arrow-hold');
+    if (arrowIn) arrowIn.classList.toggle('visible', visual.type === 'in');
+    if (arrowOut) arrowOut.classList.toggle('visible', visual.type === 'out');
+    if (arrowHold) arrowHold.classList.toggle('visible', visual.type === 'hold');
   }
 
   // Nádech/výdech mají pevný vzhled, zádrž si podrží vzhled poslední ne-hold fáze (shimmer navíc)
   function getFigurePhaseVisual(phase) {
     if (phase.type === 'in') return FIGURE_IN_VISUAL;
     if (phase.type === 'out') return FIGURE_OUT_VISUAL;
-    return { transform: lastFigureVisual.transform, glowScale: lastFigureVisual.glowScale, glowOpacity: lastFigureVisual.glowOpacity, isHold: true };
+    return { transform: lastFigureVisual.transform, glowScale: lastFigureVisual.glowScale, glowOpacity: lastFigureVisual.glowOpacity, isHold: true, type: 'hold' };
   }
 
   // Samostatný cyklus postavičky - používá se JEN když hlavní cvičení (koule) neběží,
