@@ -986,6 +986,8 @@
     text-transform: uppercase; max-width: 260px; margin-bottom: 6px; min-height: 10px; text-align: center;
   }
 
+  .breath-orb-group { position: relative; display: flex; align-items: center; justify-content: center; }
+  .breath-orb-arrows { position: absolute; right: -30px; top: 50%; transform: translateY(-50%); width: 34px; height: 96px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
   .breath-orb-wrap {
     position: relative; width: 180px; height: 180px;
     display: flex; align-items: center; justify-content: center;
@@ -2020,11 +2022,26 @@
   </div>
   <div class="breath-technique-info" id="breath-technique-info"></div>
 
-  <div class="breath-orb-wrap" id="breath-orb-wrap">
-    <div class="breath-ring breath-ring-1"></div>
-    <div class="breath-ring breath-ring-2"></div>
-    <div class="breath-orb" id="breath-orb"></div>
-    <div class="breath-core-mark" id="breath-logo" aria-hidden="true"></div>
+  <div class="breath-orb-group">
+    <div class="breath-orb-wrap" id="breath-orb-wrap">
+      <div class="breath-ring breath-ring-1"></div>
+      <div class="breath-ring breath-ring-2"></div>
+      <div class="breath-orb" id="breath-orb"></div>
+      <div class="breath-core-mark" id="breath-logo" aria-hidden="true"></div>
+    </div>
+    <div class="breath-orb-arrows" id="breath-orb-arrows" aria-hidden="true">
+      <svg class="breath-arrow-icon breath-arrow-in" id="breath-orb-arrow-in" viewBox="0 0 40 96">
+        <polyline points="6,70 20,54 34,70" class="arrow-chevron c1"></polyline>
+        <polyline points="6,46 20,30 34,46" class="arrow-chevron c2"></polyline>
+        <polyline points="6,22 20,6 34,22" class="arrow-chevron c3"></polyline>
+      </svg>
+      <svg class="breath-arrow-icon breath-arrow-out" id="breath-orb-arrow-out" viewBox="0 0 40 96">
+        <polyline points="6,26 20,42 34,26" class="arrow-chevron c1"></polyline>
+        <polyline points="6,50 20,66 34,50" class="arrow-chevron c2"></polyline>
+        <polyline points="6,74 20,90 34,74" class="arrow-chevron c3"></polyline>
+      </svg>
+      <div class="breath-arrow-hold" id="breath-orb-arrow-hold"><span></span><span></span></div>
+    </div>
   </div>
   <div class="breath-phase" id="breath-phase" aria-live="polite">Nádech</div>
   <div class="breath-count" id="breath-count">4</div>
@@ -2350,8 +2367,8 @@
     }
   };
 
-  const OUT_VISUAL = { scale: 0.62, orbOpacity: 0.32, glowPx: 8, isHold: false };
-  const IN_VISUAL  = { scale: 1.15, orbOpacity: 0.85, glowPx: 26, isHold: false };
+  const OUT_VISUAL = { scale: 0.62, orbOpacity: 0.32, glowPx: 8, isHold: false, type: 'out' };
+  const IN_VISUAL  = { scale: 1.15, orbOpacity: 0.85, glowPx: 26, isHold: false, type: 'in' };
   let lastBreathVisual = OUT_VISUAL;
 
   const breathOrbWrap = document.getElementById('breath-orb-wrap');
@@ -2395,13 +2412,19 @@
     breathOrbEl.style.opacity = visual.orbOpacity;
     breathLogoEl.style.filter = `drop-shadow(0 0 ${visual.glowPx}px var(--accent-color))`;
     breathOrbEl.classList.toggle('holding', visual.isHold);
+    const orbArrowIn = document.getElementById('breath-orb-arrow-in');
+    const orbArrowOut = document.getElementById('breath-orb-arrow-out');
+    const orbArrowHold = document.getElementById('breath-orb-arrow-hold');
+    if (orbArrowIn) orbArrowIn.classList.toggle('visible', visual.type === 'in');
+    if (orbArrowOut) orbArrowOut.classList.toggle('visible', visual.type === 'out');
+    if (orbArrowHold) orbArrowHold.classList.toggle('visible', visual.type === 'hold');
   }
 
   // Nádech/výdech mají pevný vzhled, zádrž si podrží vzhled poslední ne-hold fáze (shimmer navíc)
   function getPhaseVisual(phase) {
     if (phase.type === 'in') return IN_VISUAL;
     if (phase.type === 'out') return OUT_VISUAL;
-    return { scale: lastBreathVisual.scale, orbOpacity: lastBreathVisual.orbOpacity, glowPx: lastBreathVisual.glowPx, isHold: true };
+    return { scale: lastBreathVisual.scale, orbOpacity: lastBreathVisual.orbOpacity, glowPx: lastBreathVisual.glowPx, isHold: true, type: 'hold' };
   }
 
   // Jemná vibrace na mobilu při každé změně fáze (nádech / výdech / zádrž)
@@ -2421,7 +2444,7 @@
   let breathFigurePhaseTimeout = null;
   let breathFigureCountdownInterval = null;
   const FIGURE_OUT_VISUAL = { transform: 'scale(1, 1) translateY(0)', glowScale: 0.75, glowOpacity: 0.22, isHold: false, type: 'out' };
-  const FIGURE_IN_VISUAL  = { transform: 'scale(1.26, 1.16) translateY(-6px)', glowScale: 1.1, glowOpacity: 0.55, isHold: false, type: 'in' };
+  const FIGURE_IN_VISUAL  = { transform: 'scale(1.12, 1.08) translateY(-3px)', glowScale: 1.1, glowOpacity: 0.55, isHold: false, type: 'in' };
   let lastFigureVisual = FIGURE_OUT_VISUAL;
 
   function setBreathFigureTransitionDuration(seconds) {
