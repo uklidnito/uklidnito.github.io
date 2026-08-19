@@ -705,6 +705,43 @@
   }
   .poradna-history-item:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); }
 
+  .poradna-action-btn.report-btn { color: rgba(255,140,140,0.85); border-color: rgba(255,120,120,0.3); }
+  .poradna-action-btn.report-btn:hover { border-color: #ff6b6b; color: #ff6b6b; background: rgba(255,107,107,0.08); }
+
+  /* ---------- Report AI answer modal ---------- */
+  .poradna-report-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(3px);
+    display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px;
+  }
+  .poradna-report-overlay[hidden] { display: none; }
+  .poradna-report-modal {
+    width: 100%; max-width: 420px; background: #1a0f00; border: 1px solid rgba(255,119,0,0.35);
+    border-radius: 16px; padding: 22px 22px 18px; box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  }
+  .poradna-report-modal h3 { margin: 0 0 8px; font-size: 15px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
+  .poradna-report-modal p { margin: 0 0 14px; font-size: 12.5px; opacity: 0.75; line-height: 1.6; }
+  .poradna-report-reason {
+    width: 100%; font-family: 'Poppins', sans-serif; font-size: 13px; color: #fff;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px;
+    padding: 10px 12px; resize: vertical; min-height: 70px; margin-bottom: 12px;
+  }
+  .poradna-report-reason::placeholder { color: rgba(255,255,255,0.4); }
+  .poradna-report-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .poradna-report-cancel {
+    font-family: 'Poppins', sans-serif; font-size: 12.5px; color: rgba(255,255,255,0.7);
+    background: transparent; border: 1px solid rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 9px 16px; cursor: pointer;
+  }
+  .poradna-report-submit {
+    font-family: 'Poppins', sans-serif; font-size: 12.5px; font-weight: 500; color: #fff;
+    background: #ff6b6b; border: none; border-radius: 20px; padding: 9px 18px; cursor: pointer;
+  }
+  .poradna-report-submit:disabled { opacity: 0.5; cursor: default; }
+  .poradna-report-status { font-size: 11.5px; margin-top: 10px; min-height: 14px; }
+  .poradna-report-status.sending { opacity: 0.6; }
+  .poradna-report-status.error { color: #ff8a8a; }
+  .poradna-report-status.success { color: #7be08a; }
+
   .benefits-list { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
   .benefits-list li { font-size: 13.5px; opacity: 0.82; padding-left: 22px; position: relative; line-height: 1.6; }
   .benefits-list li::before { content: "○"; position: absolute; left: 0; color: var(--accent-color); }
@@ -1686,6 +1723,19 @@
     </div>
 
     <div class="poradna-result-wrap" id="poradna-result-wrap"></div>
+
+    <div class="poradna-report-overlay" id="poradna-report-overlay" hidden onclick="if(event.target===this) closePoradnaReportModal();">
+      <div class="poradna-report-modal" role="dialog" aria-modal="true" aria-labelledby="poradna-report-title">
+        <h3 id="poradna-report-title">Nahlásit odpověď AI</h3>
+        <p>Pokud ti odpověď přišla nevhodná, urážlivá, nepravdivá nebo jinak problematická, dej nám prosím vědět. Dotaz i odpověď se pošlou provozovateli webu ke kontrole.</p>
+        <textarea class="poradna-report-reason" id="poradna-report-reason" maxlength="500" placeholder="Co bylo na odpovědi špatně? (nepovinné)"></textarea>
+        <div class="poradna-report-actions">
+          <button type="button" class="poradna-report-cancel" onclick="closePoradnaReportModal()">Zrušit</button>
+          <button type="button" class="poradna-report-submit" id="poradna-report-submit-btn" onclick="submitPoradnaReport()">Odeslat nahlášení</button>
+        </div>
+        <p class="poradna-report-status" id="poradna-report-status" aria-live="polite"></p>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -4704,6 +4754,7 @@ Pravidla:
             '<div class="poradna-answer-actions">' +
               '<button type="button" class="poradna-action-btn" onclick="exportPoradnaPDF()">📄 Export do PDF</button>' +
               '<button type="button" class="poradna-action-btn" onclick="sharePoradnaAnswer()">🔗 Sdílet</button>' +
+              '<button type="button" class="poradna-action-btn report-btn" onclick="openPoradnaReportModal()">🚩 Nahlásit problém</button>' +
               '<span class="poradna-share-status" id="poradna-share-status"></span>' +
             '</div>' +
           '</div>';
@@ -4806,6 +4857,68 @@ Pravidla:
       }
     } catch (e) {
       if (statusEl) statusEl.textContent = 'Kopírování se nezdařilo, zkus to prosím ručně.';
+    }
+  };
+
+  // ---------- Nahlásit problematickou AI odpověď ----------
+  // Používá stejný Web3Forms endpoint a access key jako kontaktní formulář
+  // v levém menu - dotaz i odpověď se odešlou e-mailem provozovateli ke kontrole.
+  const PORADNA_REPORT_ACCESS_KEY = '7674a578-969d-431d-9f07-64daba89437d';
+  const PORADNA_REPORT_ENDPOINT = 'https://api.web3forms.com/submit';
+
+  window.openPoradnaReportModal = function () {
+    if (!lastPoradnaAnswerText) return;
+    const overlay = document.getElementById('poradna-report-overlay');
+    const reasonEl = document.getElementById('poradna-report-reason');
+    const statusEl = document.getElementById('poradna-report-status');
+    const submitBtn = document.getElementById('poradna-report-submit-btn');
+    if (!overlay) return;
+    if (reasonEl) reasonEl.value = '';
+    if (statusEl) { statusEl.textContent = ''; statusEl.className = 'poradna-report-status'; }
+    if (submitBtn) submitBtn.disabled = false;
+    overlay.hidden = false;
+  };
+
+  window.closePoradnaReportModal = function () {
+    const overlay = document.getElementById('poradna-report-overlay');
+    if (overlay) overlay.hidden = true;
+  };
+
+  window.submitPoradnaReport = async function () {
+    const submitBtn = document.getElementById('poradna-report-submit-btn');
+    const statusEl = document.getElementById('poradna-report-status');
+    const reasonEl = document.getElementById('poradna-report-reason');
+    if (!lastPoradnaAnswerText) return;
+
+    const reason = reasonEl ? reasonEl.value.trim() : '';
+    if (submitBtn) submitBtn.disabled = true;
+    if (statusEl) { statusEl.textContent = 'Odesílám nahlášení…'; statusEl.className = 'poradna-report-status sending'; }
+
+    const formData = new FormData();
+    formData.append('access_key', PORADNA_REPORT_ACCESS_KEY);
+    formData.append('subject', 'Nahlášení problematické AI odpovědi — Uklidni To');
+    formData.append('name', 'Rady a poradna – nahlášení');
+    formData.append('question', lastPoradnaQuestion);
+    formData.append('ai_answer', lastPoradnaAnswerText);
+    formData.append('user_reason', reason || '(uživatel nenapsal důvod)');
+    formData.append('message',
+      'Dotaz: ' + lastPoradnaQuestion +
+      '\n\nOdpověď AI:\n' + lastPoradnaAnswerText +
+      '\n\nDůvod nahlášení od uživatele:\n' + (reason || '(nenapsal důvod)'));
+
+    try {
+      const res = await fetch(PORADNA_REPORT_ENDPOINT, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error('Odeslání se nezdařilo');
+      if (statusEl) { statusEl.textContent = '✓ Děkujeme, nahlášení bylo odesláno a projdeme ho.'; statusEl.className = 'poradna-report-status success'; }
+      setTimeout(() => { closePoradnaReportModal(); }, 1800);
+    } catch (e) {
+      if (statusEl) { statusEl.textContent = 'Odeslání se nezdařilo, zkus to prosím znovu.'; statusEl.className = 'poradna-report-status error'; }
+      if (submitBtn) submitBtn.disabled = false;
     }
   };
 
