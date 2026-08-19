@@ -751,6 +751,63 @@
     outline: 2px solid var(--accent-color); outline-offset: 2px;
   }
 
+  .breath-stats-row {
+    position: absolute; top: 18px; left: 50%; transform: translateX(-50%); z-index: 2;
+    display: flex; gap: 22px;
+  }
+  .breath-stat-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.4);
+  }
+  .breath-stat-item .breath-stat-value {
+    font-size: 15px; letter-spacing: 0.5px; text-transform: none; color: #fff;
+    font-variant-numeric: tabular-nums; text-shadow: 0 0 10px var(--accent-color);
+  }
+  @media (max-width: 380px) {
+    .breath-stats-row { gap: 14px; }
+    .breath-stat-item { font-size: 8px; }
+    .breath-stat-item .breath-stat-value { font-size: 13px; }
+  }
+
+  .breathing-figure-btn {
+    position: absolute; top: 16px; left: 64px; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+    font-size: 16px; opacity: 0.55; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: 0.3s; z-index: 2;
+  }
+  .breathing-figure-btn:hover, .breathing-figure-btn:active {
+    opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color);
+  }
+  .breathing-figure-btn:focus-visible { outline: 2px solid var(--accent-color); outline-offset: 2px; }
+
+  .breath-figure-panel {
+    position: absolute; inset: 0; z-index: 6; display: none;
+    background: rgba(5, 2, 10, 0.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    padding: 64px 24px 40px;
+  }
+  .breath-figure-panel.visible { display: flex; }
+  .breath-figure-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff;
+    font-size: 14px; opacity: 0.55; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
+  }
+  .breath-figure-close:hover, .breath-figure-close:active {
+    opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color);
+  }
+  .breath-figure-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+  .breath-figure-tech-name { font-size: 18px; color: #fff; margin-bottom: 20px; }
+  .breath-figure-svg { width: 130px; height: auto; overflow: visible; }
+  .breath-figure-torso {
+    transform-box: fill-box; transform-origin: 50% 100%; transition: transform linear;
+    fill: var(--accent-color); opacity: 0.85; filter: drop-shadow(0 0 14px var(--accent-color));
+  }
+  .breath-figure-head { fill: rgba(255,255,255,0.9); }
+  .breath-figure-leg { fill: rgba(255,255,255,0.3); }
+  .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; }
+  .breath-figure-count { margin-top: 6px; font-size: 34px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px var(--accent-color); }
+  .breath-figure-hint { margin-top: 26px; font-size: 10px; opacity: 0.35; letter-spacing: 1px; text-transform: uppercase; max-width: 220px; }
+
   .breath-guide {
     position: absolute; inset: 0; z-index: 5; display: none;
     background: rgba(5, 2, 10, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -1050,6 +1107,7 @@
     <h2 id="jak-funguje">Jak dechové cvičení funguje</h2>
     <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe.</p>
     <p>Kdykoli si můžeš vybrat jednu z osmi vědecky podložených technik podle toho, co zrovna potřebuješ: rychle se zklidnit, usnout, nebo naopak zůstat soustředěný/á pod tlakem. Na podporovaných telefonech cvičení navíc jemně vibruje při každé změně fáze, takže se můžeš soustředit i se zavřenýma očima.</p>
+    <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. A pokud si nejsi jistý/á, jak přesně u dané techniky dýchat, klepni na ikonku postavičky 🧍 vedle ikonky s návodem (ⓘ) — otevře se ukázka, kde se malé postavičce plynule zvedá a klesá hrudník přesně v rytmu zvolené techniky (nádech, zádrž, výdech), takže stačí dýchat podle ní. Ukázku můžeš mít puštěnou i bez spuštěného cvičení a technika se v ní přepíná spolu s tou, kterou máš zvolenou v hlavním cvičení.</p>
     <ul class="benefits-list">
       <li>Zklidnění nervového systému a snížení pocitu úzkosti a stresu</li>
       <li>Rychlejší usínání a hlubší uvolnění před spaním</li>
@@ -1637,6 +1695,33 @@
   </div>
   <button class="breathing-close" onclick="stopBreathing()" aria-label="Ukončit dechové cvičení">✖</button>
   <button class="breathing-info" onclick="toggleBreathGuide()" aria-label="Návod na dýchání">ⓘ</button>
+  <button class="breathing-figure-btn" onclick="toggleBreathFigure()" aria-label="Ukázka dýchání na postavičce">🧍</button>
+
+  <div class="breath-figure-panel" id="breath-figure-panel">
+    <button class="breath-figure-close" onclick="toggleBreathFigure()" aria-label="Zavřít ukázku dýchání">✖</button>
+    <div class="breath-figure-title">Ukázka dýchání</div>
+    <div class="breath-figure-tech-name" id="breath-figure-tech-name">4-7-8</div>
+    <svg class="breath-figure-svg" viewBox="0 0 120 220" aria-hidden="true">
+      <ellipse cx="60" cy="108" rx="30" ry="52" class="breath-figure-torso" id="breath-figure-torso"></ellipse>
+      <circle cx="60" cy="34" r="20" class="breath-figure-head"></circle>
+      <rect x="45" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
+      <rect x="65" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
+    </svg>
+    <div class="breath-figure-phase" id="breath-figure-phase">Nádech</div>
+    <div class="breath-figure-count" id="breath-figure-count">4</div>
+    <div class="breath-figure-hint">Sleduj postavičku a dýchej stejným tempem — technika jde přepnout i s ukázkou otevřenou</div>
+  </div>
+
+  <div class="breath-stats-row" id="breath-stats-row">
+    <div class="breath-stat-item">
+      <span>Cvičíš</span>
+      <span class="breath-stat-value" id="breath-stopwatch">00:00</span>
+    </div>
+    <div class="breath-stat-item">
+      <span>Čas</span>
+      <span class="breath-stat-value" id="breath-clock">--:--</span>
+    </div>
+  </div>
 
   <div class="breath-guide" id="breath-guide">
     <div class="breath-guide-inner">
@@ -1923,6 +2008,10 @@
   let breathSloganTimeout = null;
   let breathSloganActiveTimeout = null;
   let breathSessionStartTime = 0;
+  let breathStopwatchElapsedMs = 0;
+  let breathStopwatchResumeTime = 0;
+  let breathStopwatchInterval = null;
+  let breathClockInterval = null;
 
   const DEFAULT_PHASE_LABELS = { in: 'Nádech', hold: 'Zádrž', out: 'Výdech' };
 
@@ -2064,6 +2153,86 @@
     try { navigator.vibrate(pattern); } catch (e) { /* ignore */ }
   }
 
+  // ---------- Ukázka dýchání na postavičce (podle aktuálně vybrané techniky) ----------
+  let breathFigureActive = false;
+  let breathFigurePhaseIndex = 0;
+  let breathFigurePhaseTimeout = null;
+  let breathFigureCountdownInterval = null;
+  const FIGURE_OUT_TRANSFORM = 'scale(1, 1)';
+  const FIGURE_IN_TRANSFORM = 'scale(1.22, 1.12)';
+  let lastFigureTransform = FIGURE_OUT_TRANSFORM;
+
+  function setBreathFigureTransitionDuration(seconds) {
+    const torso = document.getElementById('breath-figure-torso');
+    if (torso) torso.style.transitionDuration = seconds + 's';
+  }
+
+  function applyBreathFigureTransform(transform) {
+    const torso = document.getElementById('breath-figure-torso');
+    if (torso) torso.style.transform = transform;
+  }
+
+  function getFigurePhaseTransform(phase) {
+    if (phase.type === 'in') return FIGURE_IN_TRANSFORM;
+    if (phase.type === 'out') return FIGURE_OUT_TRANSFORM;
+    return lastFigureTransform;
+  }
+
+  function runBreathFigurePhase() {
+    if (!breathFigureActive) return;
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    const phase = phases[breathFigurePhaseIndex];
+    const phaseEl = document.getElementById('breath-figure-phase');
+    const countEl = document.getElementById('breath-figure-count');
+    if (phaseEl) phaseEl.innerText = phase.label || DEFAULT_PHASE_LABELS[phase.type];
+    setBreathFigureTransitionDuration(phase.duration);
+
+    const transform = getFigurePhaseTransform(phase);
+    if (phase.type !== 'hold') lastFigureTransform = transform;
+    requestAnimationFrame(() => applyBreathFigureTransform(transform));
+
+    let secondsLeft = Math.ceil(phase.duration);
+    if (countEl) countEl.innerText = secondsLeft;
+    clearInterval(breathFigureCountdownInterval);
+    breathFigureCountdownInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0 && countEl) countEl.innerText = secondsLeft;
+    }, 1000);
+
+    breathFigurePhaseTimeout = setTimeout(() => {
+      breathFigurePhaseIndex = (breathFigurePhaseIndex + 1) % phases.length;
+      runBreathFigurePhase();
+    }, phase.duration * 1000);
+  }
+
+  function restartBreathFigureLoop() {
+    const techNameEl = document.getElementById('breath-figure-tech-name');
+    if (techNameEl) techNameEl.innerText = BREATH_TECHNIQUES[currentBreathTechnique].name;
+    breathFigurePhaseIndex = 0;
+    clearTimeout(breathFigurePhaseTimeout);
+    clearInterval(breathFigureCountdownInterval);
+    lastFigureTransform = FIGURE_OUT_TRANSFORM;
+    setBreathFigureTransitionDuration(0);
+    applyBreathFigureTransform(FIGURE_OUT_TRANSFORM);
+    requestAnimationFrame(() => requestAnimationFrame(runBreathFigurePhase));
+  }
+
+  // Otevře/zavře panel s ukázkou dýchání na postavičce; běží nezávisle na tom, jestli cvičení právě probíhá
+  window.toggleBreathFigure = function() {
+    const panel = document.getElementById('breath-figure-panel');
+    if (!panel) return;
+    const opening = !panel.classList.contains('visible');
+    panel.classList.toggle('visible', opening);
+    if (opening) {
+      breathFigureActive = true;
+      restartBreathFigureLoop();
+    } else {
+      breathFigureActive = false;
+      clearTimeout(breathFigurePhaseTimeout);
+      clearInterval(breathFigureCountdownInterval);
+    }
+  };
+
   function runBreathPhase() {
     if (!breathingActive) return;
     const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
@@ -2106,6 +2275,7 @@
         requestAnimationFrame(() => requestAnimationFrame(runBreathPhase));
       }
     }
+    if (breathFigureActive) restartBreathFigureLoop();
   };
 
   function updateBreathTechniqueUI() {
@@ -2121,12 +2291,75 @@
     if (guide) guide.classList.toggle('visible');
   };
 
+  // ---------- Stopky (délka cvičení) a aktuální čas v dechovém cvičení ----------
+  function formatBreathStopwatch(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function updateBreathStopwatchDisplay() {
+    const el = document.getElementById('breath-stopwatch');
+    if (!el) return;
+    const activeMs = breathingPaused ? 0 : (Date.now() - breathStopwatchResumeTime);
+    el.textContent = formatBreathStopwatch(breathStopwatchElapsedMs + activeMs);
+  }
+
+  function updateBreathClockDisplay() {
+    const el = document.getElementById('breath-clock');
+    if (!el) return;
+    const now = new Date();
+    el.textContent = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  }
+
+  function startBreathStopwatch() {
+    breathStopwatchElapsedMs = 0;
+    breathStopwatchResumeTime = Date.now();
+    updateBreathStopwatchDisplay();
+    clearInterval(breathStopwatchInterval);
+    breathStopwatchInterval = setInterval(updateBreathStopwatchDisplay, 1000);
+  }
+
+  function pauseBreathStopwatch() {
+    breathStopwatchElapsedMs += Date.now() - breathStopwatchResumeTime;
+    clearInterval(breathStopwatchInterval);
+    breathStopwatchInterval = null;
+    updateBreathStopwatchDisplay();
+  }
+
+  function resumeBreathStopwatch() {
+    breathStopwatchResumeTime = Date.now();
+    clearInterval(breathStopwatchInterval);
+    breathStopwatchInterval = setInterval(updateBreathStopwatchDisplay, 1000);
+  }
+
+  function stopBreathStopwatch() {
+    clearInterval(breathStopwatchInterval);
+    breathStopwatchInterval = null;
+    breathStopwatchElapsedMs = 0;
+    updateBreathStopwatchDisplay();
+  }
+
+  function startBreathClock() {
+    updateBreathClockDisplay();
+    clearInterval(breathClockInterval);
+    breathClockInterval = setInterval(updateBreathClockDisplay, 1000);
+  }
+
+  function stopBreathClock() {
+    clearInterval(breathClockInterval);
+    breathClockInterval = null;
+  }
+
   window.startBreathing = function() {
     if (breathingActive) return;
     breathingActive = true;
     breathingPaused = false;
     breathPhaseIndex = 0;
     breathSessionStartTime = Date.now();
+    startBreathStopwatch();
+    startBreathClock();
     document.body.classList.add('breathing-active');
 
     lastBreathVisual = OUT_VISUAL;
@@ -2147,6 +2380,7 @@
   window.pauseBreathCycle = function() {
     if (!breathingActive || breathingPaused) return;
     breathingPaused = true;
+    pauseBreathStopwatch();
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
     clearTimeout(breathSloganTimeout);
@@ -2160,6 +2394,7 @@
     if (!breathingActive) { window.startBreathing(); return; }
     if (!breathingPaused) return;
     breathingPaused = false;
+    resumeBreathStopwatch();
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
     runBreathPhase();
     scheduleNextBreathSlogan(4000);
@@ -2269,6 +2504,8 @@
     if (sessionDurationMs >= 15000) recordBreathingSession();
     breathingActive = false;
     breathingPaused = false;
+    stopBreathStopwatch();
+    stopBreathClock();
 
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
@@ -2281,11 +2518,20 @@
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
     const guide = document.getElementById('breath-guide');
     if (guide) guide.classList.remove('visible');
+    if (breathFigureActive) {
+      breathFigureActive = false;
+      clearTimeout(breathFigurePhaseTimeout);
+      clearInterval(breathFigureCountdownInterval);
+    }
+    const figurePanel = document.getElementById('breath-figure-panel');
+    if (figurePanel) figurePanel.classList.remove('visible');
   };
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (!breathingActive) return;
+      const figurePanel = document.getElementById('breath-figure-panel');
+      if (figurePanel && figurePanel.classList.contains('visible')) { toggleBreathFigure(); return; }
       const guide = document.getElementById('breath-guide');
       if (guide && guide.classList.contains('visible')) { guide.classList.remove('visible'); return; }
       stopBreathing();
