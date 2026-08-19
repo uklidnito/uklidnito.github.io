@@ -14,7 +14,12 @@
       green:  ['#43a047', '#1b5e20'],
       pink:   ['#ff4d8d', '#85114a'],
       teal:   ['#12c2c2', '#0a5c5c'],
-      red:    ['#ef4444', '#7f1d1d']
+      red:    ['#ef4444', '#7f1d1d'],
+      indigo: ['#6366f1', '#312e81'],
+      gold:   ['#fbbf24', '#78350f'],
+      sky:    ['#0ea5e9', '#0c4a6e'],
+      mint:   ['#34d399', '#065f46'],
+      rose:   ['#f43f5e', '#831843']
     };
     try {
       var raw = localStorage.getItem('uklidnito_settings');
@@ -227,8 +232,17 @@
   .hero-progress-link:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
 
   /* ---------- Floating scroll-to-top arrow (Your Progress section) ---------- */
+  /* The wrapper is fixed across the full viewport height using 100dvh
+     (dynamic viewport height) - this makes the button inside automatically
+     shift above the mobile browser's toolbar when it slides back in at the
+     bottom of the page (where scrolling can't go further), shrinking the
+     visible area. Without this, the button would sit exactly at the page's
+     end, physically hidden under the toolbar and unclickable. */
+  .progress-scrolltop-wrap {
+    position: fixed; inset: 0; height: 100dvh; pointer-events: none; z-index: 50;
+  }
   .progress-scrolltop-btn {
-    position: fixed; right: 18px; bottom: 26px; z-index: 50;
+    position: absolute; right: 18px; bottom: 26px;
     width: 44px; height: 44px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     background: rgba(20,10,0,0.75); backdrop-filter: blur(6px);
@@ -1136,6 +1150,12 @@
     background: rgba(255,119,0,0.12); border-color: var(--accent-color); color: var(--accent-color); cursor: default;
   }
 
+  .side-nav-theme { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+  .side-nav-theme-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
+  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .side-nav-theme-picker .breath-theme-swatch { width: 24px; height: 24px; }
+  .side-nav-theme-picker .breath-theme-swatch .check { font-size: 11px; }
+
   .nav-scrim {
     position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999;
     opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
@@ -1202,6 +1222,11 @@
   <div class="side-nav-admin" id="side-nav-admin"></div>
 
   <div class="side-nav-cta">A short, science-based breathing exercise, free in your browser.</div>
+
+  <div class="side-nav-theme">
+    <div class="side-nav-theme-label">🎨 Theme</div>
+    <div class="side-nav-theme-picker" id="side-nav-theme-picker" role="menu" aria-label="Color theme picker"></div>
+  </div>
 </nav>
 
 <header>
@@ -1290,7 +1315,9 @@
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
-    <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top of section" title="Back to top">↑</button>
+    <div class="progress-scrolltop-wrap">
+      <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top of section" title="Back to top">↑</button>
+    </div>
     <h2 id="pokrok-nadpis">Your progress</h2>
     <p>Every completed session is automatically logged in the calendar below. You can also manually check or clear a day — say, if you breathed outside the app. Everything — the calendar, stress, mood and energy ratings, journal entries and weekly/monthly summaries — is stored only locally in this browser (localStorage); nothing is sent or analyzed elsewhere. If you clear your browser data or switch devices, you won’t see this progress.</p>
 
@@ -2076,30 +2103,11 @@
     const btn = document.getElementById('progress-scrolltop-btn');
     if (!btn) return;
     const SHOW_AFTER = 400;
-    const BASE_BOTTOM = parseFloat(getComputedStyle(btn).bottom) || 26;
     window.addEventListener('scroll', function () {
       const pokrokEl = document.getElementById('pokrok');
       const isPokrokActive = pokrokEl && pokrokEl.classList.contains('panel-active');
       btn.classList.toggle('visible', !!isPokrokActive && window.scrollY > SHOW_AFTER);
     }, { passive: true });
-
-    // On mobile, once you hit the very bottom of the page and can't scroll
-    // further, the browser's bottom toolbar (address bar) slides back in -
-    // and since it sits above position:fixed elements, the button ends up
-    // physically hidden underneath it and isn't clickable, even though it
-    // still looks the same visually. So we keep recalculating the button's
-    // position against the actual visible area (visualViewport) so it stays
-    // above the toolbar and remains clickable even at the very end.
-    if (window.visualViewport) {
-      const vv = window.visualViewport;
-      const updateBtnOffset = function () {
-        const hiddenBottom = window.innerHeight - vv.height - vv.offsetTop;
-        btn.style.bottom = (BASE_BOTTOM + Math.max(0, hiddenBottom)) + 'px';
-      };
-      vv.addEventListener('resize', updateBtnOffset);
-      vv.addEventListener('scroll', updateBtnOffset);
-      updateBtnOffset();
-    }
   })();
 
   (function initPanelFromHash() {
@@ -2710,29 +2718,35 @@
   const BREATH_THEMES = [
     { id: 'amber',  label: 'Amber',  accent: '#ff7700', glow: '#993300' },
     { id: 'blue',   label: 'Blue',   accent: '#2196f3', glow: '#0d3d7a' },
+    { id: 'sky',    label: 'Sky',    accent: '#0ea5e9', glow: '#0c4a6e' },
     { id: 'teal',   label: 'Teal',   accent: '#12c2c2', glow: '#0a5c5c' },
+    { id: 'mint',   label: 'Mint',   accent: '#34d399', glow: '#065f46' },
     { id: 'green',  label: 'Green',  accent: '#43a047', glow: '#1b5e20' },
+    { id: 'gold',   label: 'Gold',   accent: '#fbbf24', glow: '#78350f' },
+    { id: 'indigo', label: 'Indigo', accent: '#6366f1', glow: '#312e81' },
     { id: 'purple', label: 'Purple', accent: '#9c27b0', glow: '#4a0e59' },
     { id: 'pink',   label: 'Pink',   accent: '#ff4d8d', glow: '#85114a' },
+    { id: 'rose',   label: 'Rose',   accent: '#f43f5e', glow: '#831843' },
     { id: 'red',    label: 'Red',    accent: '#ef4444', glow: '#7f1d1d' }
   ];
   let currentThemeId = 'amber';
 
   function renderThemePicker() {
-    const picker = document.getElementById('breath-theme-picker');
-    if (!picker || picker.childElementCount) return;
-    BREATH_THEMES.forEach(function (theme) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'breath-theme-swatch';
-      btn.dataset.theme = theme.id;
-      btn.setAttribute('role', 'menuitemradio');
-      btn.setAttribute('aria-label', theme.label);
-      btn.title = theme.label;
-      btn.style.background = 'radial-gradient(circle at 35% 30%, ' + theme.accent + ', ' + theme.glow + ')';
-      btn.innerHTML = '<span class="dot"></span><span class="check">✓</span>';
-      btn.onclick = function () { selectBreathTheme(theme.id); };
-      picker.appendChild(btn);
+    document.querySelectorAll('#breath-theme-picker, #side-nav-theme-picker').forEach(function (picker) {
+      if (!picker || picker.childElementCount) return;
+      BREATH_THEMES.forEach(function (theme) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'breath-theme-swatch';
+        btn.dataset.theme = theme.id;
+        btn.setAttribute('role', 'menuitemradio');
+        btn.setAttribute('aria-label', theme.label);
+        btn.title = theme.label;
+        btn.style.background = 'radial-gradient(circle at 35% 30%, ' + theme.accent + ', ' + theme.glow + ')';
+        btn.innerHTML = '<span class="dot"></span><span class="check">✓</span>';
+        btn.onclick = function () { selectBreathTheme(theme.id); };
+        picker.appendChild(btn);
+      });
     });
   }
 
