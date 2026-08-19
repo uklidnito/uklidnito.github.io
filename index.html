@@ -5001,7 +5001,8 @@
         journal: {},
         stressLog: mergeLogs(local.stressLog, remote.stressLog),
         moodLog: mergeLogs(local.moodLog, remote.moodLog),
-        energyLog: mergeLogs(local.energyLog, remote.energyLog)
+        energyLog: mergeLogs(local.energyLog, remote.energyLog),
+        xp: Math.max((local && local.xp) || 0, (remote && remote.xp) || 0)
       };
       const journalKeys = new Set([
         ...Object.keys((remote && remote.journal) || {}),
@@ -5025,6 +5026,7 @@
         progressData = mergeProgress(progressData, snap.val());
         saveProgressData(progressData);
         renderProgress();
+        renderXpBadge();
       }).catch(() => {});
     }
 
