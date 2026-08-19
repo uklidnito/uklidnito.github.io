@@ -860,6 +860,40 @@
     .breath-stat-item .breath-stat-value { font-size: 13px; }
   }
 
+  /* ---------- XP and cups (breathing exercise gamification) ---------- */
+  .breath-xp-badge-wrap { position: absolute; top: 56px; left: 50%; transform: translateX(-50%); z-index: 2; }
+  @media (max-width: 380px) { .breath-xp-badge-wrap { top: 50px; } }
+  .breath-xp-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; padding: 4px 12px 4px 4px; cursor: default;
+  }
+  .breath-figure-xp-badge { margin: 6px 0 0; }
+  .breath-xp-icon {
+    width: 24px; height: 24px; border-radius: 50%; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+    background: radial-gradient(circle at 35% 30%, #a9754a, #4a2f16);
+    box-shadow: 0 0 8px #a9754a; transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+  .breath-xp-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 96px; }
+  .breath-xp-tier-name { font-size: 8px; letter-spacing: 1px; text-transform: uppercase; color: #fff; opacity: 0.85; }
+  .breath-xp-count { font-size: 8px; letter-spacing: 0.5px; color: rgba(255,255,255,0.45); font-variant-numeric: tabular-nums; }
+  .breath-xp-bar-track { width: 100%; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.12); overflow: hidden; margin-top: 2px; }
+  .breath-xp-bar-fill {
+    display: block; height: 100%; width: 0%; border-radius: 3px;
+    background: #a9754a; box-shadow: 0 0 6px #a9754a;
+    transition: width 0.6s ease, background 0.4s ease, box-shadow 0.4s ease;
+  }
+  .breath-xp-toast {
+    position: absolute; top: 96px; left: 50%; transform: translateX(-50%) translateY(-6px);
+    z-index: 7; background: rgba(10,6,2,0.92); border: 1px solid var(--accent-color);
+    color: #fff; font-size: 10px; letter-spacing: 0.5px; padding: 8px 16px; border-radius: 20px;
+    box-shadow: 0 0 16px var(--accent-color); opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease; white-space: nowrap;
+  }
+  .breath-xp-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (max-width: 380px) { .breath-xp-toast { font-size: 9px; padding: 7px 12px; white-space: normal; text-align: center; max-width: 260px; } }
+
   .breathing-figure-btn {
     position: absolute; top: 16px; left: 64px; width: 36px; height: 36px; border-radius: 50%;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #fff;
@@ -1900,6 +1934,19 @@
   <button class="breathing-info" onclick="toggleBreathGuide()" aria-label="Breathing guide">ⓘ</button>
   <button class="breathing-figure-btn" onclick="toggleBreathFigure()" aria-label="Breathing pace demo">🧍</button>
 
+  <div class="breath-xp-toast" id="breath-xp-toast"></div>
+
+  <div class="breath-xp-badge-wrap" id="breath-xp-badge-wrap">
+    <div class="breath-xp-badge">
+      <div class="breath-xp-icon">🏆</div>
+      <div class="breath-xp-text">
+        <span class="breath-xp-tier-name">Wooden Cup</span>
+        <span class="breath-xp-count">0 / 100 XP</span>
+        <div class="breath-xp-bar-track"><div class="breath-xp-bar-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="breath-figure-panel" id="breath-figure-panel">
     <button class="breath-figure-close" onclick="toggleBreathFigure()" aria-label="Close breathing demo">✖</button>
     <div class="breath-figure-title">Breathing pace demo</div>
@@ -1957,6 +2004,15 @@
       <div class="breath-stat-item">
         <span>Time</span>
         <span class="breath-stat-value breath-clock-value">--:--</span>
+      </div>
+    </div>
+
+    <div class="breath-xp-badge breath-figure-xp-badge">
+      <div class="breath-xp-icon">🏆</div>
+      <div class="breath-xp-text">
+        <span class="breath-xp-tier-name">Wooden Cup</span>
+        <span class="breath-xp-count">0 / 100 XP</span>
+        <div class="breath-xp-bar-track"><div class="breath-xp-bar-fill"></div></div>
       </div>
     </div>
 
@@ -2022,6 +2078,11 @@
       <div class="breath-guide-tech">
         <h4>Lion’s breath — Simhasana</h4>
         <p>Take a deep inhale through the nose for 4 s, then forcefully exhale through the mouth for 4 s with your tongue stuck out (feel free to add a quiet “ha”). Releases tension in the face, jaw and neck and works as a quick release valve for frustration or tension.</p>
+      </div>
+
+      <div class="breath-guide-tech">
+        <h4>🏆 XP & cups</h4>
+        <p>Every breathing session longer than 15 seconds earns you XP — the longer you breathe, the more you get (up to 100 XP per session). Collected XP gradually moves you up through cups: Wooden (0), Bronze (100), Silver (300), Gold (700), Platinum (1,500), Diamond (3,000), Master (6,000) and Legendary (12,000 XP). Your current cup, XP count and progress bar toward the next cup are shown right at the top of the exercise the whole time — and a short message lets you know whenever you reach a new one.</p>
       </div>
 
       <p class="breath-guide-note">For general relaxation only, not medical advice. If you feel nauseous or dizzy, breathe normally and stop.</p>
@@ -2966,7 +3027,7 @@
   window.stopBreathing = function() {
     if (!breathingActive) return;
     const sessionDurationMs = breathSessionStartTime ? (Date.now() - breathSessionStartTime) : 0;
-    if (sessionDurationMs >= 15000) recordBreathingSession();
+    if (sessionDurationMs >= 15000) recordBreathingSession(sessionDurationMs);
     breathingActive = false;
     breathingPaused = false;
     stopBreathStopwatch();
@@ -3057,11 +3118,12 @@
           stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : [],
           moodLog: Array.isArray(parsed.moodLog) ? parsed.moodLog : [],
           energyLog: Array.isArray(parsed.energyLog) ? parsed.energyLog : [],
-          journal: journal
+          journal: journal,
+          xp: typeof parsed.xp === 'number' && parsed.xp >= 0 ? parsed.xp : 0
         };
       }
     } catch (e) { /* ignore */ }
-    return { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {} };
+    return { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {}, xp: 0 };
   }
 
   function saveProgressData(data) {
@@ -3093,11 +3155,89 @@
 
   let progressData = loadProgressData();
 
+  // ---------- XP and cups (breathing exercise gamification) ----------
+  // Cups the user climbs by collecting XP. Threshold (xp) is the minimum XP for that cup.
+  const XP_TIERS = [
+    { id: 'wood',     xp: 0,     name: 'Wooden Cup',    color: '#a9754a', glow: '#4a2f16' },
+    { id: 'bronze',   xp: 100,   name: 'Bronze Cup',    color: '#c97a3d', glow: '#6b3d1a' },
+    { id: 'silver',   xp: 300,   name: 'Silver Cup',    color: '#c8ccd4', glow: '#5c626e' },
+    { id: 'gold',     xp: 700,   name: 'Gold Cup',      color: '#f5c542', glow: '#8a6a0a' },
+    { id: 'platinum', xp: 1500,  name: 'Platinum Cup',  color: '#7fe0d6', glow: '#0f5f58' },
+    { id: 'diamond',  xp: 3000,  name: 'Diamond Cup',   color: '#7cb8ff', glow: '#123a73' },
+    { id: 'master',   xp: 6000,  name: 'Master Cup',    color: '#c084fc', glow: '#4c1d7a' },
+    { id: 'legend',   xp: 12000, name: 'Legendary Cup', color: '#ff66b3', glow: '#7a0f45' }
+  ];
+
+  // Returns the current cup, the next one (if any) and the progress percentage between them.
+  function getXpTierInfo(xp) {
+    let current = XP_TIERS[0];
+    let next = XP_TIERS[1] || null;
+    for (let i = 0; i < XP_TIERS.length; i++) {
+      if (xp >= XP_TIERS[i].xp) {
+        current = XP_TIERS[i];
+        next = XP_TIERS[i + 1] || null;
+      }
+    }
+    let pct = 100;
+    if (next) {
+      pct = Math.max(0, Math.min(100, Math.round((xp - current.xp) / (next.xp - current.xp) * 100)));
+    }
+    return { current: current, next: next, pct: pct };
+  }
+
+  // Redraws the cup/XP/progress badge (in the main exercise and in the figure panel).
+  function renderXpBadge() {
+    const xp = progressData.xp || 0;
+    const info = getXpTierInfo(xp);
+    document.querySelectorAll('.breath-xp-tier-name').forEach(function (el) { el.textContent = info.current.name; });
+    document.querySelectorAll('.breath-xp-count').forEach(function (el) {
+      el.textContent = info.next ? (xp + ' / ' + info.next.xp + ' XP') : (xp + ' XP (MAX)');
+    });
+    document.querySelectorAll('.breath-xp-bar-fill').forEach(function (el) {
+      el.style.width = info.pct + '%';
+      el.style.background = info.current.color;
+      el.style.boxShadow = '0 0 6px ' + info.current.color;
+    });
+    document.querySelectorAll('.breath-xp-icon').forEach(function (el) {
+      el.style.background = 'radial-gradient(circle at 35% 30%, ' + info.current.color + ', ' + info.current.glow + ')';
+      el.style.boxShadow = '0 0 8px ' + info.current.color;
+    });
+    document.querySelectorAll('.breath-xp-badge').forEach(function (el) {
+      el.title = info.current.name + ' — ' + xp + ' XP';
+    });
+  }
+
+  // Short message shown when the user reaches a new cup.
+  function showXpTierUpToast(tier) {
+    const toast = document.getElementById('breath-xp-toast');
+    if (!toast) return;
+    toast.textContent = '🏆 New cup: ' + tier.name + '!';
+    toast.classList.add('visible');
+    clearTimeout(toast._breathXpToastTimer);
+    toast._breathXpToastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 3500);
+  }
+
+  // Awards XP for a completed session (based on its length) and announces a new cup if reached.
+  function awardBreathXp(durationMs) {
+    const minutes = durationMs / 60000;
+    const earned = Math.max(2, Math.min(Math.round(minutes * 10), 100));
+    const before = getXpTierInfo(progressData.xp || 0);
+    progressData.xp = (progressData.xp || 0) + earned;
+    const after = getXpTierInfo(progressData.xp);
+    saveProgressData(progressData);
+    renderXpBadge();
+    if (after.current.id !== before.current.id) showXpTierUpToast(after.current);
+    return earned;
+  }
+
+  renderXpBadge();
+
   // Called automatically after finishing a breathing exercise (see stopBreathing)
-  function recordBreathingSession() {
+  function recordBreathingSession(durationMs) {
     const key = dateKey(new Date());
     if (!progressData.days[key]) progressData.days[key] = { sessions: 0 };
     progressData.days[key].sessions = (progressData.days[key].sessions || 0) + 1;
+    awardBreathXp(typeof durationMs === 'number' ? durationMs : 15000);
     saveProgressData(progressData);
     renderProgress();
   }
@@ -3115,9 +3255,10 @@
 
   window.resetBreathProgress = function() {
     if (!confirm('Are you sure you want to clear your entire progress (calendar, stress, mood and energy logs and journal)? This cannot be undone.')) return;
-    progressData = { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {} };
+    progressData = { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {}, xp: 0 };
     saveProgressData(progressData);
     renderProgress();
+    renderXpBadge();
   };
 
   window.logProgressStress = function(value) {
