@@ -814,13 +814,14 @@
   .breath-figure-svg { position: relative; z-index: 1; width: 130px; height: auto; overflow: visible; }
   .breath-figure-torso {
     transform-box: fill-box; transform-origin: 50% 100%; transition: transform linear;
-    fill: url(#breathFigureGradient); opacity: 0.95; filter: drop-shadow(0 0 16px var(--accent-color));
+    fill: var(--accent-color); opacity: 0.95; filter: drop-shadow(0 0 10px var(--accent-glow));
   }
-  .breath-figure-fg-stop-1 { stop-color: #fff; stop-opacity: 0.95; }
-  .breath-figure-fg-stop-2 { stop-color: var(--accent-color); }
-  .breath-figure-fg-stop-3 { stop-color: var(--accent-glow); }
-  .breath-figure-head { fill: rgba(255,255,255,0.92); filter: drop-shadow(0 0 6px rgba(255,255,255,0.35)); }
-  .breath-figure-leg { fill: rgba(255,255,255,0.28); }
+  .figure-skin { fill: #f0b992; }
+  .figure-hair { fill: #241b16; }
+  .figure-pants { fill: #1c2340; }
+  .figure-shoe { fill: #f4ede2; }
+  .figure-eye { fill: #241b16; }
+  .figure-mouth { stroke: #c98a5e; stroke-width: 2; fill: none; stroke-linecap: round; }
   .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; }
   .breath-figure-count { margin-top: 6px; font-size: 34px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px var(--accent-color); }
   .breath-figure-hint { margin-top: 26px; font-size: 10px; opacity: 0.35; letter-spacing: 1px; text-transform: uppercase; max-width: 220px; }
@@ -1125,7 +1126,7 @@
     <h2 id="jak-funguje">Jak dechové cvičení funguje</h2>
     <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe.</p>
     <p>Kdykoli si můžeš vybrat jednu z osmi vědecky podložených technik podle toho, co zrovna potřebuješ: rychle se zklidnit, usnout, nebo naopak zůstat soustředěný/á pod tlakem. Na podporovaných telefonech cvičení navíc jemně vibruje při každé změně fáze, takže se můžeš soustředit i se zavřenýma očima.</p>
-    <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. Vedle ikonky s návodem (ⓘ) je ikonka postavičky 🧍 — je to živá ukázka tempa dýchání pro navíc, ne povinná součást cvičení. Po klepnutí se otevře malá zářící postavička, které se hrudník plynule zvedá a klesá přesně v rytmu zvolené techniky (nádech, zádrž, výdech) a k tomu odpočítává sekundy dané fáze, takže se stačí dívat a dýchat stejným tempem — ideální, když si nejsi jistý/á, jak přesně danou techniku dýchat. Ukázku můžeš mít otevřenou i bez spuštěného hlavního cvičení a technika se v ní automaticky přepíná spolu s tou, kterou máš zvolenou nahoře.</p>
+    <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. Vedle ikonky s návodem (ⓘ) je ikonka postavičky 🧍 — druhé, lidštější zobrazení stejného dechu, ne povinná součást cvičení. Po klepnutí se otevře malá zářící postavička, které se hrudník zvedá a klesá a k tomu odpočítává sekundy dané fáze (nádech, zádrž, výdech). Když už hlavní cvičení běží, postavička jede naprosto souběžně s koulí — stejná fáze i stejný odpočet ve stejný okamžik, takže si obě zobrazení nikdy neodporují a klidně sleduješ to, které ti sedí víc. Technika se dá přepnout i s otevřenou ukázkou a obě zobrazení se přepnou a zresetují společně. Ukázku jde otevřít i bez spuštěného hlavního cvičení — pak postavička jede sama v tempu zvolené techniky jako náhled, a jakmile cvičení spustíš, automaticky se napojí na kouli.</p>
     <ul class="benefits-list">
       <li>Zklidnění nervového systému a snížení pocitu úzkosti a stresu</li>
       <li>Rychlejší usínání a hlubší uvolnění před spaním</li>
@@ -1724,22 +1725,27 @@
       <div class="breath-figure-ring ring-2" aria-hidden="true"></div>
       <div class="breath-figure-glow" id="breath-figure-glow" aria-hidden="true"></div>
       <svg class="breath-figure-svg" viewBox="0 0 120 220" aria-hidden="true">
-        <defs>
-          <radialGradient id="breathFigureGradient" cx="50%" cy="30%" r="75%">
-            <stop offset="0%" class="breath-figure-fg-stop-1"></stop>
-            <stop offset="45%" class="breath-figure-fg-stop-2"></stop>
-            <stop offset="100%" class="breath-figure-fg-stop-3"></stop>
-          </radialGradient>
-        </defs>
-        <ellipse cx="60" cy="108" rx="30" ry="52" class="breath-figure-torso" id="breath-figure-torso"></ellipse>
-        <circle cx="60" cy="34" r="20" class="breath-figure-head"></circle>
-        <rect x="45" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
-        <rect x="65" y="150" width="10" height="55" rx="5" class="breath-figure-leg"></rect>
+        <rect x="20" y="60" width="15" height="50" rx="7.5" class="figure-skin" transform="rotate(10 27 60)"></rect>
+        <rect x="85" y="60" width="15" height="50" rx="7.5" class="figure-skin" transform="rotate(-10 93 60)"></rect>
+        <circle cx="27" cy="113" r="8.5" class="figure-skin"></circle>
+        <circle cx="93" cy="113" r="8.5" class="figure-skin"></circle>
+        <rect x="35" y="122" width="50" height="22" rx="8" class="figure-pants"></rect>
+        <rect x="40" y="139" width="16" height="56" rx="7" class="figure-pants"></rect>
+        <rect x="64" y="139" width="16" height="56" rx="7" class="figure-pants"></rect>
+        <rect x="35" y="191" width="26" height="14" rx="7" class="figure-shoe"></rect>
+        <rect x="59" y="191" width="26" height="14" rx="7" class="figure-shoe"></rect>
+        <rect x="32" y="56" width="56" height="72" rx="20" class="breath-figure-torso" id="breath-figure-torso"></rect>
+        <rect x="53" y="46" width="14" height="12" rx="4" class="figure-skin"></rect>
+        <path d="M40 18 Q60 2 80 18 Q85 33 78 40 Q72 27 60 27 Q48 27 42 40 Q35 33 40 18 Z" class="figure-hair"></path>
+        <circle cx="60" cy="33" r="18" class="figure-skin"></circle>
+        <circle cx="53" cy="32" r="2" class="figure-eye"></circle>
+        <circle cx="67" cy="32" r="2" class="figure-eye"></circle>
+        <path d="M54 40 Q60 44 66 40" class="figure-mouth"></path>
       </svg>
     </div>
     <div class="breath-figure-phase" id="breath-figure-phase">Nádech</div>
     <div class="breath-figure-count" id="breath-figure-count">4</div>
-    <div class="breath-figure-hint">Postavička dýchá za tebe — sleduj, jak se jí hrudník zvedá a klesá, a dýchej ve stejném tempu. Technika jde přepnout i s otevřenou ukázkou.</div>
+    <div class="breath-figure-hint">Postavička dýchá ve stejném rytmu jako koule vedle ní — sleduj, jak se jí hrudník zvedá a klesá, a dýchej ve stejném tempu. Technika jde přepnout i s otevřenou ukázkou.</div>
   </div>
 
   <div class="breath-stats-row" id="breath-stats-row">
@@ -2189,7 +2195,7 @@
   let breathFigurePhaseTimeout = null;
   let breathFigureCountdownInterval = null;
   const FIGURE_OUT_VISUAL = { transform: 'scale(1, 1)', glowScale: 0.75, glowOpacity: 0.22, isHold: false };
-  const FIGURE_IN_VISUAL  = { transform: 'scale(1.22, 1.12)', glowScale: 1.05, glowOpacity: 0.55, isHold: false };
+  const FIGURE_IN_VISUAL  = { transform: 'scale(1.15, 1.08)', glowScale: 1.05, glowOpacity: 0.55, isHold: false };
   let lastFigureVisual = FIGURE_OUT_VISUAL;
 
   function setBreathFigureTransitionDuration(seconds) {
@@ -2217,8 +2223,10 @@
     return { transform: lastFigureVisual.transform, glowScale: lastFigureVisual.glowScale, glowOpacity: lastFigureVisual.glowOpacity, isHold: true };
   }
 
+  // Samostatný cyklus postavičky - používá se JEN když hlavní cvičení (koule) neběží,
+  // aby šla ukázka tempa otevřít i bez spuštěného cvičení (viz popisek u ikonky ⓘ).
   function runBreathFigurePhase() {
-    if (!breathFigureActive) return;
+    if (!breathFigureActive || breathingActive) return;
     const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
     const phase = phases[breathFigurePhaseIndex];
     const phaseEl = document.getElementById('breath-figure-phase');
@@ -2256,15 +2264,47 @@
     requestAnimationFrame(() => requestAnimationFrame(runBreathFigurePhase));
   }
 
-  // Otevře/zavře panel s ukázkou dýchání na postavičce; běží nezávisle na tom, jestli cvičení právě probíhá
+  // Napojí postavičku přesně na aktuální fázi a odpočet hlavní koule (jeden zdroj pravdy,
+  // žádný vlastní časovač) - volá se z runBreathPhase(), dokud běží hlavní cvičení.
+  function syncBreathFigureToMainPhase(phase, secondsLeft) {
+    const phaseEl = document.getElementById('breath-figure-phase');
+    const countEl = document.getElementById('breath-figure-count');
+    if (phaseEl) phaseEl.innerText = phase.label || DEFAULT_PHASE_LABELS[phase.type];
+    if (countEl) countEl.innerText = secondsLeft;
+    setBreathFigureTransitionDuration(phase.duration);
+
+    const visual = getFigurePhaseVisual(phase);
+    if (phase.type !== 'hold') lastFigureVisual = visual;
+    requestAnimationFrame(() => applyBreathFigureVisual(visual));
+  }
+
+  // Otevře/zavře panel s ukázkou dýchání na postavičce.
+  // Pokud hlavní cvičení (koule) zrovna běží, postavička se hned přilepí na jeho AKTUÁLNÍ fázi
+  // a dál jede naprosto synchronně s koulí (žádný vlastní restart od nuly).
+  // Pokud hlavní cvičení neběží, funguje postavička jako samostatná ukázka tempa.
   window.toggleBreathFigure = function() {
     const panel = document.getElementById('breath-figure-panel');
     if (!panel) return;
     const opening = !panel.classList.contains('visible');
     panel.classList.toggle('visible', opening);
+    const techNameEl = document.getElementById('breath-figure-tech-name');
+    if (techNameEl) techNameEl.innerText = BREATH_TECHNIQUES[currentBreathTechnique].name;
+
     if (opening) {
       breathFigureActive = true;
-      restartBreathFigureLoop();
+      clearTimeout(breathFigurePhaseTimeout);
+      clearInterval(breathFigureCountdownInterval);
+      if (breathingActive) {
+        // Cvičení už běží (spuštěné nebo na pauze) - napoj se hned na jeho aktuální fázi a čas
+        breathFigurePhaseIndex = breathPhaseIndex;
+        const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+        const phase = phases[breathPhaseIndex];
+        const secondsNow = parseInt(breathCountEl.innerText, 10) || Math.ceil(phase.duration);
+        setBreathFigureTransitionDuration(0);
+        syncBreathFigureToMainPhase(phase, secondsNow);
+      } else {
+        restartBreathFigureLoop();
+      }
     } else {
       breathFigureActive = false;
       clearTimeout(breathFigurePhaseTimeout);
@@ -2284,12 +2324,23 @@
     requestAnimationFrame(() => applyBreathPhase(visual));
     triggerBreathVibration(phase.type);
 
+    // Postavička (pokud je otevřená) jede na stejném "tiku" jako koule - je to tak vždy
+    // přesně ve stejné fázi a se stejným odpočtem, nikdy se nerozjede.
+    if (breathFigureActive) {
+      breathFigurePhaseIndex = breathPhaseIndex;
+      syncBreathFigureToMainPhase(phase, Math.ceil(phase.duration));
+    }
+
     let secondsLeft = Math.ceil(phase.duration);
     breathCountEl.innerText = secondsLeft;
+    const figureCountElLive = document.getElementById('breath-figure-count');
     clearInterval(breathCountdownInterval);
     breathCountdownInterval = setInterval(() => {
       secondsLeft--;
-      if (secondsLeft > 0) breathCountEl.innerText = secondsLeft;
+      if (secondsLeft > 0) {
+        breathCountEl.innerText = secondsLeft;
+        if (breathFigureActive && figureCountElLive) figureCountElLive.innerText = secondsLeft;
+      }
     }, 1000);
 
     breathPhaseTimeout = setTimeout(() => {
@@ -2307,14 +2358,27 @@
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
     lastBreathVisual = OUT_VISUAL;
+    if (breathFigureActive) {
+      const techNameEl = document.getElementById('breath-figure-tech-name');
+      if (techNameEl) techNameEl.innerText = BREATH_TECHNIQUES[currentBreathTechnique].name;
+    }
     if (breathingActive) {
       setBreathTransitionDuration(0);
       applyBreathPhase(OUT_VISUAL);
+      // Postavička se resetuje spolu s koulí na stejnou startovní fázi - žádný vlastní restart
+      breathFigurePhaseIndex = 0;
+      lastFigureVisual = FIGURE_OUT_VISUAL;
+      if (breathFigureActive) {
+        setBreathFigureTransitionDuration(0);
+        applyBreathFigureVisual(FIGURE_OUT_VISUAL);
+      }
       if (!breathingPaused) {
         requestAnimationFrame(() => requestAnimationFrame(runBreathPhase));
       }
+    } else if (breathFigureActive) {
+      // Hlavní cvičení neběží - postavička dál jede sama, jen v novém tempu
+      restartBreathFigureLoop();
     }
-    if (breathFigureActive) restartBreathFigureLoop();
   };
 
   function updateBreathTechniqueUI() {
