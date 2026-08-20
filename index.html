@@ -968,7 +968,7 @@
     position: absolute; width: 140px; height: 140px; border-radius: 50%;
     background: radial-gradient(circle, var(--accent-color) 0%, var(--accent-glow) 45%, transparent 72%);
     filter: blur(14px); transform: scale(0.75); opacity: 0.22;
-    transition: opacity linear, transform linear; will-change: opacity, transform;
+    transition: opacity ease-in-out, transform ease-in-out; will-change: opacity, transform;
   }
   .breath-figure-glow.holding { animation: breathHoldShimmer 2.4s ease-in-out infinite; }
   .breath-figure-ring {
@@ -979,7 +979,7 @@
   .breath-figure-ring.ring-2 { animation-delay: 2s; }
   .breath-figure-svg { position: relative; z-index: 1; width: 130px; height: auto; overflow: visible; }
   .breath-figure-torso {
-    transform-box: fill-box; transform-origin: 50% 100%; transition: transform linear;
+    transform-box: fill-box; transform-origin: 50% 100%; transition: transform ease-in-out;
     fill: var(--accent-color); opacity: 0.95; filter: drop-shadow(0 0 10px var(--accent-glow));
   }
   .breath-figure-arrows { position: absolute; right: -8px; top: 24%; width: 34px; height: 96px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
