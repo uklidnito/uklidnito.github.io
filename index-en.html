@@ -1094,6 +1094,27 @@
     border-radius: 50%; background: radial-gradient(circle, #fff 0%, var(--accent-color) 70%);
   }
 
+  /* ---------- Alternative breathing exercise visual: Mandala/flower ---------- */
+  .breath-mandala-wrap {
+    display: none;
+    position: relative; width: 180px; height: 180px;
+    align-items: center; justify-content: center;
+    transform: scale(0.62) rotate(-12deg); transition: transform 4s ease-in-out; will-change: transform;
+  }
+  .breath-orb-group.visual-mandala .breath-orb-wrap { display: none; }
+  .breath-orb-group.visual-mandala .breath-mandala-wrap { display: flex; }
+  .breath-mandala-wrap.holding { animation: breathHoldShimmer 2.4s ease-in-out infinite; }
+  .breath-mandala-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .breath-mandala-petal-outer {
+    fill: var(--accent-glow); opacity: 0.55;
+    filter: drop-shadow(0 0 6px var(--accent-color));
+  }
+  .breath-mandala-petal-inner {
+    fill: var(--accent-color); opacity: 0.9;
+    filter: drop-shadow(0 0 8px var(--accent-color));
+  }
+  .breath-mandala-wrap .breath-core-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; }
+
   .breath-phase { margin-top: 34px; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 12px var(--accent-color); min-height: 18px; }
   .breath-count { margin-top: 8px; font-size: 50px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 20px var(--accent-color); }
   .breath-hint { margin-top: 36px; font-size: 9px; opacity: 0.3; letter-spacing: 1.5px; text-transform: uppercase; }
@@ -1116,6 +1137,7 @@
   #breath-logo-btn, #breath-figure-logo-btn { min-width: 96px; }
   #breath-vibe-btn, #breath-figure-vibe-btn { min-width: 108px; }
   #breath-save-btn, #breath-figure-save-btn { min-width: 62px; }
+  #breath-visual-btn { min-width: 128px; }
   .breath-figure-controls { margin-top: 18px; }
 
   /* ---------- Color theme picker (breathing exercise) ---------- */
@@ -1145,9 +1167,9 @@
   @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; } .breath-theme-swatch { width: 36px; height: 36px; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow { transition-duration: 0.6s !important; }
+    .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow, .breath-mandala-wrap { transition-duration: 0.6s !important; }
     .breath-orb.holding, .cta-icon, .breath-ring, .breath-blob, .hero-orb-preview .ring,
-    .breath-figure-glow.holding, .breath-figure-ring { animation: none; }
+    .breath-figure-glow.holding, .breath-figure-ring, .breath-mandala-wrap.holding { animation: none; }
     .breath-ring, .hero-orb-preview .ring, .breath-figure-ring { display: none; }
     .arrow-chevron, .breath-arrow-hold span { animation: none !important; opacity: 0.9 !important; transform: none !important; }
   }
@@ -2209,6 +2231,11 @@
         <p>Every breathing session longer than 15 seconds earns you XP — the longer you breathe, the more you get (up to 100 XP per session). Collected XP gradually moves you up through cups: Wooden (0), Bronze (100), Silver (300), Gold (700), Platinum (1,500), Diamond (3,000), Master (6,000) and Legendary (12,000 XP). Your current cup, XP count and progress bar toward the next cup are shown right at the top of the exercise the whole time — and a short message lets you know whenever you reach a new one.</p>
       </div>
 
+      <div class="breath-guide-tech">
+        <h4>⌨️ Keyboard shortcuts</h4>
+        <p>On desktop you can also control the exercise from the keyboard: Space starts or pauses the cycle, the Left/Right (or Up/Down) arrows switch between techniques, and Esc quickly closes the exercise.</p>
+      </div>
+
       <p class="breath-guide-note">For general relaxation only, not medical advice. If you feel nauseous or dizzy, breathe normally and stop.</p>
     </div>
   </div>
@@ -2231,6 +2258,31 @@
       <div class="breath-ring breath-ring-2"></div>
       <div class="breath-orb" id="breath-orb"></div>
       <div class="breath-core-mark" id="breath-logo" aria-hidden="true"></div>
+    </div>
+    <div class="breath-mandala-wrap" id="breath-mandala-wrap">
+      <svg class="breath-mandala-svg" viewBox="0 0 200 200" aria-hidden="true">
+        <g id="breath-mandala-outer">
+          <path class="breath-mandala-petal-outer" transform="rotate(0 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(45 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(90 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(135 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(180 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(225 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(270 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+          <path class="breath-mandala-petal-outer" transform="rotate(315 100 100)" d="M100,100 C78,68 72,28 100,6 C128,28 122,68 100,100 Z"></path>
+        </g>
+        <g id="breath-mandala-inner">
+          <path class="breath-mandala-petal-inner" transform="rotate(22.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(67.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(112.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(157.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(202.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(247.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(292.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+          <path class="breath-mandala-petal-inner" transform="rotate(337.5 100 100)" d="M100,100 C87,80 83,55 100,38 C117,55 113,80 100,100 Z"></path>
+        </g>
+      </svg>
+      <div class="breath-core-mark" id="breath-mandala-logo" aria-hidden="true"></div>
     </div>
     <div class="breath-orb-arrows" id="breath-orb-arrows" aria-hidden="true">
       <svg class="breath-arrow-icon breath-arrow-in" id="breath-orb-arrow-in" viewBox="0 0 40 96">
@@ -2256,6 +2308,7 @@
     <button class="btn-breath-ctrl" id="breath-logo-btn" onclick="toggleBreathLogo()">LOGO: ON</button>
     <button class="btn-breath-ctrl" id="breath-vibe-btn" onclick="toggleBreathVibration()">VIBRACE: ZAP</button>
     <button class="btn-breath-ctrl" id="breath-theme-btn" onclick="toggleThemePicker(this)" aria-haspopup="true" aria-expanded="false">THEME</button>
+    <button class="btn-breath-ctrl" id="breath-visual-btn" onclick="toggleBreathVisualStyle()">VISUAL: ORB</button>
     <button class="btn-breath-ctrl" id="breath-save-btn" onclick="saveBreathSettings()">SAVE</button>
 
     <div class="breath-theme-picker" id="breath-theme-picker" role="menu" aria-label="Color theme picker"></div>
@@ -2657,13 +2710,14 @@
     }
   };
 
-  const OUT_VISUAL = { scale: 0.62, orbOpacity: 0.32, glowPx: 8, isHold: false, type: 'out' };
-  const IN_VISUAL  = { scale: 1.15, orbOpacity: 0.85, glowPx: 26, isHold: false, type: 'in' };
+  const OUT_VISUAL = { scale: 0.62, rotate: -12, orbOpacity: 0.32, glowPx: 8, isHold: false, type: 'out' };
+  const IN_VISUAL  = { scale: 1.15, rotate: 18, orbOpacity: 0.85, glowPx: 26, isHold: false, type: 'in' };
   let lastBreathVisual = OUT_VISUAL;
 
   const breathOrbWrap = document.getElementById('breath-orb-wrap');
   const breathOrbEl = document.getElementById('breath-orb');
-  const breathLogoEl = document.getElementById('breath-logo');
+  const breathMandalaWrap = document.getElementById('breath-mandala-wrap');
+  const breathCoreMarks = document.querySelectorAll('#breath-logo, #breath-mandala-logo');
   const breathPhaseEl = document.getElementById('breath-phase');
   const breathCountEl = document.getElementById('breath-count');
   const breathSloganEl = document.getElementById('breath-slogan');
@@ -2694,13 +2748,16 @@
   function setBreathTransitionDuration(seconds) {
     breathOrbWrap.style.transitionDuration = seconds + 's';
     breathOrbEl.style.transitionDuration = seconds + 's';
-    breathLogoEl.style.transitionDuration = seconds + 's';
+    breathMandalaWrap.style.transitionDuration = seconds + 's';
+    breathCoreMarks.forEach(function (el) { el.style.transitionDuration = seconds + 's'; });
   }
 
   function applyBreathPhase(visual) {
     breathOrbWrap.style.transform = `scale(${visual.scale})`;
     breathOrbEl.style.opacity = visual.orbOpacity;
-    breathLogoEl.style.filter = `drop-shadow(0 0 ${visual.glowPx}px var(--accent-color))`;
+    breathMandalaWrap.style.transform = `scale(${visual.scale}) rotate(${visual.rotate}deg)`;
+    breathMandalaWrap.classList.toggle('holding', visual.isHold);
+    breathCoreMarks.forEach(function (el) { el.style.filter = `drop-shadow(0 0 ${visual.glowPx}px var(--accent-color))`; });
     breathOrbEl.classList.toggle('holding', visual.isHold);
     const orbArrowIn = document.getElementById('breath-orb-arrow-in');
     const orbArrowOut = document.getElementById('breath-orb-arrow-out');
@@ -2714,7 +2771,7 @@
   function getPhaseVisual(phase) {
     if (phase.type === 'in') return IN_VISUAL;
     if (phase.type === 'out') return OUT_VISUAL;
-    return { scale: lastBreathVisual.scale, orbOpacity: lastBreathVisual.orbOpacity, glowPx: lastBreathVisual.glowPx, isHold: true, type: 'hold' };
+    return { scale: lastBreathVisual.scale, rotate: lastBreathVisual.rotate, orbOpacity: lastBreathVisual.orbOpacity, glowPx: lastBreathVisual.glowPx, isHold: true, type: 'hold' };
   }
 
   // Gentle vibration on mobile with every phase change (inhale / exhale / hold)
@@ -3095,6 +3152,7 @@
 
     freezeBreathVisual(breathOrbWrap, ['transform']);
     freezeBreathVisual(breathOrbEl, ['opacity']);
+    freezeBreathVisual(breathMandalaWrap, ['transform']);
     if (breathFigureActive) {
       freezeBreathFigureVisual(phase, elapsed);
     }
@@ -3184,10 +3242,25 @@
   };
 
   function applyBreathLogoVisibility() {
-    breathLogoEl.style.display = breathLogoHidden ? 'none' : '';
+    breathCoreMarks.forEach(function (el) { el.style.display = breathLogoHidden ? 'none' : ''; });
     document.querySelectorAll('#breath-logo-btn, #breath-figure-logo-btn').forEach(function (btn) {
       btn.innerText = breathLogoHidden ? 'LOGO: OFF' : 'LOGO: ON';
       btn.classList.toggle('active', !breathLogoHidden);
+    });
+  }
+
+  // Toggle the graphic visual of the breathing exercise (orb / mandala)
+  let currentBreathVisual = 'orb';
+  window.toggleBreathVisualStyle = function() {
+    currentBreathVisual = currentBreathVisual === 'orb' ? 'mandala' : 'orb';
+    applyBreathVisualStyle();
+  };
+
+  function applyBreathVisualStyle() {
+    const group = document.querySelector('.breath-orb-group');
+    if (group) group.classList.toggle('visual-mandala', currentBreathVisual === 'mandala');
+    document.querySelectorAll('#breath-visual-btn').forEach(function (btn) {
+      btn.innerText = currentBreathVisual === 'mandala' ? 'VISUAL: MANDALA' : 'VISUAL: ORB';
     });
   }
 
@@ -3315,6 +3388,7 @@
     settings.vibrationEnabled = vibrationEnabled;
     settings.breathTechnique = currentBreathTechnique;
     settings.themeColor = currentThemeId;
+    settings.breathVisual = currentBreathVisual;
     try { localStorage.setItem('uklidnito_settings', JSON.stringify(settings)); } catch (e) { /* ignore */ }
 
     document.querySelectorAll('#breath-save-btn, #breath-figure-save-btn').forEach(function (btn) {
@@ -3408,6 +3482,35 @@
     }
   });
 
+  // Keyboard shortcuts in the breathing exercise: spacebar = start/stop, arrows = switch technique
+  const BREATH_TECH_ORDER = ['478', 'box', 'coherent', 'calm', 'sigh', 'branice', 'nozdry', 'lev'];
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('breathing-active')) return;
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) return;
+
+    if (e.code === 'Space' || e.key === ' ') {
+      e.preventDefault();
+      if (breathingPaused) resumeBreathCycle();
+      else pauseBreathCycle();
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const idx = BREATH_TECH_ORDER.indexOf(currentBreathTechnique);
+      selectBreathTechnique(BREATH_TECH_ORDER[(idx + 1) % BREATH_TECH_ORDER.length]);
+      return;
+    }
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const idx = BREATH_TECH_ORDER.indexOf(currentBreathTechnique);
+      selectBreathTechnique(BREATH_TECH_ORDER[(idx - 1 + BREATH_TECH_ORDER.length) % BREATH_TECH_ORDER.length]);
+      return;
+    }
+  });
+
   // Loading saved preferences (technique, vibration, logo) on page load
   (function loadBreathSettings() {
     try {
@@ -3420,11 +3523,13 @@
         if (typeof settings.vibrationEnabled === 'boolean') vibrationEnabled = settings.vibrationEnabled;
         if (typeof settings.breathLogoHidden === 'boolean') breathLogoHidden = settings.breathLogoHidden;
         if (settings.themeColor) currentThemeId = settings.themeColor;
+        if (settings.breathVisual === 'mandala' || settings.breathVisual === 'orb') currentBreathVisual = settings.breathVisual;
       }
     } catch (e) { /* ignore */ }
     updateBreathTechniqueUI();
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
+    applyBreathVisualStyle();
     renderThemePicker();
     document.querySelectorAll('.breath-theme-swatch').forEach(function (el) {
       el.classList.toggle('active', el.dataset.theme === currentThemeId);
