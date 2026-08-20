@@ -1136,7 +1136,7 @@
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
     background: rgba(15,8,0,0.92); backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
-    padding: 14px; width: 220px; z-index: 30;
+    padding: 14px; width: 220px; max-height: 260px; overflow-y: auto; z-index: 30;
     opacity: 0; pointer-events: none; visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
@@ -1146,6 +1146,7 @@
     width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;
     cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s ease, border-color 0.15s ease; -webkit-tap-highlight-color: transparent;
+    position: relative; flex-shrink: 0;
   }
   .breath-theme-swatch:hover { transform: scale(1.08); }
   .breath-theme-swatch:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -1154,7 +1155,12 @@
   .breath-theme-swatch .check { color: #fff; font-size: 15px; text-shadow: 0 0 4px rgba(0,0,0,0.6); display: none; }
   .breath-theme-swatch.active .check { display: block; }
   .breath-theme-swatch.active .dot { display: none; }
-  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; } .breath-theme-swatch { width: 36px; height: 36px; } }
+  .breath-theme-swatch .lock { display: none; color: #fff; font-size: 13px; text-shadow: 0 0 4px rgba(0,0,0,0.75); }
+  .breath-theme-swatch.locked { cursor: not-allowed; filter: grayscale(0.75); }
+  .breath-theme-swatch.locked:hover { transform: none; }
+  .breath-theme-swatch.locked .dot { opacity: 0.5; }
+  .breath-theme-swatch.locked .lock { display: block; }
+  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 230px; } .breath-theme-swatch { width: 36px; height: 36px; } }
   #breath-logo-btn, #breath-figure-logo-btn { min-width: 96px; }
   #breath-vibe-btn, #breath-figure-vibe-btn { min-width: 108px; }
   #breath-save-btn, #breath-figure-save-btn { min-width: 62px; }
@@ -1289,9 +1295,10 @@
 
   .side-nav-theme { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
   .side-nav-theme-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
-  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; }
   .side-nav-theme-picker .breath-theme-swatch { width: 24px; height: 24px; }
   .side-nav-theme-picker .breath-theme-swatch .check { font-size: 11px; }
+  .side-nav-theme-picker .breath-theme-swatch .lock { font-size: 10px; }
 
   .nav-scrim {
     position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999;
@@ -2230,6 +2237,7 @@
       <div class="breath-guide-tech">
         <h4>🏆 XP a poháry</h4>
         <p>Za každé dechové cvičení delší než 15 vteřin získáváš XP — čím déle dýcháš, tím víc (maximálně 100 XP za jedno cvičení). Nasbírané XP tě postupně posouvají mezi poháry: Dřevěný (0), Bronzový (100), Stříbrný (300), Zlatý (700), Platinový (1&nbsp;500), Diamantový (3&nbsp;000), Mistrovský (6&nbsp;000) a Legendární (12&nbsp;000 XP). Svůj aktuální pohár, počet XP i ukazatel postupu k dalšímu poháru vidíš celou dobu nahoře v cvičení — a při postupu na nový pohár tě upozorní krátká zpráva.</p>
+        <p>Dosažené poháry navíc odemykají nové barevné motivy (v nabídce MOTIV je poznáš podle zamčeného 🔒). Za Bronzový pohár získáš Měděnou a Pískovou, za Stříbrný Stříbrnou a Ocelovou, za Zlatý Slunečnicovou a Medovou, za Platinový Platinovou a Akvamarínovou, za Diamantový Diamantovou a Safírovou, za Mistrovský vzácnou Mistrovskou a za Legendární exkluzivní Legendární motiv.</p>
       </div>
 
       <div class="breath-guide-tech">
@@ -3298,7 +3306,20 @@
     { id: 'purple', label: 'Fialová',    accent: '#9c27b0', glow: '#4a0e59' },
     { id: 'pink',   label: 'Růžová',     accent: '#ff4d8d', glow: '#85114a' },
     { id: 'rose',   label: 'Malinová',   accent: '#f43f5e', glow: '#831843' },
-    { id: 'red',    label: 'Červená',    accent: '#ef4444', glow: '#7f1d1d' }
+    { id: 'red',    label: 'Červená',    accent: '#ef4444', glow: '#7f1d1d' },
+    // Odemykatelné motivy - postupně se zpřístupní podle dosaženého poháru (viz XP_TIERS a isThemeUnlocked)
+    { id: 'copper',     label: 'Měděná',        accent: '#c2703d', glow: '#5c2f10', tier: 'bronze' },
+    { id: 'sand',       label: 'Písková',       accent: '#d4a373', glow: '#6b4a26', tier: 'bronze' },
+    { id: 'silver',     label: 'Stříbrná',      accent: '#b8c4d0', glow: '#4a5560', tier: 'silver' },
+    { id: 'steel',      label: 'Ocelová',       accent: '#5b7c99', glow: '#1f3347', tier: 'silver' },
+    { id: 'sunflower',  label: 'Slunečnicová',  accent: '#ffd23f', glow: '#8a5a00', tier: 'gold' },
+    { id: 'honey',      label: 'Medová',        accent: '#ffb020', glow: '#7a3d00', tier: 'gold' },
+    { id: 'platinum',   label: 'Platinová',     accent: '#e0e8ec', glow: '#5a6b73', tier: 'platinum' },
+    { id: 'aqua',       label: 'Akvamarínová',  accent: '#4fd1c5', glow: '#0f5c54', tier: 'platinum' },
+    { id: 'diamond',    label: 'Diamantová',    accent: '#a0e9ff', glow: '#0a4a5c', tier: 'diamond' },
+    { id: 'sapphire',   label: 'Safírová',      accent: '#3b5bdb', glow: '#131f5c', tier: 'diamond' },
+    { id: 'master',     label: 'Mistrovská',    accent: '#b026ff', glow: '#3a0a5c', tier: 'master' },
+    { id: 'legend',     label: 'Legendární',    accent: '#ffd700', glow: '#3a0a1e', tier: 'legend' }
   ];
   let currentThemeId = 'amber';
 
@@ -3308,13 +3329,16 @@
       BREATH_THEMES.forEach(function (theme) {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'breath-theme-swatch';
+        btn.className = 'breath-theme-swatch' + (theme.tier ? ' locked' : '');
         btn.dataset.theme = theme.id;
         btn.setAttribute('role', 'menuitemradio');
         btn.setAttribute('aria-label', theme.label);
+        // Skutečný stav (odemčeno/zamčeno) a přesný popisek dopočítá updateThemeLockStates()
+        // až po načtení progressData/XP_TIERS - do té doby je odemykatelný motiv jen zamčený "na jistotu".
         btn.title = theme.label;
+        if (theme.tier) btn.disabled = true;
         btn.style.background = 'radial-gradient(circle at 35% 30%, ' + theme.accent + ', ' + theme.glow + ')';
-        btn.innerHTML = '<span class="dot"></span><span class="check">✓</span>';
+        btn.innerHTML = '<span class="dot"></span><span class="check">✓</span><span class="lock">🔒</span>';
         btn.onclick = function () { selectBreathTheme(theme.id); };
         picker.appendChild(btn);
       });
@@ -3369,6 +3393,11 @@
 
   window.selectBreathTheme = function (id) {
     const theme = BREATH_THEMES.find(function (t) { return t.id === id; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) {
+      const reqTier = XP_TIERS.find(function (t) { return t.id === theme.tier; });
+      showBreathToast('🔒 ' + theme.label + ' — odemkne se v poháru ' + (reqTier ? reqTier.name : '?'));
+      return;
+    }
     currentThemeId = theme.id;
     document.documentElement.style.setProperty('--accent-color', theme.accent);
     document.documentElement.style.setProperty('--accent-glow', theme.glow);
@@ -3652,6 +3681,45 @@
     { id: 'legend',   xp: 12000, name: 'Legendární pohár', color: '#ff66b3', glow: '#7a0f45' }
   ];
 
+  // Zjistí, jestli je barevný motiv (viz BREATH_THEMES) už odemčený - motivy bez "tier" jsou
+  // odemčené vždy, ostatní vyžadují dosažení daného poháru (nebo lepšího).
+  function isThemeUnlocked(theme) {
+    if (!theme || !theme.tier) return true;
+    const xp = (typeof progressData !== 'undefined' && progressData && progressData.xp) || 0;
+    const currentTierId = getXpTierInfo(xp).current.id;
+    const currentIdx = XP_TIERS.findIndex(function (t) { return t.id === currentTierId; });
+    const requiredIdx = XP_TIERS.findIndex(function (t) { return t.id === theme.tier; });
+    return currentIdx >= requiredIdx;
+  }
+
+  // Projde všechny vykreslené barevné vzorky a podle aktuálního XP jim nastaví
+  // zamčený/odemčený stav (a odpovídající titulek s vysvětlením).
+  function updateThemeLockStates() {
+    document.querySelectorAll('.breath-theme-swatch').forEach(function (btn) {
+      const theme = BREATH_THEMES.find(function (t) { return t.id === btn.dataset.theme; });
+      if (!theme) return;
+      const unlocked = isThemeUnlocked(theme);
+      btn.classList.toggle('locked', !unlocked);
+      btn.disabled = !unlocked;
+      if (unlocked) {
+        btn.title = theme.label;
+      } else {
+        const reqTier = XP_TIERS.find(function (t) { return t.id === theme.tier; });
+        btn.title = theme.label + ' — 🔒 odemkne se v poháru ' + (reqTier ? reqTier.name : '?');
+      }
+    });
+  }
+
+  // Krátká vyskakovací zpráva u odznaku s poháry (nový pohár, zamčený motiv apod.)
+  function showBreathToast(text) {
+    const toast = document.getElementById('breath-xp-toast');
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.add('visible');
+    clearTimeout(toast._breathXpToastTimer);
+    toast._breathXpToastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 3500);
+  }
+
   // Vrátí aktuální pohár, ten následující (pokud existuje) a procento postupu mezi nimi.
   function getXpTierInfo(xp) {
     let current = XP_TIERS[0];
@@ -3746,12 +3814,7 @@
 
   // Krátká zpráva při postupu na nový pohár.
   function showXpTierUpToast(tier) {
-    const toast = document.getElementById('breath-xp-toast');
-    if (!toast) return;
-    toast.textContent = '🏆 Nový pohár: ' + tier.name + '!';
-    toast.classList.add('visible');
-    clearTimeout(toast._breathXpToastTimer);
-    toast._breathXpToastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 3500);
+    showBreathToast('🏆 Nový pohár: ' + tier.name + '!');
   }
 
   // Přidělí XP za odcvičenou session (podle délky trvání) a případně ohlásí nový pohár.
@@ -3763,11 +3826,19 @@
     const after = getXpTierInfo(progressData.xp);
     saveProgressData(progressData);
     animateXpBadgeTo(progressData.xp);
+    updateThemeLockStates();
     if (after.current.id !== before.current.id) showXpTierUpToast(after.current);
     return earned;
   }
 
   renderXpBadge();
+  updateThemeLockStates();
+  // Pojistka: kdyby byl v localStorage uložený motiv, který uživatel (ještě) nemá odemčený
+  // (např. po smazání pokroku), vrátí se na výchozí Jantarovou.
+  (function ensureSavedThemeUnlocked() {
+    const theme = BREATH_THEMES.find(function (t) { return t.id === currentThemeId; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) selectBreathTheme('amber');
+  })();
 
   // Zavolá se automaticky po dokončení dechového cvičení (viz stopBreathing)
   function recordBreathingSession(durationMs) {
@@ -3796,6 +3867,9 @@
     saveProgressData(progressData);
     renderProgress();
     renderXpBadge();
+    updateThemeLockStates();
+    const theme = BREATH_THEMES.find(function (t) { return t.id === currentThemeId; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) selectBreathTheme('amber');
   };
 
   window.logProgressStress = function(value) {
@@ -5294,6 +5368,7 @@
       saveProgressData(progressData);
       renderProgress();
       renderXpBadge();
+      updateThemeLockStates();
       setProgressImportStatus('✓ Záloha byla nahrána a sloučena s tvým pokrokem.', 'success');
     };
     reader.onerror = function () {
@@ -5699,6 +5774,7 @@
         saveProgressData(progressData);
         renderProgress();
         renderXpBadge();
+        updateThemeLockStates();
       }).catch(() => {});
     }
 

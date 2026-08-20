@@ -1148,7 +1148,7 @@
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
     background: rgba(15,8,0,0.92); backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
-    padding: 14px; width: 220px; z-index: 30;
+    padding: 14px; width: 220px; max-height: 260px; overflow-y: auto; z-index: 30;
     opacity: 0; pointer-events: none; visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
@@ -1158,6 +1158,7 @@
     width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;
     cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s ease, border-color 0.15s ease; -webkit-tap-highlight-color: transparent;
+    position: relative; flex-shrink: 0;
   }
   .breath-theme-swatch:hover { transform: scale(1.08); }
   .breath-theme-swatch:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -1166,7 +1167,12 @@
   .breath-theme-swatch .check { color: #fff; font-size: 15px; text-shadow: 0 0 4px rgba(0,0,0,0.6); display: none; }
   .breath-theme-swatch.active .check { display: block; }
   .breath-theme-swatch.active .dot { display: none; }
-  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; } .breath-theme-swatch { width: 36px; height: 36px; } }
+  .breath-theme-swatch .lock { display: none; color: #fff; font-size: 13px; text-shadow: 0 0 4px rgba(0,0,0,0.75); }
+  .breath-theme-swatch.locked { cursor: not-allowed; filter: grayscale(0.75); }
+  .breath-theme-swatch.locked:hover { transform: none; }
+  .breath-theme-swatch.locked .dot { opacity: 0.5; }
+  .breath-theme-swatch.locked .lock { display: block; }
+  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 230px; } .breath-theme-swatch { width: 36px; height: 36px; } }
 
   @media (prefers-reduced-motion: reduce) {
     .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow, .breath-mandala-wrap { transition-duration: 0.6s !important; }
@@ -1294,9 +1300,10 @@
 
   .side-nav-theme { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
   .side-nav-theme-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
-  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; }
   .side-nav-theme-picker .breath-theme-swatch { width: 24px; height: 24px; }
   .side-nav-theme-picker .breath-theme-swatch .check { font-size: 11px; }
+  .side-nav-theme-picker .breath-theme-swatch .lock { font-size: 10px; }
 
   .nav-scrim {
     position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999;
@@ -2235,6 +2242,7 @@
       <div class="breath-guide-tech">
         <h4>🏆 XP & cups</h4>
         <p>Every breathing session longer than 15 seconds earns you XP — the longer you breathe, the more you get (up to 100 XP per session). Collected XP gradually moves you up through cups: Wooden (0), Bronze (100), Silver (300), Gold (700), Platinum (1,500), Diamond (3,000), Master (6,000) and Legendary (12,000 XP). Your current cup, XP count and progress bar toward the next cup are shown right at the top of the exercise the whole time — and a short message lets you know whenever you reach a new one.</p>
+        <p>Reaching a cup also unlocks new color themes (spot them in the THEME menu by the 🔒 lock icon). The Bronze cup unlocks Copper and Sand, Silver unlocks Silver and Steel, Gold unlocks Sunflower and Honey, Platinum unlocks Platinum and Aqua, Diamond unlocks Diamond and Sapphire, Master unlocks the rare Master theme, and Legendary unlocks the exclusive Legend theme.</p>
       </div>
 
       <div class="breath-guide-tech">
@@ -3297,7 +3305,20 @@
     { id: 'purple', label: 'Purple', accent: '#9c27b0', glow: '#4a0e59' },
     { id: 'pink',   label: 'Pink',   accent: '#ff4d8d', glow: '#85114a' },
     { id: 'rose',   label: 'Rose',   accent: '#f43f5e', glow: '#831843' },
-    { id: 'red',    label: 'Red',    accent: '#ef4444', glow: '#7f1d1d' }
+    { id: 'red',    label: 'Red',    accent: '#ef4444', glow: '#7f1d1d' },
+    // Unlockable themes - progressively revealed as the user reaches a higher cup (see XP_TIERS / isThemeUnlocked)
+    { id: 'copper',     label: 'Copper',     accent: '#c2703d', glow: '#5c2f10', tier: 'bronze' },
+    { id: 'sand',       label: 'Sand',       accent: '#d4a373', glow: '#6b4a26', tier: 'bronze' },
+    { id: 'silver',     label: 'Silver',     accent: '#b8c4d0', glow: '#4a5560', tier: 'silver' },
+    { id: 'steel',      label: 'Steel',      accent: '#5b7c99', glow: '#1f3347', tier: 'silver' },
+    { id: 'sunflower',  label: 'Sunflower',  accent: '#ffd23f', glow: '#8a5a00', tier: 'gold' },
+    { id: 'honey',      label: 'Honey',      accent: '#ffb020', glow: '#7a3d00', tier: 'gold' },
+    { id: 'platinum',   label: 'Platinum',   accent: '#e0e8ec', glow: '#5a6b73', tier: 'platinum' },
+    { id: 'aqua',       label: 'Aqua',       accent: '#4fd1c5', glow: '#0f5c54', tier: 'platinum' },
+    { id: 'diamond',    label: 'Diamond',    accent: '#a0e9ff', glow: '#0a4a5c', tier: 'diamond' },
+    { id: 'sapphire',   label: 'Sapphire',   accent: '#3b5bdb', glow: '#131f5c', tier: 'diamond' },
+    { id: 'master',     label: 'Master',     accent: '#b026ff', glow: '#3a0a5c', tier: 'master' },
+    { id: 'legend',     label: 'Legend',     accent: '#ffd700', glow: '#3a0a1e', tier: 'legend' }
   ];
   let currentThemeId = 'amber';
 
@@ -3307,13 +3328,16 @@
       BREATH_THEMES.forEach(function (theme) {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'breath-theme-swatch';
+        btn.className = 'breath-theme-swatch' + (theme.tier ? ' locked' : '');
         btn.dataset.theme = theme.id;
         btn.setAttribute('role', 'menuitemradio');
         btn.setAttribute('aria-label', theme.label);
+        // Actual locked/unlocked state and precise tooltip are set later by updateThemeLockStates(),
+        // once progressData/XP_TIERS are ready - until then an unlockable theme defaults to "locked".
         btn.title = theme.label;
+        if (theme.tier) btn.disabled = true;
         btn.style.background = 'radial-gradient(circle at 35% 30%, ' + theme.accent + ', ' + theme.glow + ')';
-        btn.innerHTML = '<span class="dot"></span><span class="check">✓</span>';
+        btn.innerHTML = '<span class="dot"></span><span class="check">✓</span><span class="lock">🔒</span>';
         btn.onclick = function () { selectBreathTheme(theme.id); };
         picker.appendChild(btn);
       });
@@ -3368,6 +3392,11 @@
 
   window.selectBreathTheme = function (id) {
     const theme = BREATH_THEMES.find(function (t) { return t.id === id; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) {
+      const reqTier = XP_TIERS.find(function (t) { return t.id === theme.tier; });
+      showBreathToast('🔒 ' + theme.label + ' — unlocks at the ' + (reqTier ? reqTier.name : '?'));
+      return;
+    }
     currentThemeId = theme.id;
     document.documentElement.style.setProperty('--accent-color', theme.accent);
     document.documentElement.style.setProperty('--accent-glow', theme.glow);
@@ -3651,6 +3680,45 @@
     { id: 'legend',   xp: 12000, name: 'Legendary Cup', color: '#ff66b3', glow: '#7a0f45' }
   ];
 
+  // Checks whether a color theme (see BREATH_THEMES) is already unlocked - themes without a "tier"
+  // are always unlocked, the rest require reaching that cup (or a better one).
+  function isThemeUnlocked(theme) {
+    if (!theme || !theme.tier) return true;
+    const xp = (typeof progressData !== 'undefined' && progressData && progressData.xp) || 0;
+    const currentTierId = getXpTierInfo(xp).current.id;
+    const currentIdx = XP_TIERS.findIndex(function (t) { return t.id === currentTierId; });
+    const requiredIdx = XP_TIERS.findIndex(function (t) { return t.id === theme.tier; });
+    return currentIdx >= requiredIdx;
+  }
+
+  // Walks every rendered color swatch and, based on current XP, sets its locked/unlocked
+  // state (and matching tooltip).
+  function updateThemeLockStates() {
+    document.querySelectorAll('.breath-theme-swatch').forEach(function (btn) {
+      const theme = BREATH_THEMES.find(function (t) { return t.id === btn.dataset.theme; });
+      if (!theme) return;
+      const unlocked = isThemeUnlocked(theme);
+      btn.classList.toggle('locked', !unlocked);
+      btn.disabled = !unlocked;
+      if (unlocked) {
+        btn.title = theme.label;
+      } else {
+        const reqTier = XP_TIERS.find(function (t) { return t.id === theme.tier; });
+        btn.title = theme.label + ' — 🔒 unlocks at the ' + (reqTier ? reqTier.name : '?');
+      }
+    });
+  }
+
+  // Short popup message near the XP badge (new cup, locked theme, etc.)
+  function showBreathToast(text) {
+    const toast = document.getElementById('breath-xp-toast');
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.add('visible');
+    clearTimeout(toast._breathXpToastTimer);
+    toast._breathXpToastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 3500);
+  }
+
   // Returns the current cup, the next one (if any) and the progress percentage between them.
   function getXpTierInfo(xp) {
     let current = XP_TIERS[0];
@@ -3746,12 +3814,7 @@
 
   // Short message shown when the user reaches a new cup.
   function showXpTierUpToast(tier) {
-    const toast = document.getElementById('breath-xp-toast');
-    if (!toast) return;
-    toast.textContent = '🏆 New cup: ' + tier.name + '!';
-    toast.classList.add('visible');
-    clearTimeout(toast._breathXpToastTimer);
-    toast._breathXpToastTimer = setTimeout(function () { toast.classList.remove('visible'); }, 3500);
+    showBreathToast('🏆 New cup: ' + tier.name + '!');
   }
 
   // Awards XP for a completed session (based on its length) and announces a new cup if reached.
@@ -3763,11 +3826,19 @@
     const after = getXpTierInfo(progressData.xp);
     saveProgressData(progressData);
     animateXpBadgeTo(progressData.xp);
+    updateThemeLockStates();
     if (after.current.id !== before.current.id) showXpTierUpToast(after.current);
     return earned;
   }
 
   renderXpBadge();
+  updateThemeLockStates();
+  // Safety net: if a theme saved in localStorage isn't (yet) unlocked for this user
+  // (e.g. after clearing progress), fall back to the default Amber.
+  (function ensureSavedThemeUnlocked() {
+    const theme = BREATH_THEMES.find(function (t) { return t.id === currentThemeId; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) selectBreathTheme('amber');
+  })();
 
   // Called automatically after finishing a breathing exercise (see stopBreathing)
   function recordBreathingSession(durationMs) {
@@ -3796,6 +3867,9 @@
     saveProgressData(progressData);
     renderProgress();
     renderXpBadge();
+    updateThemeLockStates();
+    const theme = BREATH_THEMES.find(function (t) { return t.id === currentThemeId; }) || BREATH_THEMES[0];
+    if (!isThemeUnlocked(theme)) selectBreathTheme('amber');
   };
 
   window.logProgressStress = function(value) {
@@ -5294,6 +5368,7 @@
       saveProgressData(progressData);
       renderProgress();
       renderXpBadge();
+      updateThemeLockStates();
       setProgressImportStatus('✓ Backup loaded and merged with your progress.', 'success');
     };
     reader.onerror = function () {
@@ -5699,6 +5774,7 @@
         saveProgressData(progressData);
         renderProgress();
         renderXpBadge();
+        updateThemeLockStates();
       }).catch(() => {});
     }
 
