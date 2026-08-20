@@ -2840,9 +2840,9 @@
   };
 
   // Zamrazí právě probíhající CSS přechod přesně tam, kde je (přepíše ho jeho aktuální
-  // vypočtenou hodnotou a vypne transition-duration) - jinak by koule/postavička dál
-  // animovaly v reálném čase i po stisku STOP, protože JS pauza zastaví jen časovače,
-  // ne samotný CSS přechod.
+  // vypočtenou hodnotou a vypne transition-duration) - jinak by koule dál animovala
+  // v reálném čase i po stisku STOP, protože JS pauza zastaví jen časovače,
+  // ne samotný CSS přechod. Funguje spolehlivě pro obyčejné <div> elementy (koule).
   function freezeBreathVisual(el, props) {
     if (!el) return;
     const cs = getComputedStyle(el);
@@ -2850,6 +2850,42 @@
     props.forEach(function (p) { frozen[p] = cs[p]; });
     el.style.transitionDuration = '0s';
     props.forEach(function (p) { el.style[p] = frozen[p]; });
+  }
+
+  // Postavička je SVG <path> s transform-box:fill-box - čtení aktuální rozanimované
+  // hodnoty přes getComputedStyle je u SVG transformů napříč prohlížeči (hlavně
+  // Safari/iOS) nespolehlivé. Proto se zamrazená pozice dopočítá čistě matematicky
+  // podle toho, kolik času z fáze nádech/výdech už uplynulo (zádrž se nemění, tam
+  // není co dopočítávat).
+  function computeFrozenFigureVisual(phase, elapsedMs) {
+    if (phase.type === 'hold') return null;
+    const durationMs = phase.duration * 1000;
+    const rawT = Math.min(1, Math.max(0, elapsedMs / durationMs));
+    // Přibližuje CSS "ease-in-out" křivku použitou v přechodu postavičky.
+    const t = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+    const from = phase.type === 'in' ? FIGURE_OUT_VISUAL : FIGURE_IN_VISUAL;
+    const to = phase.type === 'in' ? FIGURE_IN_VISUAL : FIGURE_OUT_VISUAL;
+    const fromNums = from.transform.match(/-?[\d.]+/g).map(Number);
+    const toNums = to.transform.match(/-?[\d.]+/g).map(Number);
+    const mix = fromNums.map(function (v, i) { return v + (toNums[i] - v) * t; });
+    return {
+      transform: 'scale(' + mix[0] + ', ' + mix[1] + ') translateY(' + mix[2] + 'px)',
+      glowScale: from.glowScale + (to.glowScale - from.glowScale) * t,
+      glowOpacity: from.glowOpacity + (to.glowOpacity - from.glowOpacity) * t
+    };
+  }
+
+  function freezeBreathFigureVisual(phase, elapsedMs) {
+    const torso = document.getElementById('breath-figure-torso');
+    const glow = document.getElementById('breath-figure-glow');
+    const frozen = computeFrozenFigureVisual(phase, elapsedMs);
+    if (!frozen) return; // zádrž - nic se nehýbe, není co zamrazovat
+    if (torso) { torso.style.transitionDuration = '0s'; torso.style.transform = frozen.transform; }
+    if (glow) {
+      glow.style.transitionDuration = '0s';
+      glow.style.transform = 'scale(' + frozen.glowScale + ')';
+      glow.style.opacity = frozen.glowOpacity;
+    }
   }
 
   function runBreathPhase() {
@@ -3044,8 +3080,7 @@
     freezeBreathVisual(breathOrbWrap, ['transform']);
     freezeBreathVisual(breathOrbEl, ['opacity']);
     if (breathFigureActive) {
-      freezeBreathVisual(document.getElementById('breath-figure-torso'), ['transform']);
-      freezeBreathVisual(document.getElementById('breath-figure-glow'), ['transform', 'opacity']);
+      freezeBreathFigureVisual(phase, elapsed);
     }
 
     clearTimeout(breathPhaseTimeout);
