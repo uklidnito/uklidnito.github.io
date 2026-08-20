@@ -2550,6 +2550,8 @@
   let breathPhaseIndex = 0;
   let breathPhaseTimeout = null;
   let breathCountdownInterval = null;
+  let breathPhaseStartTime = 0;
+  let breathPhaseRemainingMs = 0;
   let breathSloganQueue = [];
   let breathSloganTimeout = null;
   let breathSloganActiveTimeout = null;
@@ -2837,8 +2839,22 @@
     }
   };
 
+  // Zamrazí právě probíhající CSS přechod přesně tam, kde je (přepíše ho jeho aktuální
+  // vypočtenou hodnotou a vypne transition-duration) - jinak by koule/postavička dál
+  // animovaly v reálném čase i po stisku STOP, protože JS pauza zastaví jen časovače,
+  // ne samotný CSS přechod.
+  function freezeBreathVisual(el, props) {
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    const frozen = {};
+    props.forEach(function (p) { frozen[p] = cs[p]; });
+    el.style.transitionDuration = '0s';
+    props.forEach(function (p) { el.style[p] = frozen[p]; });
+  }
+
   function runBreathPhase() {
     if (!breathingActive) return;
+    breathPhaseStartTime = Date.now();
     const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
     const phase = phases[breathPhaseIndex];
     breathPhaseEl.innerText = phase.label || DEFAULT_PHASE_LABELS[phase.type];
@@ -2899,6 +2915,10 @@
       }
       if (!breathingPaused) {
         requestAnimationFrame(() => requestAnimationFrame(runBreathPhase));
+      } else {
+        // Cvičení je na pauze - jen si poznamenej plnou délku nové první fáze,
+        // aby po stisku START pokračovalo správně dlouho (viz resumeBreathPhaseFromPause).
+        breathPhaseRemainingMs = BREATH_TECHNIQUES[currentBreathTechnique].phases[0].duration * 1000;
       }
     } else if (breathFigureActive) {
       // Hlavní cvičení neběží - postavička dál jede sama, jen v novém tempu
@@ -3013,6 +3033,21 @@
     if (!breathingActive || breathingPaused) return;
     breathingPaused = true;
     pauseBreathStopwatch();
+
+    // Spočítej, kolik z aktuální fáze ještě zbývalo, a zamrzni kouli i postavičku
+    // přesně v té pozici, kde právě jsou - jinak by dál doanimovaly samy.
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    const phase = phases[breathPhaseIndex];
+    const elapsed = Date.now() - breathPhaseStartTime;
+    breathPhaseRemainingMs = Math.max(0, phase.duration * 1000 - elapsed);
+
+    freezeBreathVisual(breathOrbWrap, ['transform']);
+    freezeBreathVisual(breathOrbEl, ['opacity']);
+    if (breathFigureActive) {
+      freezeBreathVisual(document.getElementById('breath-figure-torso'), ['transform']);
+      freezeBreathVisual(document.getElementById('breath-figure-glow'), ['transform', 'opacity']);
+    }
+
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
     clearTimeout(breathSloganTimeout);
@@ -3021,6 +3056,55 @@
     updateBreathControlsUI();
   };
 
+  // Pokračuje ve fázi, kde cvičení bylo pozastaveno - doanimuje kouli i postavičku
+  // ze zamrazené pozice do cíle fáze za PŘESNĚ tolik času, kolik z fáze ještě zbývalo
+  // (ne od začátku), takže koule, postavička a odpočet zůstanou navzájem synchronní.
+  function resumeBreathPhaseFromPause() {
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    const phase = phases[breathPhaseIndex];
+    const remainingMs = breathPhaseRemainingMs;
+
+    if (remainingMs <= 0) {
+      breathPhaseIndex = (breathPhaseIndex + 1) % phases.length;
+      runBreathPhase();
+      return;
+    }
+
+    const remainingSec = remainingMs / 1000;
+    breathPhaseStartTime = Date.now() - (phase.duration * 1000 - remainingMs);
+
+    setBreathTransitionDuration(remainingSec);
+    const visual = getPhaseVisual(phase);
+    if (phase.type !== 'hold') lastBreathVisual = visual;
+    requestAnimationFrame(() => applyBreathPhase(visual));
+
+    if (breathFigureActive) {
+      breathFigurePhaseIndex = breathPhaseIndex;
+      const figVisual = getFigurePhaseVisual(phase);
+      if (phase.type !== 'hold') lastFigureVisual = figVisual;
+      setBreathFigureTransitionDuration(remainingSec);
+      requestAnimationFrame(() => applyBreathFigureVisual(figVisual));
+    }
+
+    let secondsLeft = Math.ceil(remainingSec);
+    breathCountEl.innerText = secondsLeft;
+    const figureCountElLive = document.getElementById('breath-figure-count');
+    if (breathFigureActive && figureCountElLive) figureCountElLive.innerText = secondsLeft;
+    clearInterval(breathCountdownInterval);
+    breathCountdownInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) {
+        breathCountEl.innerText = secondsLeft;
+        if (breathFigureActive && figureCountElLive) figureCountElLive.innerText = secondsLeft;
+      }
+    }, 1000);
+
+    breathPhaseTimeout = setTimeout(() => {
+      breathPhaseIndex = (breathPhaseIndex + 1) % phases.length;
+      runBreathPhase();
+    }, remainingMs);
+  }
+
   // START tlačítko uvnitř overlaye - pokud bylo cvičení pozastaveno, znovu ho spustí
   window.resumeBreathCycle = function() {
     if (!breathingActive) { window.startBreathing(); return; }
@@ -3028,7 +3112,7 @@
     breathingPaused = false;
     resumeBreathStopwatch();
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
-    runBreathPhase();
+    resumeBreathPhaseFromPause();
     scheduleNextBreathSlogan(4000);
     updateBreathControlsUI();
   };

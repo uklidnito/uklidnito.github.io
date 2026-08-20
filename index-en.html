@@ -2553,6 +2553,8 @@
   let breathPhaseIndex = 0;
   let breathPhaseTimeout = null;
   let breathCountdownInterval = null;
+  let breathPhaseStartTime = 0;
+  let breathPhaseRemainingMs = 0;
   let breathSloganQueue = [];
   let breathSloganTimeout = null;
   let breathSloganActiveTimeout = null;
@@ -2840,8 +2842,18 @@
     }
   };
 
+  function freezeBreathVisual(el, props) {
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    const frozen = {};
+    props.forEach(function (p) { frozen[p] = cs[p]; });
+    el.style.transitionDuration = '0s';
+    props.forEach(function (p) { el.style[p] = frozen[p]; });
+  }
+
   function runBreathPhase() {
     if (!breathingActive) return;
+    breathPhaseStartTime = Date.now();
     const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
     const phase = phases[breathPhaseIndex];
     breathPhaseEl.innerText = phase.label || DEFAULT_PHASE_LABELS[phase.type];
@@ -2902,6 +2914,10 @@
       }
       if (!breathingPaused) {
         requestAnimationFrame(() => requestAnimationFrame(runBreathPhase));
+      } else {
+        // Exercise is paused - just record the new first phase's full length so
+        // resuming continues for the right duration (see resumeBreathPhaseFromPause).
+        breathPhaseRemainingMs = BREATH_TECHNIQUES[currentBreathTechnique].phases[0].duration * 1000;
       }
     } else if (breathFigureActive) {
       // Main exercise isn't running - the figure keeps going on its own, just at the new pace
@@ -3016,6 +3032,21 @@
     if (!breathingActive || breathingPaused) return;
     breathingPaused = true;
     pauseBreathStopwatch();
+
+    // Work out how much of the current phase was left, and freeze the orb and
+    // figure exactly where they are - otherwise they'd keep animating on their own.
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    const phase = phases[breathPhaseIndex];
+    const elapsed = Date.now() - breathPhaseStartTime;
+    breathPhaseRemainingMs = Math.max(0, phase.duration * 1000 - elapsed);
+
+    freezeBreathVisual(breathOrbWrap, ['transform']);
+    freezeBreathVisual(breathOrbEl, ['opacity']);
+    if (breathFigureActive) {
+      freezeBreathVisual(document.getElementById('breath-figure-torso'), ['transform']);
+      freezeBreathVisual(document.getElementById('breath-figure-glow'), ['transform', 'opacity']);
+    }
+
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
     clearTimeout(breathSloganTimeout);
@@ -3024,6 +3055,55 @@
     updateBreathControlsUI();
   };
 
+  // Continues the phase where the exercise was paused - animates the orb and figure
+  // from the frozen position to the phase target over exactly the time that was left
+  // (not from scratch), so the orb, figure, and countdown stay in sync with each other.
+  function resumeBreathPhaseFromPause() {
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    const phase = phases[breathPhaseIndex];
+    const remainingMs = breathPhaseRemainingMs;
+
+    if (remainingMs <= 0) {
+      breathPhaseIndex = (breathPhaseIndex + 1) % phases.length;
+      runBreathPhase();
+      return;
+    }
+
+    const remainingSec = remainingMs / 1000;
+    breathPhaseStartTime = Date.now() - (phase.duration * 1000 - remainingMs);
+
+    setBreathTransitionDuration(remainingSec);
+    const visual = getPhaseVisual(phase);
+    if (phase.type !== 'hold') lastBreathVisual = visual;
+    requestAnimationFrame(() => applyBreathPhase(visual));
+
+    if (breathFigureActive) {
+      breathFigurePhaseIndex = breathPhaseIndex;
+      const figVisual = getFigurePhaseVisual(phase);
+      if (phase.type !== 'hold') lastFigureVisual = figVisual;
+      setBreathFigureTransitionDuration(remainingSec);
+      requestAnimationFrame(() => applyBreathFigureVisual(figVisual));
+    }
+
+    let secondsLeft = Math.ceil(remainingSec);
+    breathCountEl.innerText = secondsLeft;
+    const figureCountElLive = document.getElementById('breath-figure-count');
+    if (breathFigureActive && figureCountElLive) figureCountElLive.innerText = secondsLeft;
+    clearInterval(breathCountdownInterval);
+    breathCountdownInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) {
+        breathCountEl.innerText = secondsLeft;
+        if (breathFigureActive && figureCountElLive) figureCountElLive.innerText = secondsLeft;
+      }
+    }, 1000);
+
+    breathPhaseTimeout = setTimeout(() => {
+      breathPhaseIndex = (breathPhaseIndex + 1) % phases.length;
+      runBreathPhase();
+    }, remainingMs);
+  }
+
   // START button inside the overlay - resumes the exercise if it was paused
   window.resumeBreathCycle = function() {
     if (!breathingActive) { window.startBreathing(); return; }
@@ -3031,7 +3111,7 @@
     breathingPaused = false;
     resumeBreathStopwatch();
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
-    runBreathPhase();
+    resumeBreathPhaseFromPause();
     scheduleNextBreathSlogan(4000);
     updateBreathControlsUI();
   };
