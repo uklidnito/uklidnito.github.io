@@ -1315,6 +1315,11 @@
   </div>
 
   <div class="side-nav-external">
+    <a href="https://dazante.bandcamp.com/" target="_blank" rel="noopener">💛 Podpořit (Bandcamp)</a>
+    <p>Pokud se ti projekt Uklidni to líbí, můžeš nás podpořit nákupem hudby na Bandcampu.</p>
+  </div>
+
+  <div class="side-nav-external">
     <a href="https://apps.microsoft.com/detail/9ns1vchv9ffl?hl=cs-CZ&amp;gl=CZ" target="_blank" rel="noopener" class="side-nav-msstore-link">
       <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <rect x="1" y="1" width="10" height="10" fill="#F25022"/>
@@ -2123,7 +2128,7 @@
       <button class="btn-breath-ctrl" id="breath-figure-stop-btn" onclick="pauseBreathCycle()">STOP</button>
       <button class="btn-breath-ctrl" id="breath-figure-logo-btn" onclick="toggleBreathLogo()">ZNAČKA: ZAP</button>
       <button class="btn-breath-ctrl" id="breath-figure-vibe-btn" onclick="toggleBreathVibration()">VIBRACE: ZAP</button>
-      <button class="btn-breath-ctrl" id="breath-figure-theme-btn" onclick="toggleThemePicker()" aria-haspopup="true" aria-expanded="false">MOTIV</button>
+      <button class="btn-breath-ctrl" id="breath-figure-theme-btn" onclick="toggleThemePicker(this)" aria-haspopup="true" aria-expanded="false">MOTIV</button>
       <button class="btn-breath-ctrl" id="breath-figure-save-btn" onclick="saveBreathSettings()">ULOŽIT</button>
 
       <div class="breath-theme-picker" id="breath-figure-theme-picker" role="menu" aria-label="Výběr barevného motivu"></div>
@@ -2233,7 +2238,7 @@
     <button class="btn-breath-ctrl" id="breath-stop-btn" onclick="pauseBreathCycle()">STOP</button>
     <button class="btn-breath-ctrl" id="breath-logo-btn" onclick="toggleBreathLogo()">ZNAČKA: ZAP</button>
     <button class="btn-breath-ctrl" id="breath-vibe-btn" onclick="toggleBreathVibration()">VIBRACE: ZAP</button>
-    <button class="btn-breath-ctrl" id="breath-theme-btn" onclick="toggleThemePicker()" aria-haspopup="true" aria-expanded="false">MOTIV</button>
+    <button class="btn-breath-ctrl" id="breath-theme-btn" onclick="toggleThemePicker(this)" aria-haspopup="true" aria-expanded="false">MOTIV</button>
     <button class="btn-breath-ctrl" id="breath-save-btn" onclick="saveBreathSettings()">ULOŽIT</button>
 
     <div class="breath-theme-picker" id="breath-theme-picker" role="menu" aria-label="Výběr barevného motivu"></div>
@@ -3224,18 +3229,33 @@
     });
   }
 
-  window.toggleThemePicker = function (force) {
+  window.toggleThemePicker = function (trigger) {
     const pickers = document.querySelectorAll('#breath-theme-picker, #breath-figure-theme-picker');
     if (!pickers.length) return;
     renderThemePicker();
-    let anyOpen = false;
-    pickers.forEach(function (p) { if (p.classList.contains('open')) anyOpen = true; });
-    const open = typeof force === 'boolean' ? force : !anyOpen;
-    pickers.forEach(function (p) { p.classList.toggle('open', open); });
-    document.querySelectorAll('#breath-theme-btn, #breath-figure-theme-btn').forEach(function (btn) {
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.classList.toggle('active', open);
-    });
+
+    // Called with a boolean (outside click / Esc) -> force-close everything, regardless of which panel is open
+    if (typeof trigger === 'boolean') {
+      const open = trigger;
+      pickers.forEach(function (p) { p.classList.toggle('open', open); });
+      document.querySelectorAll('#breath-theme-btn, #breath-figure-theme-btn').forEach(function (btn) {
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.classList.toggle('active', open);
+      });
+      return;
+    }
+
+    // Called from a specific MOTIV button -> only toggle the picker that belongs to that button
+    // (koule and postavička panels can be visible at the same time, so each needs its own picker)
+    const container = trigger instanceof HTMLElement ? trigger.closest('.breath-controls, .breath-figure-controls') : null;
+    const picker = container ? container.querySelector('.breath-theme-picker') : null;
+    if (!picker) return;
+    const open = !picker.classList.contains('open');
+    picker.classList.toggle('open', open);
+    if (trigger instanceof HTMLElement) {
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      trigger.classList.toggle('active', open);
+    }
   };
 
   // Zavření nabídky motivů kliknutím mimo ni nebo klávesou Esc
