@@ -553,6 +553,19 @@
     letter-spacing: 0.3px; font-family: 'Poppins', sans-serif; white-space: nowrap;
   }
 
+  .progress-storage-warning {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.7);
+    border-radius: 12px; padding: 12px 16px; margin: 16px 0; font-size: 12.5px; line-height: 1.5;
+  }
+  .progress-storage-warning button {
+    background: rgba(239,68,68,0.85); border: none; color: #fff; font-weight: 600;
+    padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 11.5px;
+    letter-spacing: 0.3px; font-family: 'Poppins', sans-serif; white-space: nowrap;
+  }
+  .progress-backup-lastinfo { font-size: 11px; opacity: 0.6; text-align: center; margin: -6px 0 14px; }
+  .progress-backup-lastinfo.stale { color: rgba(255,190,120,0.9); opacity: 1; }
+
   .progress-reminder-wrap {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px; padding: 16px; margin-bottom: 18px; font-size: 12.5px;
@@ -723,6 +736,8 @@
   }
 
   .poradna-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+  .poradna-rate-hint { font-size: 10.5px; opacity: 0.45; margin: 10px 0 0; line-height: 1.5; }
+  .poradna-rate-hint.limit-reached { color: rgba(255,140,140,0.85); opacity: 1; }
   .poradna-chip {
     font-size: 11.5px; letter-spacing: 0.3px; color: rgba(255,255,255,0.75);
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
@@ -1435,6 +1450,11 @@
     <h2 id="pokrok-nadpis">Tvůj pokrok</h2>
     <p>Každé dokončené cvičení se automaticky zaznamená do kalendáře níže. Den si můžeš i ručně odškrtnout nebo zrušit kliknutím — třeba když jsi dýchal/a mimo aplikaci. Vše — kalendář, hodnocení stresu, nálady i energie, deníček i týdenní/měsíční souhrny — se ukládá jen lokálně v tomto prohlížeči (localStorage), nikam se to neodesílá ani neanalyzuje. Při vymazání dat prohlížeče nebo na jiném zařízení pokrok neuvidíš.</p>
 
+    <div class="progress-storage-warning" id="progress-storage-warning" style="display:none;" role="alert">
+      <span id="progress-storage-warning-text">⚠️ Tomuto prohlížeči se nepodařilo uložit tvůj pokrok (např. soukromé prohlížení, plné nebo zakázané úložiště). Bez zálohy bys o data mohl/a přijít.</span>
+      <button type="button" onclick="exportProgressJSON()">Stáhnout zálohu</button>
+    </div>
+
     <div class="progress-quicknav-wrap">
       <div class="progress-quicknav" role="group" aria-label="Rychlý přechod na sekci">
         <button type="button" class="progress-quicknav-btn" onclick="document.getElementById('progress-nav-overview').scrollIntoView({behavior:'smooth', block:'start'})"><span class="icon">🗓️</span> Přehled</button>
@@ -1698,6 +1718,7 @@
 
     <hr class="progress-actions-divider">
     <p class="progress-backup-hint">💡 Přecházíš na jiný telefon nebo počítač? Data jsou uložená jen v tomto prohlížeči — stáhni si zálohu (JSON) a na novém zařízení ji nahraj zpět, ať o svůj pokrok nepřijdeš.</p>
+    <p class="progress-backup-lastinfo" id="progress-backup-lastinfo"></p>
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-backup-btn" onclick="exportProgressJSON()">💾 Stáhnout zálohu (JSON)</button>
       <button class="progress-reset-btn" id="progress-restore-btn" onclick="triggerProgressImport()">📥 Nahrát zálohu (JSON)</button>
@@ -1938,7 +1959,7 @@
     </div>
     <h2 id="poradna-nadpis">Rady a poradna</h2>
     <p class="poradna-intro">Zeptej se na cokoliv ohledně klidu, zvládání stresu, zdravého životního stylu, doplňků stravy, spánku nebo kondice. Odpověď generuje umělá inteligence (Google Gemini) a hledá jen v těchto tématech.</p>
-    <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, ověř si to prosím u lékaře nebo jiného kvalifikovaného odborníka.</p>
+    <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, ověř si to prosím u lékaře nebo jiného kvalifikovaného odborníka. Text tvého dotazu se kvůli vygenerování odpovědi odešle a zpracuje na serverech Google (Gemini) — nepiš sem prosím jméno ani jiné osobní údaje.</p>
 
     <form class="poradna-search-form" id="poradna-form" onsubmit="return handlePoradnaSubmit(event);">
       <span class="poradna-search-icon" aria-hidden="true">🔍</span>
@@ -1950,6 +1971,7 @@
       </div>
       <button type="submit" class="poradna-search-submit" id="poradna-submit-btn">Zeptat se</button>
     </form>
+    <p class="poradna-rate-hint" id="poradna-rate-hint" aria-live="polite"></p>
 
     <div class="poradna-chips">
       <button type="button" class="poradna-chip" onclick="askPoradna('Jak přirozeně snížit stres a úzkost během dne?')">Jak snížit stres</button>
@@ -3289,9 +3311,36 @@
     return { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {}, xp: 0 };
   }
 
-  function saveProgressData(data) {
-    try { localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
+  function showStorageWarning() {
+    const el = document.getElementById('progress-storage-warning');
+    if (el) el.style.display = 'flex';
   }
+  function hideStorageWarning() {
+    const el = document.getElementById('progress-storage-warning');
+    if (el) el.style.display = 'none';
+  }
+
+  function saveProgressData(data) {
+    try {
+      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(data));
+      hideStorageWarning();
+    } catch (e) {
+      showStorageWarning();
+    }
+  }
+
+  // Rychlá kontrola hned při startu (soukromé prohlížení v některých prohlížečích
+  // hází chybu už při prvním zápisu) - ať uživatel neví, že o data přišel, až
+  // když je pozdě.
+  (function checkStorageAvailabilityEarly() {
+    try {
+      const testKey = '__uklidnito_storage_test__';
+      localStorage.setItem(testKey, '1');
+      localStorage.removeItem(testKey);
+    } catch (e) {
+      showStorageWarning();
+    }
+  })();
 
   // Tlačítko "Uložit pokrok" v sekci Tvůj pokrok - vše se ukládá automaticky
   // průběžně (saveProgressData se volá po každé změně), takže tohle tlačítko
@@ -4816,6 +4865,42 @@
     }
   }
 
+  const LAST_BACKUP_STORAGE_KEY = 'uklidnito_last_backup';
+
+  function formatBackupDate(iso) {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' }) +
+        ' v ' + d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return ''; }
+  }
+
+  function updateLastBackupInfo() {
+    const el = document.getElementById('progress-backup-lastinfo');
+    if (!el) return;
+    const hasData = Object.keys(progressData.days || {}).length
+      || (progressData.stressLog || []).length
+      || (progressData.moodLog || []).length
+      || (progressData.energyLog || []).length
+      || Object.keys(progressData.journal || {}).length;
+    if (!hasData) {
+      el.textContent = '';
+      el.className = 'progress-backup-lastinfo';
+      return;
+    }
+    let iso = null;
+    try { iso = localStorage.getItem(LAST_BACKUP_STORAGE_KEY); } catch (e) { /* ignore */ }
+    if (!iso) {
+      el.textContent = 'Zálohu sis ještě nestáhl/a — doporučujeme to udělat co nejdřív, ať máš pokrok jistý i mimo tento prohlížeč.';
+      el.className = 'progress-backup-lastinfo stale';
+      return;
+    }
+    const daysSince = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+    const stale = daysSince >= 14;
+    el.textContent = (stale ? '⚠️ ' : '') + 'Poslední záloha: ' + formatBackupDate(iso) + (stale ? ' — je čas na novou.' : '');
+    el.className = 'progress-backup-lastinfo' + (stale ? ' stale' : '');
+  }
+
   function exportProgressJSON() {
     const payload = {
       app: 'uklidnito',
@@ -4834,6 +4919,8 @@
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    try { localStorage.setItem(LAST_BACKUP_STORAGE_KEY, new Date().toISOString()); } catch (e) { /* ignore */ }
+    updateLastBackupInfo();
     setProgressImportStatus('✓ Záloha byla stažena. Ulož si ji, ať ji máš po ruce na novém zařízení.', 'success');
   }
   window.exportProgressJSON = exportProgressJSON;
@@ -4909,12 +4996,18 @@
         setProgressImportStatus('Tenhle soubor nevypadá jako záloha pokroku z Uklidni To.', 'error');
         return;
       }
+      const rawImportedJournal = incoming.journal && typeof incoming.journal === 'object' ? incoming.journal : {};
+      const importedJournal = {};
+      Object.keys(rawImportedJournal).forEach((k) => {
+        const v = rawImportedJournal[k];
+        if (Array.isArray(v)) importedJournal[k] = v.filter((s) => typeof s === 'string' && s.trim());
+      });
       const normalized = {
         days: incoming.days && typeof incoming.days === 'object' ? incoming.days : {},
         stressLog: Array.isArray(incoming.stressLog) ? incoming.stressLog : [],
         moodLog: Array.isArray(incoming.moodLog) ? incoming.moodLog : [],
         energyLog: Array.isArray(incoming.energyLog) ? incoming.energyLog : [],
-        journal: incoming.journal && typeof incoming.journal === 'object' ? incoming.journal : {},
+        journal: importedJournal,
         xp: typeof incoming.xp === 'number' && incoming.xp >= 0 ? incoming.xp : 0
       };
       const hasExisting = Object.keys(progressData.days || {}).length
@@ -5036,6 +5129,7 @@
     renderProgressMoodRiskBanner();
     renderProgressEnergyRiskBanner();
     renderProgressDataTable();
+    updateLastBackupInfo();
   }
 
   renderProgress();
@@ -5445,6 +5539,60 @@ Pravidla:
   let appCheckReady = false;
   const modelCache = {}; // model name -> GenerativeModel instance (nevytváříme opakovaně)
 
+  // ---------- Klientský limit počtu dotazů (ochrana appky před zneužitím/nechtěnými náklady) ----------
+  // Toto NENAHRAZUJE skutečnou ochranu na backendu (App Check + kvóty ve Firebase/Google Cloud),
+  // je to jen viditelné a rychlé omezení v prohlížeči, které jde technicky obejít (vymazáním
+  // localStorage), ale běžného uživatele upozorní a odradí od nechtěného zahlcení appky.
+  const PORADNA_RATE_LIMIT_KEY = 'uklidnito_poradna_requests';
+  const PORADNA_RATE_LIMIT_MAX = 8; // max. dotazů
+  const PORADNA_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // za 1 hodinu
+
+  function getPoradnaRequestLog() {
+    try {
+      const raw = localStorage.getItem(PORADNA_RATE_LIMIT_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr.filter(t => typeof t === 'number') : [];
+    } catch (e) { return []; }
+  }
+
+  function poradnaRateLimitStatus() {
+    const now = Date.now();
+    const log = getPoradnaRequestLog().filter(t => now - t < PORADNA_RATE_LIMIT_WINDOW_MS);
+    const remaining = Math.max(0, PORADNA_RATE_LIMIT_MAX - log.length);
+    let resetInMs = 0;
+    if (remaining === 0 && log.length) {
+      resetInMs = PORADNA_RATE_LIMIT_WINDOW_MS - (now - Math.min(...log));
+    }
+    return { remaining, resetInMs, allowed: remaining > 0, used: log.length };
+  }
+
+  function recordPoradnaRequest() {
+    const now = Date.now();
+    const log = getPoradnaRequestLog().filter(t => now - t < PORADNA_RATE_LIMIT_WINDOW_MS);
+    log.push(now);
+    try { localStorage.setItem(PORADNA_RATE_LIMIT_KEY, JSON.stringify(log)); } catch (e) { /* ignore */ }
+  }
+
+  function formatPoradnaWaitTime(ms) {
+    const mins = Math.max(1, Math.ceil(ms / 60000));
+    if (mins < 5) return mins + (mins === 1 ? ' minutu' : ' minuty');
+    return mins + ' minut';
+  }
+
+  function updatePoradnaRateHint() {
+    const el = document.getElementById('poradna-rate-hint');
+    if (!el) return;
+    const rl = poradnaRateLimitStatus();
+    if (!rl.allowed) {
+      el.textContent = '🚫 Vyčerpal/a jsi limit ' + PORADNA_RATE_LIMIT_MAX + ' dotazů za hodinu. Další dotaz půjde položit za ' + formatPoradnaWaitTime(rl.resetInMs) + '.';
+      el.className = 'poradna-rate-hint limit-reached';
+    } else {
+      el.textContent = 'Zbývá ti ' + rl.remaining + ' z ' + PORADNA_RATE_LIMIT_MAX + ' dotazů tuto hodinu.';
+      el.className = 'poradna-rate-hint';
+    }
+  }
+  updatePoradnaRateHint();
+
   function poradnaShowError(msg) {
     const wrap = document.getElementById('poradna-result-wrap');
     if (!wrap) return;
@@ -5545,6 +5693,14 @@ Pravidla:
       poradnaShowError('Vyhledávání zatím není nastavené. Dokonči prosím propojení s Gemini podle návodu (NAVOD-RADY-A-PORADNA.md) — vlož Firebase a reCAPTCHA klíče do kódu stránky.');
       return;
     }
+
+    const rl = poradnaRateLimitStatus();
+    if (!rl.allowed) {
+      poradnaShowError('🚫 Dosáhl/a jsi limitu ' + PORADNA_RATE_LIMIT_MAX + ' dotazů za hodinu (chráníme tím appku před přetížením a zneužitím). Zkus to prosím znovu za ' + formatPoradnaWaitTime(rl.resetInMs) + '.');
+      return;
+    }
+    recordPoradnaRequest();
+    updatePoradnaRateHint();
 
     if (btn) btn.disabled = true;
     wrap.innerHTML = '<div class="poradna-loading"><span class="spin"></span> Hledám odpověď…</div>';
