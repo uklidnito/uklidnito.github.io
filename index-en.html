@@ -330,6 +330,36 @@
   .article-source { font-size: 10.5px !important; opacity: 0.45 !important; letter-spacing: 0.3px; font-style: italic; }
   .article-disclaimer { font-size: 10.5px; opacity: 0.4; line-height: 1.7; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
 
+  /* ---------- Article search (Breathing articles section) ---------- */
+  .article-search-wrap {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 30px; padding: 10px 10px 10px 18px; margin: 4px 0 10px;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .article-search-wrap:focus-within { border-color: var(--accent-color); box-shadow: 0 0 16px rgba(255,119,0,0.25); }
+  .article-search-icon { flex-shrink: 0; opacity: 0.55; font-size: 14px; }
+  .article-search-input-wrap { position: relative; flex: 1; min-width: 0; }
+  .article-search-input {
+    width: 100%; box-sizing: border-box; background: none; border: none; outline: none; color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 13.5px; padding: 4px 26px 4px 0;
+  }
+  .article-search-input::placeholder { color: rgba(255,255,255,0.4); }
+  .article-search-input::-webkit-search-cancel-button { display: none; }
+  .article-search-clear {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 20px; height: 20px; border: none; border-radius: 50%; flex-shrink: 0;
+    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.65);
+    font-size: 11px; line-height: 1; cursor: pointer; padding: 0; display: none;
+    align-items: center; justify-content: center; transition: 0.2s;
+  }
+  .article-search-clear.visible { display: flex; }
+  .article-search-clear:hover { background: rgba(255,119,0,0.2); color: #fff; }
+  .article-search-count { font-size: 10.5px; opacity: 0.45; margin: -2px 0 16px; min-height: 1em; }
+  .article-card.search-hidden { display: none; }
+  .article-search-empty { font-size: 13px; opacity: 0.6; text-align: center; padding: 18px 0; display: none; }
+  .article-search-empty.visible { display: block; }
+
   /* ---------- Your progress ---------- */
   .progress-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 24px; }
   .progress-stat {
@@ -1383,7 +1413,7 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
     <div class="progress-scrolltop-wrap">
-      <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top of section" title="Back to top">↑</button>
+      <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" aria-label="Back to top of section" title="Back to top">↑</button>
     </div>
     <h2 id="pokrok-nadpis">Your progress</h2>
     <p>Every completed session is automatically logged in the calendar below. You can also manually check or clear a day — say, if you breathed outside the app. Everything — the calendar, stress, mood and energy ratings, journal entries and weekly/monthly summaries — is stored only locally in this browser (localStorage); nothing is sent or analyzed elsewhere. If you clear your browser data or switch devices, you won’t see this progress.</p>
@@ -1664,6 +1694,16 @@
     <h2 id="clanky-nadpis">Breathing articles</h2>
     <p>A short summary of what peer-reviewed studies actually say about the individual breathing techniques — no exaggeration.</p>
 
+    <div class="article-search-wrap">
+      <span class="article-search-icon">🔎</span>
+      <div class="article-search-input-wrap">
+        <input type="search" class="article-search-input" id="article-search-input" placeholder="Search articles… (e.g. HRV, diaphragm, sleep)" aria-label="Search breathing articles" autocomplete="off">
+        <button type="button" class="article-search-clear" id="article-search-clear" aria-label="Clear search" title="Clear">✕</button>
+      </div>
+    </div>
+    <p class="article-search-count" id="article-search-count"></p>
+    <p class="article-search-empty" id="article-search-empty">No articles matched your search.</p>
+
     <article class="article-card">
       <h3>Physiological sigh: the fastest way to calm down, according to a Stanford study</h3>
       <p>In 2023, a Stanford University team (Balban, Spiegel, Huberman et al.) published a month-long randomized controlled trial with 114 participants in the journal <em>Cell Reports Medicine</em>. It compared four daily five-minute practices: cyclic sighing (two inhales through the nose and a long exhale), box breathing, inhale-focused breathing, and classic mindfulness meditation (passively observing the breath).</p>
@@ -1735,6 +1775,16 @@
     </div>
     <h2 id="doplnky-nadpis">Supplements &amp; other paths to calm</h2>
     <p>Breathing is the foundation, but a few other things can help too — here’s what the research actually says about them.</p>
+
+    <div class="article-search-wrap">
+      <span class="article-search-icon">🔎</span>
+      <div class="article-search-input-wrap">
+        <input type="search" class="article-search-input" id="doplnky-search-input" placeholder="Search supplements… (e.g. magnesium, sleep, caffeine)" aria-label="Search supplements and other paths to calm" autocomplete="off">
+        <button type="button" class="article-search-clear" id="doplnky-search-clear" aria-label="Clear search" title="Clear">✕</button>
+      </div>
+    </div>
+    <p class="article-search-count" id="doplnky-search-count"></p>
+    <p class="article-search-empty" id="doplnky-search-empty">No articles matched your search.</p>
 
     <article class="article-card">
       <h3>Magnesium: popular, but not miraculous</h3>
@@ -2176,6 +2226,69 @@
     });
   })();
 
+  // ---------- Article search (Breathing articles + Supplements sections) ----------
+  // Cards are queried live via querySelectorAll every time the user types,
+  // so a newly added <article class="article-card"> inside the section is
+  // automatically included in the search without touching this script.
+  function initArticleSearch(sectionId, inputId, clearId, countId, emptyId) {
+    const input = document.getElementById(inputId);
+    const clearBtn = document.getElementById(clearId);
+    const countEl = document.getElementById(countId);
+    const emptyEl = document.getElementById(emptyId);
+    const section = document.getElementById(sectionId);
+    if (!input || !clearBtn || !countEl || !emptyEl || !section) return;
+
+    function normalize(str) {
+      return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function pluralArticles(n) {
+      return n === 1 ? 'article found' : 'articles found';
+    }
+
+    function runSearch() {
+      const raw = input.value.trim();
+      const query = normalize(raw);
+      clearBtn.classList.toggle('visible', input.value.length > 0);
+
+      const cards = Array.from(section.querySelectorAll('.article-card'));
+      let matches = 0;
+
+      cards.forEach(function (card) {
+        const isMatch = !query || normalize(card.textContent).indexOf(query) !== -1;
+        card.classList.toggle('search-hidden', !isMatch);
+        if (isMatch) matches++;
+
+        // While a search is active, matching cards expand automatically so
+        // the user doesn't have to click each one to see if it matches.
+        const heading = card.querySelector('h3');
+        const body = card.querySelector('.article-body');
+        if (!body) return;
+        if (query && isMatch) {
+          card.classList.add('expanded');
+          if (heading) heading.setAttribute('aria-expanded', 'true');
+          body.style.maxHeight = body.scrollHeight + 'px';
+        } else if (!query) {
+          card.classList.remove('expanded');
+          if (heading) heading.setAttribute('aria-expanded', 'false');
+          body.style.maxHeight = '0px';
+        }
+      });
+
+      countEl.textContent = query ? (matches + ' ' + pluralArticles(matches)) : '';
+      emptyEl.classList.toggle('visible', !!query && matches === 0);
+    }
+
+    input.addEventListener('input', runSearch);
+    clearBtn.addEventListener('click', function () {
+      input.value = '';
+      runSearch();
+      input.focus();
+    });
+  }
+  initArticleSearch('clanky', 'article-search-input', 'article-search-clear', 'article-search-count', 'article-search-empty');
+  initArticleSearch('doplnky', 'doplnky-search-input', 'doplnky-search-clear', 'doplnky-search-count', 'doplnky-search-empty');
+
   // ---------- Expandable panels (sections from the side menu) ----------
   const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'poradna'];
 
@@ -2238,6 +2351,27 @@
     if (!btn) return;
     const wrap = btn.closest('.progress-scrolltop-wrap');
     const SHOW_AFTER = 400;
+
+    // Handle tap manually instead of a plain onclick: near the bottom of the
+    // page, Chrome/Safari can briefly freeze hit-testing on position:fixed
+    // elements while the address bar animates away, dropping the synthetic
+    // click until the next scroll. Reacting to 'pointerdown'/'touchstart'
+    // (evaluated immediately on contact, unlike the delayed click) avoids
+    // that. Click stays as a fallback for mouse/keyboard.
+    let handledByTouch = false;
+    const scrollTop = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    btn.addEventListener('touchstart', function (e) {
+      handledByTouch = true;
+      scrollTop();
+    }, { passive: true });
+    btn.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch') { handledByTouch = true; scrollTop(); }
+    });
+    btn.addEventListener('click', function () {
+      if (handledByTouch) { handledByTouch = false; return; }
+      scrollTop();
+    });
+
     window.addEventListener('scroll', function () {
       const pokrokEl = document.getElementById('pokrok');
       const isPokrokActive = pokrokEl && pokrokEl.classList.contains('panel-active');
