@@ -674,6 +674,10 @@
     border-radius: 30px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: 0.2s;
   }
   .progress-reset-btn:hover { border-color: rgba(255,100,100,0.6); color: rgba(255,140,140,0.85); }
+  .progress-backup-hint { font-size: 11px; opacity: 0.5; text-align: center; margin: 14px 0 12px; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .progress-import-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 10px 0 0; min-height: 14px; }
+  .progress-import-status.error { color: rgba(255,140,140,0.9); opacity: 1; }
+  .progress-import-status.success { color: rgba(120,255,150,0.9); opacity: 1; }
 
   .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 0; }
   .faq-item h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
@@ -1698,6 +1702,13 @@
     </div>
 
     <hr class="progress-actions-divider">
+    <p class="progress-backup-hint">💡 Switching to a new phone or computer? Your data is only stored in this browser — download a backup (JSON) and upload it back on the new device so you don't lose your progress.</p>
+    <div class="progress-actions">
+      <button class="progress-reset-btn" id="progress-backup-btn" onclick="exportProgressJSON()">💾 Download backup (JSON)</button>
+      <button class="progress-reset-btn" id="progress-restore-btn" onclick="triggerProgressImport()">📥 Restore backup (JSON)</button>
+      <input type="file" id="progress-import-input" accept="application/json,.json" style="display:none;" onchange="handleProgressImportFile(event)">
+    </div>
+    <p class="progress-import-status" id="progress-import-status" aria-live="polite"></p>
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Clear my progress</button>
       <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Export data (CSV)</button>
@@ -4786,6 +4797,149 @@
     printWindow.document.close();
   }
   window.exportProgressPDF = exportProgressPDF;
+
+  // ---------- Progress backup: JSON export/import (moving data to another device) ----------
+  // Unlike CSV/PDF (which are read-only), this file holds fully structured data,
+  // so it can be loaded back into the app - typically after switching to a new
+  // phone or computer, where localStorage starts out empty.
+  function progressImportStatusEl() {
+    return document.getElementById('progress-import-status');
+  }
+
+  function setProgressImportStatus(text, kind) {
+    const el = progressImportStatusEl();
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'progress-import-status' + (kind ? ' ' + kind : '');
+    clearTimeout(setProgressImportStatus._t);
+    if (text) {
+      setProgressImportStatus._t = setTimeout(() => {
+        el.textContent = '';
+        el.className = 'progress-import-status';
+      }, 7000);
+    }
+  }
+
+  function exportProgressJSON() {
+    const payload = {
+      app: 'uklidnito',
+      type: 'progress-backup',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: progressData
+    };
+    const json = JSON.stringify(payload, null, 2);
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'uklidnito-backup-' + dateKey(new Date()) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setProgressImportStatus('✓ Backup downloaded. Keep it handy for your new device.', 'success');
+  }
+  window.exportProgressJSON = exportProgressJSON;
+
+  window.triggerProgressImport = function () {
+    const input = document.getElementById('progress-import-input');
+    if (input) { input.value = ''; input.click(); }
+  };
+
+  // Same merge logic as the cloud sync below (see the admin mergeProgress) -
+  // nothing is overwritten or deleted, only days and entries missing in this browser are added.
+  function mergeImportedLogs(local, imported) {
+    const byDate = {};
+    (imported || []).forEach((e) => { if (e && e.date) byDate[e.date] = e; });
+    (local || []).forEach((e) => { if (e && e.date) byDate[e.date] = e; }); // local entry wins on conflict
+    return Object.values(byDate).sort((x, y) => String(x.date).localeCompare(String(y.date))).slice(-60);
+  }
+
+  function mergeImportedProgress(local, imported) {
+    const merged = {
+      days: Object.assign({}, imported.days || {}, local.days || {}),
+      journal: {},
+      stressLog: mergeImportedLogs(local.stressLog, imported.stressLog),
+      moodLog: mergeImportedLogs(local.moodLog, imported.moodLog),
+      energyLog: mergeImportedLogs(local.energyLog, imported.energyLog),
+      xp: Math.max((local && local.xp) || 0, (imported && imported.xp) || 0)
+    };
+    // If the same day is recorded in both sources, keep the higher session count.
+    Object.keys(imported.days || {}).forEach((k) => {
+      const a = local.days && local.days[k];
+      const b = imported.days[k];
+      if (a && b) merged.days[k] = { sessions: Math.max(a.sessions || 0, b.sessions || 0) };
+    });
+    const journalKeys = new Set([
+      ...Object.keys((imported && imported.journal) || {}),
+      ...Object.keys((local && local.journal) || {})
+    ]);
+    journalKeys.forEach((k) => {
+      const a = Array.isArray(local.journal && local.journal[k]) ? local.journal[k] : [];
+      const b = Array.isArray(imported.journal && imported.journal[k]) ? imported.journal[k] : [];
+      merged.journal[k] = Array.from(new Set([...b, ...a]));
+    });
+    return merged;
+  }
+
+  function isValidProgressBackupShape(d) {
+    return !!d && typeof d === 'object' && !Array.isArray(d)
+      && (d.days === undefined || (typeof d.days === 'object' && d.days !== null && !Array.isArray(d.days)))
+      && (d.stressLog === undefined || Array.isArray(d.stressLog))
+      && (d.moodLog === undefined || Array.isArray(d.moodLog))
+      && (d.energyLog === undefined || Array.isArray(d.energyLog))
+      && (d.journal === undefined || (typeof d.journal === 'object' && d.journal !== null && !Array.isArray(d.journal)));
+  }
+
+  window.handleProgressImportFile = function (event) {
+    const file = event && event.target && event.target.files && event.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setProgressImportStatus('File is too large - this doesn\'t look like an Uklidni To backup.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function () {
+      let parsed;
+      try {
+        parsed = JSON.parse(String(reader.result));
+      } catch (e) {
+        setProgressImportStatus('Couldn\'t read the file - it\'s not valid JSON.', 'error');
+        return;
+      }
+      const incoming = parsed && parsed.data && typeof parsed.data === 'object' ? parsed.data : parsed;
+      if (!isValidProgressBackupShape(incoming)) {
+        setProgressImportStatus('This file doesn\'t look like an Uklidni To progress backup.', 'error');
+        return;
+      }
+      const normalized = {
+        days: incoming.days && typeof incoming.days === 'object' ? incoming.days : {},
+        stressLog: Array.isArray(incoming.stressLog) ? incoming.stressLog : [],
+        moodLog: Array.isArray(incoming.moodLog) ? incoming.moodLog : [],
+        energyLog: Array.isArray(incoming.energyLog) ? incoming.energyLog : [],
+        journal: incoming.journal && typeof incoming.journal === 'object' ? incoming.journal : {},
+        xp: typeof incoming.xp === 'number' && incoming.xp >= 0 ? incoming.xp : 0
+      };
+      const hasExisting = Object.keys(progressData.days || {}).length
+        || (progressData.stressLog || []).length
+        || (progressData.moodLog || []).length
+        || (progressData.energyLog || []).length
+        || Object.keys(progressData.journal || {}).length;
+      if (hasExisting && !confirm('This browser already has some progress saved. The uploaded backup will be merged with it - nothing gets deleted, only missing days and entries are added. Continue?')) {
+        return;
+      }
+      progressData = mergeImportedProgress(progressData, normalized);
+      saveProgressData(progressData);
+      renderProgress();
+      renderXpBadge();
+      setProgressImportStatus('✓ Backup loaded and merged with your progress.', 'success');
+    };
+    reader.onerror = function () {
+      setProgressImportStatus('Couldn\'t read the file.', 'error');
+    };
+    reader.readAsText(file);
+  };
 
   // ---------- Optional evening reminder (only while the page stays open - Notification API, not a real push) ----------
   const REMINDER_STORAGE_KEY = 'uklidnito_reminder';

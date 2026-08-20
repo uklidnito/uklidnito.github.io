@@ -669,6 +669,10 @@
     border-radius: 30px; cursor: pointer; font-family: 'Poppins', sans-serif; transition: 0.2s;
   }
   .progress-reset-btn:hover { border-color: rgba(255,100,100,0.6); color: rgba(255,140,140,0.85); }
+  .progress-backup-hint { font-size: 11px; opacity: 0.5; text-align: center; margin: 14px 0 12px; line-height: 1.6; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .progress-import-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 10px 0 0; min-height: 14px; }
+  .progress-import-status.error { color: rgba(255,140,140,0.9); opacity: 1; }
+  .progress-import-status.success { color: rgba(120,255,150,0.9); opacity: 1; }
 
   .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 16px 0; }
   .faq-item h3 { font-size: 13px; letter-spacing: 0.5px; margin: 0 0 8px; color: #fff; font-family: 'Poppins', sans-serif; font-weight: 500; }
@@ -1693,6 +1697,13 @@
     </div>
 
     <hr class="progress-actions-divider">
+    <p class="progress-backup-hint">💡 Přecházíš na jiný telefon nebo počítač? Data jsou uložená jen v tomto prohlížeči — stáhni si zálohu (JSON) a na novém zařízení ji nahraj zpět, ať o svůj pokrok nepřijdeš.</p>
+    <div class="progress-actions">
+      <button class="progress-reset-btn" id="progress-backup-btn" onclick="exportProgressJSON()">💾 Stáhnout zálohu (JSON)</button>
+      <button class="progress-reset-btn" id="progress-restore-btn" onclick="triggerProgressImport()">📥 Nahrát zálohu (JSON)</button>
+      <input type="file" id="progress-import-input" accept="application/json,.json" style="display:none;" onchange="handleProgressImportFile(event)">
+    </div>
+    <p class="progress-import-status" id="progress-import-status" aria-live="polite"></p>
     <div class="progress-actions">
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Vymazat můj pokrok</button>
       <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Exportovat data (CSV)</button>
@@ -4782,6 +4793,149 @@
     printWindow.document.close();
   }
   window.exportProgressPDF = exportProgressPDF;
+
+  // ---------- Záloha pokroku: export/import JSON (přenos dat na jiné zařízení) ----------
+  // Na rozdíl od CSV/PDF (které jsou jen ke čtení) obsahuje tenhle soubor kompletní
+  // strukturovaná data, takže se dají znovu nahrát zpátky do aplikace - typicky
+  // po přechodu na nový telefon nebo počítač, kde localStorage začíná prázdný.
+  function progressImportStatusEl() {
+    return document.getElementById('progress-import-status');
+  }
+
+  function setProgressImportStatus(text, kind) {
+    const el = progressImportStatusEl();
+    if (!el) return;
+    el.textContent = text;
+    el.className = 'progress-import-status' + (kind ? ' ' + kind : '');
+    clearTimeout(setProgressImportStatus._t);
+    if (text) {
+      setProgressImportStatus._t = setTimeout(() => {
+        el.textContent = '';
+        el.className = 'progress-import-status';
+      }, 7000);
+    }
+  }
+
+  function exportProgressJSON() {
+    const payload = {
+      app: 'uklidnito',
+      type: 'progress-backup',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: progressData
+    };
+    const json = JSON.stringify(payload, null, 2);
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'uklidnito-zaloha-' + dateKey(new Date()) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setProgressImportStatus('✓ Záloha byla stažena. Ulož si ji, ať ji máš po ruce na novém zařízení.', 'success');
+  }
+  window.exportProgressJSON = exportProgressJSON;
+
+  window.triggerProgressImport = function () {
+    const input = document.getElementById('progress-import-input');
+    if (input) { input.value = ''; input.click(); }
+  };
+
+  // Stejná logika slučování jako u cloudové synchronizace níže (viz mergeProgress u admina) -
+  // nic se nepřepisuje ani nemaže, jen se doplní dny a záznamy, které v tomto prohlížeči chybí.
+  function mergeImportedLogs(local, imported) {
+    const byDate = {};
+    (imported || []).forEach((e) => { if (e && e.date) byDate[e.date] = e; });
+    (local || []).forEach((e) => { if (e && e.date) byDate[e.date] = e; }); // lokální záznam vyhrává při shodě
+    return Object.values(byDate).sort((x, y) => String(x.date).localeCompare(String(y.date))).slice(-60);
+  }
+
+  function mergeImportedProgress(local, imported) {
+    const merged = {
+      days: Object.assign({}, imported.days || {}, local.days || {}),
+      journal: {},
+      stressLog: mergeImportedLogs(local.stressLog, imported.stressLog),
+      moodLog: mergeImportedLogs(local.moodLog, imported.moodLog),
+      energyLog: mergeImportedLogs(local.energyLog, imported.energyLog),
+      xp: Math.max((local && local.xp) || 0, (imported && imported.xp) || 0)
+    };
+    // Pokud je stejný den zaznamenaný v obou zdrojích, ponecháme vyšší počet cvičení.
+    Object.keys(imported.days || {}).forEach((k) => {
+      const a = local.days && local.days[k];
+      const b = imported.days[k];
+      if (a && b) merged.days[k] = { sessions: Math.max(a.sessions || 0, b.sessions || 0) };
+    });
+    const journalKeys = new Set([
+      ...Object.keys((imported && imported.journal) || {}),
+      ...Object.keys((local && local.journal) || {})
+    ]);
+    journalKeys.forEach((k) => {
+      const a = Array.isArray(local.journal && local.journal[k]) ? local.journal[k] : [];
+      const b = Array.isArray(imported.journal && imported.journal[k]) ? imported.journal[k] : [];
+      merged.journal[k] = Array.from(new Set([...b, ...a]));
+    });
+    return merged;
+  }
+
+  function isValidProgressBackupShape(d) {
+    return !!d && typeof d === 'object' && !Array.isArray(d)
+      && (d.days === undefined || (typeof d.days === 'object' && d.days !== null && !Array.isArray(d.days)))
+      && (d.stressLog === undefined || Array.isArray(d.stressLog))
+      && (d.moodLog === undefined || Array.isArray(d.moodLog))
+      && (d.energyLog === undefined || Array.isArray(d.energyLog))
+      && (d.journal === undefined || (typeof d.journal === 'object' && d.journal !== null && !Array.isArray(d.journal)));
+  }
+
+  window.handleProgressImportFile = function (event) {
+    const file = event && event.target && event.target.files && event.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setProgressImportStatus('Soubor je příliš velký - nevypadá jako záloha z Uklidni To.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function () {
+      let parsed;
+      try {
+        parsed = JSON.parse(String(reader.result));
+      } catch (e) {
+        setProgressImportStatus('Soubor se nepodařilo přečíst - nejde o platný JSON.', 'error');
+        return;
+      }
+      const incoming = parsed && parsed.data && typeof parsed.data === 'object' ? parsed.data : parsed;
+      if (!isValidProgressBackupShape(incoming)) {
+        setProgressImportStatus('Tenhle soubor nevypadá jako záloha pokroku z Uklidni To.', 'error');
+        return;
+      }
+      const normalized = {
+        days: incoming.days && typeof incoming.days === 'object' ? incoming.days : {},
+        stressLog: Array.isArray(incoming.stressLog) ? incoming.stressLog : [],
+        moodLog: Array.isArray(incoming.moodLog) ? incoming.moodLog : [],
+        energyLog: Array.isArray(incoming.energyLog) ? incoming.energyLog : [],
+        journal: incoming.journal && typeof incoming.journal === 'object' ? incoming.journal : {},
+        xp: typeof incoming.xp === 'number' && incoming.xp >= 0 ? incoming.xp : 0
+      };
+      const hasExisting = Object.keys(progressData.days || {}).length
+        || (progressData.stressLog || []).length
+        || (progressData.moodLog || []).length
+        || (progressData.energyLog || []).length
+        || Object.keys(progressData.journal || {}).length;
+      if (hasExisting && !confirm('V tomto prohlížeči už nějaký pokrok máš. Nahraná záloha se s ním sloučí - nic se nesmaže, jen se doplní chybějící dny a záznamy. Pokračovat?')) {
+        return;
+      }
+      progressData = mergeImportedProgress(progressData, normalized);
+      saveProgressData(progressData);
+      renderProgress();
+      renderXpBadge();
+      setProgressImportStatus('✓ Záloha byla nahrána a sloučena s tvým pokrokem.', 'success');
+    };
+    reader.onerror = function () {
+      setProgressImportStatus('Soubor se nepodařilo přečíst.', 'error');
+    };
+    reader.readAsText(file);
+  };
 
   // ---------- Volitelná večerní připomínka (jen dokud je stránka otevřená - Notification API, ne skutečný push) ----------
   const REMINDER_STORAGE_KEY = 'uklidnito_reminder';
