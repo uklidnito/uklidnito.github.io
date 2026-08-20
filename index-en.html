@@ -1138,6 +1138,8 @@
   #breath-vibe-btn, #breath-figure-vibe-btn { min-width: 108px; }
   #breath-save-btn, #breath-figure-save-btn { min-width: 62px; }
   #breath-visual-btn { min-width: 128px; }
+  #breath-share-btn { min-width: 72px; }
+  .side-nav-share-btn { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); border-radius: 0; }
   .breath-figure-controls { margin-top: 18px; }
 
   /* ---------- Color theme picker (breathing exercise) ---------- */
@@ -1385,6 +1387,10 @@
     <div class="side-nav-theme-label">🎨 Theme</div>
     <div class="side-nav-theme-picker" id="side-nav-theme-picker" role="menu" aria-label="Color theme picker"></div>
   </div>
+
+  <button class="side-nav-contact-toggle side-nav-share-btn" id="side-nav-share-btn" type="button" onclick="shareApp(this)">
+    <span>🔗 Share app</span>
+  </button>
 </nav>
 
 <header>
@@ -2310,6 +2316,7 @@
     <button class="btn-breath-ctrl" id="breath-theme-btn" onclick="toggleThemePicker(this)" aria-haspopup="true" aria-expanded="false">THEME</button>
     <button class="btn-breath-ctrl" id="breath-visual-btn" onclick="toggleBreathVisualStyle()">VISUAL: ORB</button>
     <button class="btn-breath-ctrl" id="breath-save-btn" onclick="saveBreathSettings()">SAVE</button>
+    <button class="btn-breath-ctrl" id="breath-share-btn" onclick="shareApp(this)">🔗 SHARE</button>
 
     <div class="breath-theme-picker" id="breath-theme-picker" role="menu" aria-label="Color theme picker"></div>
   </div>
@@ -6067,6 +6074,41 @@ Rules:
     printWindow.document.open();
     printWindow.document.write(html);
     printWindow.document.close();
+  };
+
+  // Generic app sharing (button in the menu and in the breathing exercise) -
+  // native Web Share API on mobile, otherwise copies the link to the clipboard.
+  window.shareApp = async function (btn) {
+    const shareData = {
+      title: 'Uklidni To',
+      text: 'A short, science-backed breathing exercise, free in your browser.',
+      url: location.href
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      if (btn instanceof HTMLElement) {
+        if (btn._shareResetTimer) clearTimeout(btn._shareResetTimer);
+        const original = btn.dataset.shareLabel || btn.innerHTML;
+        btn.dataset.shareLabel = original;
+        btn.innerHTML = '✓ COPIED';
+        btn._shareResetTimer = setTimeout(function () {
+          btn.innerHTML = original;
+          btn._shareResetTimer = null;
+        }, 2200);
+      }
+    } catch (e) {
+      alert('Sharing failed. Please copy the link manually:\n' + shareData.url);
+    }
   };
 
   window.sharePoradnaAnswer = async function () {
