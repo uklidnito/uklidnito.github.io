@@ -540,7 +540,17 @@
   .stress-chart-line { fill: none; stroke: var(--accent-color); stroke-width: 2; stroke-linecap: round; }
   .stress-chart-area-stop-start { stop-color: var(--accent-color); stop-opacity: 0.35; }
   .stress-chart-area-stop-end { stop-color: var(--accent-color); stop-opacity: 0; }
+  .stress-chart-label { font-size: 7.5px; font-family: 'Poppins', sans-serif; fill: rgba(255,255,255,0.55); }
+  .stress-chart-label.low { fill: #f87171; }
+  .stress-chart-label.high { fill: #4ade80; }
   .progress-stress-trend { font-size: 11.5px; opacity: 0.7; margin: 10px 0 0; line-height: 1.6; }
+
+  .progress-patterns-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.12); }
+  .progress-patterns-wrap h4 { font-size: 11px; letter-spacing: 0.5px; opacity: 0.6; margin: 0 0 8px; font-weight: 500; }
+  .progress-patterns-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .progress-patterns-list li { font-size: 11.5px; line-height: 1.6; opacity: 0.88; padding-left: 14px; position: relative; }
+  .progress-patterns-list li::before { content: '•'; position: absolute; left: 0; color: var(--accent-color); }
+  .progress-patterns-list li strong { color: var(--accent-color); font-weight: 600; }
 
   .progress-risk-banner {
     display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
@@ -1692,6 +1702,31 @@
       <h3>🎯 Overall day rating</h3>
       <p class="overall-gauge-hint">Combines today’s stress, mood and energy ratings into one overall gauge.</p>
       <div id="overall-gauge-content"></div>
+
+      <p class="progress-stress-unlock-hint" id="progress-overall-unlock-hint" style="display:none;"></p>
+
+      <div class="progress-stress-chart-wrap" id="progress-overall-chart-wrap" style="display:none;">
+        <h4>Long-term trend</h4>
+
+        <div class="stress-index-badge" id="overall-index-badge" style="display:none;">
+          <div class="stress-index-number" id="overall-index-number">–<span>/10</span></div>
+          <div class="stress-index-meta">
+            <div class="stress-index-trend-row" id="overall-index-trend-row">
+              <span class="arrow" id="overall-index-arrow"></span>
+              <span id="overall-index-trend-label"></span>
+            </div>
+            <p class="stress-index-sub" id="overall-index-sub"></p>
+          </div>
+        </div>
+
+        <svg class="progress-stress-chart" id="progress-overall-chart" viewBox="0 0 300 70" preserveAspectRatio="none"></svg>
+        <p class="progress-stress-trend" id="progress-overall-trend"></p>
+
+        <div class="progress-patterns-wrap" id="progress-overall-patterns-wrap" style="display:none;">
+          <h4>🔍 Detected patterns</h4>
+          <ul class="progress-patterns-list" id="progress-overall-patterns-list"></ul>
+        </div>
+      </div>
     </div>
     </div>
 
@@ -3892,9 +3927,9 @@
     } else {
       progressData.stressLog.push({ date: key, value: value });
     }
-    // keep only the last 60 entries so localStorage doesn't grow indefinitely
-    if (progressData.stressLog.length > 60) {
-      progressData.stressLog = progressData.stressLog.slice(progressData.stressLog.length - 60);
+    // keep only the last 365 entries (about a year) so localStorage doesn't grow indefinitely
+    if (progressData.stressLog.length > 365) {
+      progressData.stressLog = progressData.stressLog.slice(progressData.stressLog.length - 365);
     }
     saveProgressData(progressData);
     renderProgress();
@@ -3908,9 +3943,9 @@
     } else {
       progressData.moodLog.push({ date: key, value: value });
     }
-    // keep only the last 60 entries so localStorage doesn't grow indefinitely
-    if (progressData.moodLog.length > 60) {
-      progressData.moodLog = progressData.moodLog.slice(progressData.moodLog.length - 60);
+    // keep only the last 365 entries (about a year) so localStorage doesn't grow indefinitely
+    if (progressData.moodLog.length > 365) {
+      progressData.moodLog = progressData.moodLog.slice(progressData.moodLog.length - 365);
     }
     saveProgressData(progressData);
     renderProgress();
@@ -3924,9 +3959,9 @@
     } else {
       progressData.energyLog.push({ date: key, value: value });
     }
-    // keep only the last 60 entries so localStorage doesn't grow indefinitely
-    if (progressData.energyLog.length > 60) {
-      progressData.energyLog = progressData.energyLog.slice(progressData.energyLog.length - 60);
+    // keep only the last 365 entries (about a year) so localStorage doesn't grow indefinitely
+    if (progressData.energyLog.length > 365) {
+      progressData.energyLog = progressData.energyLog.slice(progressData.energyLog.length - 365);
     }
     saveProgressData(progressData);
     renderProgress();
@@ -4331,6 +4366,295 @@
       missingNote;
 
     animateGaugeNeedle(needleId, dial.targetAngle);
+  }
+
+  // ---------- Long-term trend chart for the overall assessment (combines stress, mood, energy) ----------
+  function getOverallLogSorted() {
+    const stressByDate = {};
+    progressData.stressLog.forEach(e => { stressByDate[e.date] = e.value; });
+    const moodByDate = {};
+    progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
+    const energyByDate = {};
+    progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
+
+    const allDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate)]);
+
+    return [...allDates].sort().map(d => {
+      const score = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+      return score ? { date: d, value: score.avg } : null;
+    }).filter(Boolean);
+  }
+
+  // Formats a 'YYYY-MM-DD' date into a short chart label (e.g. "3/5")
+  function formatChartDateLabel(dateStr) {
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return parseInt(parts[1], 10) + '/' + parseInt(parts[2], 10);
+  }
+
+  // Computes the curve geometry (points, paths, trend line, min/max index) - shared by the
+  // live on-page chart and the PDF export so the logic isn't duplicated.
+  function buildOverallChartGeometry(limit) {
+    const fullLog = getOverallLogSorted();
+    if (fullLog.length < 4) return null;
+
+    const recent = fullLog.slice(-(limit || 60));
+    const W = 300, H = 70, padX = 10, padY = 8;
+    const n = recent.length;
+    const xFor = i => (n === 1 ? W / 2 : padX + (i * (W - padX * 2)) / (n - 1));
+    const yFor = v => padY + ((10 - v) / 9) * (H - padY * 2); // 10 = best (top), 1 = worst (bottom)
+    const points = recent.map((e, i) => ({ x: xFor(i), y: yFor(e.value), entry: e }));
+
+    let linePath = 'M ' + points[0].x.toFixed(1) + ',' + points[0].y.toFixed(1);
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i], p1 = points[i + 1];
+      const mx = (p0.x + p1.x) / 2, my = (p0.y + p1.y) / 2;
+      linePath += ' Q ' + p0.x.toFixed(1) + ',' + p0.y.toFixed(1) + ' ' + mx.toFixed(1) + ',' + my.toFixed(1);
+    }
+    const last = points[points.length - 1];
+    linePath += ' L ' + last.x.toFixed(1) + ',' + last.y.toFixed(1);
+    const areaPath = linePath + ' L ' + last.x.toFixed(1) + ',' + (H - 2) + ' L ' + points[0].x.toFixed(1) + ',' + (H - 2) + ' Z';
+
+    let trendLine = null;
+    if (n >= 2) {
+      const xs = points.map((p, i) => i);
+      const ys = recent.map(e => e.value);
+      const xMean = xs.reduce((s, x) => s + x, 0) / n;
+      const yMean = ys.reduce((s, y) => s + y, 0) / n;
+      let num = 0, den = 0;
+      for (let i = 0; i < n; i++) { num += (xs[i] - xMean) * (ys[i] - yMean); den += (xs[i] - xMean) ** 2; }
+      const slope = den !== 0 ? num / den : 0;
+      const intercept = yMean - slope * xMean;
+      const y0 = yFor(Math.max(1, Math.min(10, intercept)));
+      const y1 = yFor(Math.max(1, Math.min(10, intercept + slope * (n - 1))));
+      trendLine = { x1: points[0].x, y1: y0, x2: last.x, y2: y1 };
+    }
+
+    let minIdx = 0, maxIdx = 0;
+    for (let i = 1; i < n; i++) {
+      if (recent[i].value < recent[minIdx].value) minIdx = i;
+      if (recent[i].value > recent[maxIdx].value) maxIdx = i;
+    }
+
+    return { fullLog, recent, points, W, H, padX, padY, linePath, areaPath, trendLine, minIdx, maxIdx };
+  }
+
+  function renderProgressOverallChart() {
+    const chartWrap = document.getElementById('progress-overall-chart-wrap');
+    const unlockHint = document.getElementById('progress-overall-unlock-hint');
+    const geo = buildOverallChartGeometry(365);
+
+    if (!geo) {
+      const fullLog = getOverallLogSorted();
+      const remaining = 4 - fullLog.length;
+      unlockHint.style.display = 'block';
+      unlockHint.innerText = fullLog.length === 0
+        ? 'Once you’ve rated stress, mood or energy at least 4 times, a long-term trend chart of your overall assessment will appear here.'
+        : 'Rate yourself ' + remaining + ' more times (on any days) to unlock the long-term trend chart.';
+      chartWrap.style.display = 'none';
+      return;
+    }
+    unlockHint.style.display = 'none';
+    chartWrap.style.display = 'block';
+
+    const { fullLog, recent, points, W, linePath, areaPath, trendLine, minIdx, maxIdx } = geo;
+    const n = points.length;
+    const avg = arr => arr.reduce((s, e) => s + e.value, 0) / arr.length;
+
+    // ---- Result gauge: current index + trend vs earlier entries ----
+    const badge = document.getElementById('overall-index-badge');
+    const numberEl = document.getElementById('overall-index-number');
+    const rowEl = document.getElementById('overall-index-trend-row');
+    const arrowEl = document.getElementById('overall-index-arrow');
+    const labelEl = document.getElementById('overall-index-trend-label');
+    const subEl = document.getElementById('overall-index-sub');
+    const trendEl = document.getElementById('progress-overall-trend');
+
+    badge.style.display = 'flex';
+    const mid = Math.floor(fullLog.length / 2);
+    const firstHalf = fullLog.slice(0, mid);
+    const secondHalf = fullLog.slice(mid);
+    const avgFirst = avg(firstHalf);
+    const avgSecond = avg(secondHalf);
+    const diff = avgSecond - avgFirst; // positive = improvement
+    const pct = avgFirst > 0 ? Math.round((diff / avgFirst) * 100) : 0;
+
+    numberEl.innerHTML = avgSecond.toFixed(1) + '<span>/10</span>';
+
+    rowEl.className = 'stress-index-trend-row';
+    if (diff >= 0.5) {
+      rowEl.classList.add('improving');
+      arrowEl.innerText = '↑';
+      labelEl.innerText = 'improving (by ' + Math.abs(pct) + '%)';
+    } else if (diff <= -0.5) {
+      rowEl.classList.add('worsening');
+      arrowEl.innerText = '↓';
+      labelEl.innerText = 'worsening (by ' + Math.abs(pct) + '%)';
+    } else {
+      rowEl.classList.add('stable');
+      arrowEl.innerText = '→';
+      labelEl.innerText = 'staying stable';
+    }
+    subEl.innerText = 'vs earlier ' + avgFirst.toFixed(1) + '/10 (' + fullLog.length + ' entries)';
+
+    if (diff >= 0.5) {
+      trendEl.innerText = 'Your overall assessment has improved over the long term, on average, from ' + avgFirst.toFixed(1) + ' to ' + avgSecond.toFixed(1) + ' points — nice progress.';
+    } else if (diff <= -0.5) {
+      trendEl.innerText = 'Your overall assessment has been lower on average lately (' + avgSecond.toFixed(1) + ' vs an earlier ' + avgFirst.toFixed(1) + '). Try fitting in breathing exercises more regularly, or consider extra support.';
+    } else {
+      trendEl.innerText = 'Your overall assessment has stayed roughly the same over the long term (around ' + avgSecond.toFixed(1) + ' points).';
+    }
+
+    // ---- Chart: smooth curve with gradient fill + trend line + date labels at the min and max ----
+    const svg = document.getElementById('progress-overall-chart');
+
+    const trendLineSvg = trendLine
+      ? '<line x1="' + trendLine.x1.toFixed(1) + '" y1="' + trendLine.y1.toFixed(1) + '" x2="' + trendLine.x2.toFixed(1) + '" y2="' + trendLine.y2.toFixed(1) + '" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" stroke-dasharray="3,3" />'
+      : '';
+
+    const dots = points.map((p, i) => {
+      const isLast = i === points.length - 1;
+      return '<circle class="stress-chart-dot' + (isLast ? ' last' : '') + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (isLast ? 3.2 : 2.2) + '"><title>' + p.entry.date + ': ' + p.entry.value.toFixed(1) + '/10</title></circle>';
+    }).join('');
+
+    let labels = '';
+    if (n >= 2 && minIdx !== maxIdx) {
+      const minP = points[minIdx], maxP = points[maxIdx];
+      const minAnchor = minP.x < 20 ? 'start' : (minP.x > W - 20 ? 'end' : 'middle');
+      const maxAnchor = maxP.x < 20 ? 'start' : (maxP.x > W - 20 ? 'end' : 'middle');
+      labels +=
+        '<text class="stress-chart-label low" x="' + minP.x.toFixed(1) + '" y="' + (minP.y - 7).toFixed(1) + '" text-anchor="' + minAnchor + '">' + formatChartDateLabel(recent[minIdx].date) + '</text>' +
+        '<text class="stress-chart-label high" x="' + maxP.x.toFixed(1) + '" y="' + (maxP.y + 11).toFixed(1) + '" text-anchor="' + maxAnchor + '">' + formatChartDateLabel(recent[maxIdx].date) + '</text>';
+    }
+
+    svg.innerHTML =
+      '<defs><linearGradient id="overallAreaGrad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" class="stress-chart-area-stop-start" />' +
+      '<stop offset="100%" class="stress-chart-area-stop-end" />' +
+      '</linearGradient></defs>' +
+      '<path d="' + areaPath + '" fill="url(#overallAreaGrad)" stroke="none" />' +
+      trendLineSvg +
+      '<path d="' + linePath + '" class="stress-chart-line" />' +
+      dots + labels;
+
+    renderProgressOverallPatterns(fullLog);
+  }
+
+  // ---------- Pattern detection: the system looks for correlations in the data so the user doesn't have to decode the chart ----------
+  function detectOverallPatterns(fullLog) {
+    const patterns = [];
+    if (!fullLog || fullLog.length < 8) return patterns;
+
+    // ---- Day-of-week pattern ----
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const byWeekday = Array.from({ length: 7 }, () => []);
+    fullLog.forEach(e => {
+      const wd = new Date(e.date + 'T00:00:00').getDay();
+      byWeekday[wd].push(e.value);
+    });
+    const weekdayAvgs = byWeekday
+      .map((arr, i) => (arr.length >= 2 ? { day: i, avg: arr.reduce((a, b) => a + b, 0) / arr.length, count: arr.length } : null))
+      .filter(Boolean);
+
+    if (weekdayAvgs.length >= 3) {
+      const best = weekdayAvgs.reduce((a, b) => (b.avg > a.avg ? b : a));
+      const worst = weekdayAvgs.reduce((a, b) => (b.avg < a.avg ? b : a));
+      if (best.day !== worst.day && (best.avg - worst.avg) >= 1.2) {
+        patterns.push(
+          'Your best days tend to be <strong>' + dayNames[best.day] + '</strong> (avg ' + best.avg.toFixed(1) +
+          '/10), and your toughest tend to be <strong>' + dayNames[worst.day] + '</strong> (avg ' + worst.avg.toFixed(1) + '/10).'
+        );
+      }
+    }
+
+    // ---- Correlation with breathing exercises ----
+    const withSession = [];
+    const withoutSession = [];
+    fullLog.forEach(e => {
+      const hasSession = !!(progressData.days[e.date] && progressData.days[e.date].sessions);
+      (hasSession ? withSession : withoutSession).push(e.value);
+    });
+    if (withSession.length >= 3 && withoutSession.length >= 3) {
+      const avgWith = withSession.reduce((a, b) => a + b, 0) / withSession.length;
+      const avgWithout = withoutSession.reduce((a, b) => a + b, 0) / withoutSession.length;
+      const diff = avgWith - avgWithout;
+      if (diff >= 0.8) {
+        patterns.push(
+          'Days when you do a breathing exercise tend to score ' + diff.toFixed(1) + ' points higher on average (' +
+          avgWith.toFixed(1) + ' vs ' + avgWithout.toFixed(1) + ' without one).'
+        );
+      }
+    }
+
+    // ---- Short-term trend in the most recent entries ----
+    const lastN = fullLog.slice(-5);
+    if (lastN.length === 5) {
+      let increasing = true, decreasing = true;
+      for (let i = 1; i < 5; i++) {
+        if (lastN[i].value < lastN[i - 1].value - 0.01) increasing = false;
+        if (lastN[i].value > lastN[i - 1].value + 0.01) decreasing = false;
+      }
+      if (increasing && lastN[4].value - lastN[0].value >= 0.5) {
+        patterns.push('Your last 5 ratings have been climbing steadily — a nice upward trend.');
+      } else if (decreasing && lastN[0].value - lastN[4].value >= 0.5) {
+        patterns.push('Your last 5 ratings have been dropping steadily — worth noticing, maybe fit in some extra exercise or rest.');
+      }
+    }
+
+    return patterns;
+  }
+
+  function renderProgressOverallPatterns(fullLog) {
+    const wrap = document.getElementById('progress-overall-patterns-wrap');
+    const list = document.getElementById('progress-overall-patterns-list');
+    if (!wrap || !list) return;
+
+    const patterns = detectOverallPatterns(fullLog);
+    if (patterns.length === 0) {
+      wrap.style.display = 'none';
+      list.innerHTML = '';
+      return;
+    }
+    wrap.style.display = 'block';
+    list.innerHTML = patterns.map(p => '<li>' + p + '</li>').join('');
+  }
+
+  // Builds a self-contained version of the chart (no dependency on the page's CSS variables) for the PDF export.
+  function buildOverallChartExportSVG() {
+    const geo = buildOverallChartGeometry(365);
+    if (!geo) return '';
+    const { points, W, H, linePath, areaPath, trendLine, recent, minIdx, maxIdx } = geo;
+    const n = points.length;
+
+    const dots = points.map((p, i) => {
+      const isLast = i === points.length - 1;
+      return '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (isLast ? 3.2 : 2.2) + '" fill="' + (isLast ? '#c8590c' : '#e08a3e') + '" />';
+    }).join('');
+
+    let labels = '';
+    if (n >= 2 && minIdx !== maxIdx) {
+      const minP = points[minIdx], maxP = points[maxIdx];
+      const minAnchor = minP.x < 20 ? 'start' : (minP.x > W - 20 ? 'end' : 'middle');
+      const maxAnchor = maxP.x < 20 ? 'start' : (maxP.x > W - 20 ? 'end' : 'middle');
+      labels +=
+        '<text x="' + minP.x.toFixed(1) + '" y="' + (minP.y - 7).toFixed(1) + '" text-anchor="' + minAnchor + '" font-size="7.5" font-family="Poppins, Arial, sans-serif" fill="#c0392b">' + formatChartDateLabel(recent[minIdx].date) + '</text>' +
+        '<text x="' + maxP.x.toFixed(1) + '" y="' + (maxP.y + 11).toFixed(1) + '" text-anchor="' + maxAnchor + '" font-size="7.5" font-family="Poppins, Arial, sans-serif" fill="#1e8a4c">' + formatChartDateLabel(recent[maxIdx].date) + '</text>';
+    }
+
+    const trendLineSvg = trendLine
+      ? '<line x1="' + trendLine.x1.toFixed(1) + '" y1="' + trendLine.y1.toFixed(1) + '" x2="' + trendLine.x2.toFixed(1) + '" y2="' + trendLine.y2.toFixed(1) + '" stroke="#999" stroke-width="1.2" stroke-dasharray="3,3" />'
+      : '';
+
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="90" preserveAspectRatio="none" style="overflow:visible;display:block;">' +
+      '<defs><linearGradient id="overallAreaGradExport" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#e08a3e" stop-opacity="0.35" />' +
+      '<stop offset="100%" stop-color="#e08a3e" stop-opacity="0" />' +
+      '</linearGradient></defs>' +
+      '<path d="' + areaPath + '" fill="url(#overallAreaGradExport)" stroke="none" />' +
+      trendLineSvg +
+      '<path d="' + linePath + '" fill="none" stroke="#c8590c" stroke-width="2" stroke-linecap="round" />' +
+      dots + labels +
+      '</svg>';
   }
 
   function renderProgressStressScale() {
@@ -5133,6 +5457,15 @@
       </div>`
       : `<div class="summary-box"><p class="empty">Not enough data yet for an overall index.</p></div>`;
 
+    const overallChartSvg = buildOverallChartExportSVG();
+    const overallPatterns = detectOverallPatterns(getOverallLogSorted());
+    const patternsHtml = overallPatterns.length
+      ? `<ul class="pattern-list">${overallPatterns.map(p => `<li>${p}</li>`).join('')}</ul>`
+      : '';
+    const chartHtml = overallChartSvg
+      ? `<div class="chart-box"><div class="chart-box-title">📈 Long-term trend of your overall assessment</div>${overallChartSvg}${patternsHtml}</div>`
+      : '';
+
     const tableRows = rows.length
       ? rows.map(r => `
         <tr>
@@ -5159,6 +5492,12 @@
   .summary-score { font-family: 'Orbitron', Arial, sans-serif; font-size: 16px; margin-bottom: 10px; }
   .summary-stats { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: #333; }
   .summary-stats strong { display: block; font-family: 'Orbitron', Arial, sans-serif; font-size: 15px; color: #c8590c; }
+  .chart-box { border: 1px solid #e08a3e; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px; background: #fff8f2; }
+  .chart-box-title { font-size: 12px; color: #555; margin-bottom: 8px; font-weight: 600; }
+  .pattern-list { list-style: none; margin: 12px 0 0; padding: 10px 0 0; border-top: 1px dashed #e0c19c; font-size: 11.5px; color: #333; }
+  .pattern-list li { margin-bottom: 6px; padding-left: 14px; position: relative; }
+  .pattern-list li::before { content: '•'; position: absolute; left: 0; color: #c8590c; }
+  .pattern-list li strong { color: #c8590c; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; vertical-align: top; }
   th { background: #f0f0f0; }
@@ -5173,6 +5512,7 @@
   <h1>Uklidni To – Your Progress</h1>
   <div class="subtitle">Export from ${pdfEscapeHtml(todayStr)}</div>
   ${summaryHtml}
+  ${chartHtml}
   <table>
     <thead>
       <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Note</th></tr>
@@ -5481,6 +5821,7 @@
     renderProgressEnergyScale();
     renderProgressEnergyChart();
     renderProgressOverallGauge();
+    renderProgressOverallChart();
     renderProgressLifetimeGauge();
     renderProgressJournal();
     renderProgressSummary();
