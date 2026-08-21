@@ -1161,6 +1161,37 @@
     text-transform: uppercase; max-width: 260px; margin-bottom: 6px; min-height: 10px; text-align: center;
   }
 
+  .btn-custom-tech-toggle {
+    display: none; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; opacity: 0.6; width: 22px; height: 22px; padding: 0; border-radius: 50%;
+    font-size: 11px; line-height: 1; cursor: pointer; transition: 0.3s;
+  }
+  .btn-custom-tech-toggle.has-items { display: inline-flex; }
+  .btn-custom-tech-toggle:hover { opacity: 1; }
+  .btn-custom-tech-toggle.active { opacity: 1; color: var(--accent-color); border-color: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); }
+  .custom-tech-popup {
+    display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    width: 230px; max-height: 220px; overflow-y: auto; z-index: 20; text-align: left;
+    background: rgba(18,18,26,0.97); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px;
+    padding: 10px; backdrop-filter: blur(10px); box-shadow: 0 10px 26px rgba(0,0,0,0.45);
+  }
+  .custom-tech-popup.visible { display: block; }
+  .custom-tech-popup-title {
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45;
+    margin: 0 0 8px; text-align: center;
+  }
+  .custom-tech-popup-item {
+    display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12); color: #fff; opacity: 0.75; padding: 7px 10px;
+    border-radius: 10px; font-size: 10.5px; letter-spacing: 0.5px; cursor: pointer;
+    transition: 0.25s; margin-bottom: 6px;
+  }
+  .custom-tech-popup-item:last-child { margin-bottom: 0; }
+  .custom-tech-popup-item:hover { opacity: 1; background: rgba(255,255,255,0.08); }
+  .custom-tech-popup-item.active { opacity: 1; color: var(--accent-color); border-color: var(--accent-color); }
+  .custom-tech-popup-empty { font-size: 10px; opacity: 0.5; text-align: center; padding: 6px 0; }
+
   .breath-orb-group { position: relative; display: flex; align-items: center; justify-content: center; }
   .breath-orb-arrows { position: absolute; right: -30px; top: 50%; transform: translateY(-50%); width: 34px; height: 96px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
   .breath-orb-wrap {
@@ -1530,7 +1561,7 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
     <h2 id="jak-funguje">How the breathing exercise works</h2>
-    <p>After clicking the button, a fullscreen breathing exercise opens with a gently pulsing orb. The orb grows and glows brighter on the inhale, gently trembles during the hold, and shrinks and dims again on the exhale. Just follow its rhythm with your eyes or your breath — the app handles the timing and counting for you.</p>
+    <p>After clicking the button, a fullscreen breathing exercise opens with a gently pulsing orb. The orb grows and glows brighter on the inhale, gently trembles during the hold, and shrinks and dims again on the exhale. Just follow its rhythm with your eyes or your breath — the app handles the timing and counting for you. A button inside the exercise lets you switch the visual at any time between the pulsing orb and an unfolding mandala — both breathe in the exact same rhythm, so it's just a matter of which one you find more soothing to look at.</p>
     <p>You can pick any of eight science-based techniques at any time, depending on what you need right now: to calm down quickly, to fall asleep, or to stay focused under pressure. On supported phones the exercise also gently vibrates with every phase change, so you can focus even with your eyes closed.</p>
     <p>At the top of the exercise you'll also see a stopwatch showing how long you've been breathing, plus the current time. Next to the guide icon (ⓘ) there's a little figure icon 🧍 — a second, more human view of the same breath, not a required part of the exercise. Tap it and a small glowing figure opens whose chest rises and falls while counting down the seconds of each phase (inhale, hold, exhale). Once the main exercise is running, the figure moves in perfect lockstep with the sphere — same phase, same countdown, at the exact same moment — so the two views never contradict each other and you can just watch whichever one suits you. You can switch technique while the demo is open too, and both views switch and reset together. You can also open the demo without the main exercise running — then the figure paces itself through the selected technique as a preview, and as soon as you start the exercise it locks onto the sphere automatically.</p>
     <ul class="benefits-list">
@@ -1548,6 +1579,10 @@
     </div>
     <h2 id="techniky">Breathing techniques</h2>
     <p>You can choose each technique directly in the breathing exercise and switch between them at any time while it runs.</p>
+
+    <div style="text-align:center; margin: -6px 0 20px;">
+      <button type="button" class="panel-nav-btn" onclick="document.getElementById('custom-tech-import-row').scrollIntoView({behavior:'smooth', block:'center'}); return false;">⬇️ Jump to importing your own techniques</button>
+    </div>
 
     <div style="border: 1px solid rgba(255,119,0,0.35); border-radius: 14px; padding: 18px 20px; margin: 14px 0 22px; background: rgba(255,119,0,0.06);">
       <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">🎁 36 ready-made breathing techniques</div>
@@ -1603,7 +1638,7 @@
 
       <div class="custom-tech-list" id="custom-tech-list"></div>
 
-      <div class="custom-tech-actions-row">
+      <div class="custom-tech-actions-row" id="custom-tech-import-row">
         <button type="button" class="progress-reset-btn" onclick="showCustomTechForm()">+ New custom exercise</button>
         <button type="button" class="progress-reset-btn" onclick="exportCustomTechniques()">💾 Export custom exercises</button>
         <button type="button" class="progress-reset-btn" onclick="triggerCustomTechImport()">📥 Import exercises</button>
@@ -2026,6 +2061,148 @@
       <h3>Breathing and music: why pairing it with ambient works even better</h3>
       <p>Guided breathing works on its own, but slow, unobtrusive music can boost the effect further. Ambient and chillout with no strong beat doesn’t force the body to “match” the tempo of the track the way faster music does, so it doesn’t override the pace set by the pulsing orb — instead it creates a sonic backdrop that helps you stay focused on your breath and blocks out distracting sounds around you.</p>
       <p>If you want to pair the breathing exercise with ambient music, try playing <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA RELAX PLAYER</a> in the background and start the breathing exercise here on Uklidni To — keep the music playing in one tab and let the orb guide your breath in the other.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Pursed-Lip Breathing</h3>
+      <p>Inhale 2s – exhale 4s. Used e.g. for breathlessness in COPD. A short nose inhale followed by a longer exhale through pursed lips helps keep the airways open.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Triangle Breathing</h3>
+      <p>Inhale 4s – hold 4s – exhale 4s. A simpler variant of box breathing without the second hold, suitable for everyday practice.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Calm Breathing 5-5 (NHS)</h3>
+      <p>Inhale 5s – exhale 5s. A technique recommended by the UK's NHS for anxiety, typically practiced for about 3 minutes.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>The Relaxation Response (Herbert Benson)</h3>
+      <p>Inhale 4s – exhale 6s. Based on research by Harvard cardiologist Herbert Benson on the body's so-called relaxation response to chronic stress.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Sitali Pranayama (Cooling Breath)</h3>
+      <p>Inhale 4s – hold 4s – exhale 6s. A yogic technique of inhaling through a curled tongue, traditionally used to cool the body and calm the mind.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Bhramari (Humming Bee Breath)</h3>
+      <p>Inhale 4s – hold 2s – exhale 6s. A yogic technique with a humming sound on the exhale — the vibration helps quickly settle the mind.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Ujjayi (Ocean Breath)</h3>
+      <p>Inhale 4s – exhale 6s. A yogic technique with slight throat constriction that creates a sound similar to ocean waves. Common in yoga and meditation practice.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Military Technique 4-4-6-2</h3>
+      <p>Inhale 4s – hold 4s – exhale 6s – hold 2s. A controlled-breathing variant with two holds, used in stress-management programs.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Buteyko Method — Reduced Breathing</h3>
+      <p>Inhale 2s – exhale 3s. Developed by Russian physician Konstantin Buteyko, based on gentle, shallower breathing. Used, among other things, for asthma and hyperventilation.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Equal Breathing (Sama Vritti)</h3>
+      <p>Inhale 4s – exhale 4s. A yogic technique with an equally long inhale and exhale — a good starting point for evening out your breathing rhythm.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>The 3-4-5 Anxiety Technique (NHS)</h3>
+      <p>Inhale 3s – hold 4s – exhale 5s. A short inhale and the longest exhale of the cycle, used as a quick tool during a wave of anxiety.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Deep Release Sigh</h3>
+      <p>Inhale 5s – hold 2s – exhale 7s. A longer inhale with a brief hold and a long, relaxed exhale that creates a sense of physical release.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Cardiac Coherence (The 365 Method)</h3>
+      <p>Inhale 6s – exhale 6s. A French method: breathe at a pace of 6 breaths per minute, 5 times a day for 5 minutes, to improve heart rate coherence.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>4-8 Breathing for Panic</h3>
+      <p>Inhale 4s – exhale 8s. A short inhale and a twice-as-long exhale, recommended as quick relief during a panic attack.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>7-11 Breathing</h3>
+      <p>Inhale 7s – exhale 11s. A technique used, for example, in military stress-management programs.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Square Breathing for Kids</h3>
+      <p>Inhale 3s – hold 3s – exhale 3s – hold 3s. A shorter, simpler variant of box breathing, suitable for children and practicing calm at school.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Taoist Breathing 6-6</h3>
+      <p>Inhale 6s – exhale 6s. Slow, even breathing used in traditional Chinese breathing and meditation practices (qigong).</p>
+    </article>
+
+    <article class="article-card">
+      <h3>4-2-6 Breathing for Sleep</h3>
+      <p>Inhale 4s – hold 2s – exhale 6s. A slightly extended exhale with a short hold after the inhale — a good fit for an evening wind-down ritual.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Kapalabhati (Skull-Shining / Cleansing Breath)</h3>
+      <p>Rapid, active exhales through the nose with a passive inhale (1s / 1s), repeated. A traditional yogic technique to energize and clear the mind. Requires practice.</p>
+      <p><strong>⚠️ Not recommended</strong> during pregnancy, with high blood pressure, epilepsy, heart conditions, or shortly after surgery — consult a doctor if in doubt.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Wim Hof Method (simplified)</h3>
+      <p>Rapid breathing (inhale 2s – exhale 1s), repeated. The full method also includes a breath hold on the exhale and a recovery inhale with hold — simplified in the app to a fast breathing cycle only.</p>
+      <p><strong>⚠️ Never practice</strong> in water, while driving, or standing without support (risk of fainting from hyperventilation). Not recommended during pregnancy, with epilepsy, high blood pressure, or heart conditions — consult a doctor if in doubt.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Advanced Yogic Ratio 1:4:2</h3>
+      <p>Inhale 3s – hold 12s – exhale 6s. A classic pranayama ratio used in more advanced practice. The longer hold requires experience.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Three-Part Yogic Breath (Dirga Pranayama)</h3>
+      <p>Inhale 6s – hold 3s – exhale 6s. Gradually filling the belly, chest, and upper lungs — a foundational technique for full, mindful breathing.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Chandra Bhedana (Cooling/Moon Breath, simplified)</h3>
+      <p>Inhale 4s – hold 2s – exhale 8s. Traditionally inhaled through the left nostril and exhaled through the right, with a cooling effect. Simplified in the app to a rhythm without physically alternating nostrils.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Surya Bhedana (Energizing/Sun Breath, simplified)</h3>
+      <p>Inhale 4s – hold 4s – exhale 2s. Traditionally inhaled through the right nostril and exhaled through the left, with an energizing effect. Simplified in the app to a rhythm without physically alternating nostrils.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Vagus Nerve Stimulation Breathing 6-2-7</h3>
+      <p>Inhale 6s – hold 2s – exhale 7s. Slow breathing with an extended exhale, used in techniques aimed at activating the parasympathetic system via the vagus nerve.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Buteyko — Control Pause</h3>
+      <p>Inhale 3s – hold 5s – exhale 3s. A Buteyko method variant with a short hold after the exhale, used to build tolerance to carbon dioxide.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Yogic Breathing Ratio 1:2 (Vinyasa)</h3>
+      <p>Inhale 3s – exhale 6s. A general guideline from yoga practice (e.g. Vinyasa) — exhale twice as long as the inhale, for smooth breathing during movement.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Alternative Sleep Breath 4-7-7</h3>
+      <p>Inhale 4s – hold 7s – exhale 7s. A 4-7-8 breathing variant with a shorter exhale, for those who find the full eight-second exhale hard to sustain.</p>
     </article>
 
     <p class="article-disclaimer">The text on this page summarizes publicly available peer-reviewed studies and is for general information only — it is not medical advice or a diagnosis. If you have an anxiety disorder, heart or lung condition, are pregnant, or don’t feel well during the exercise, consult a doctor and stop breathing immediately if you feel nauseous or dizzy.</p>
@@ -2456,6 +2633,11 @@
     <button class="btn-breath-tech" data-tech="branice" onclick="selectBreathTechnique('branice')">BRANICE</button>
     <button class="btn-breath-tech" data-tech="nozdry" onclick="selectBreathTechnique('nozdry')">NOZDRY</button>
     <button class="btn-breath-tech" data-tech="lev" onclick="selectBreathTechnique('lev')">LION'S BREATH</button>
+    <button type="button" class="btn-custom-tech-toggle" id="custom-tech-toggle-btn" onclick="toggleCustomTechPopup(event)" title="Your imported exercises">📂</button>
+    <div class="custom-tech-popup" id="custom-tech-popup">
+      <p class="custom-tech-popup-title">Custom exercises</p>
+      <div id="custom-tech-popup-list"></div>
+    </div>
   </div>
   <div class="breath-technique-info" id="breath-technique-info"></div>
 
@@ -3212,6 +3394,7 @@
     if (!BREATH_TECHNIQUES[techId]) return;
     currentBreathTechnique = techId;
     updateBreathTechniqueUI();
+    closeCustomTechPopup();
     breathPhaseIndex = 0;
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
@@ -3244,11 +3427,35 @@
   };
 
   function updateBreathTechniqueUI() {
-    document.querySelectorAll('.btn-breath-tech').forEach((b) => {
+    document.querySelectorAll('.btn-breath-tech, .custom-tech-popup-item').forEach((b) => {
       b.classList.toggle('active', b.dataset.tech === currentBreathTechnique);
     });
+    const customToggleBtn = document.getElementById('custom-tech-toggle-btn');
+    if (customToggleBtn) {
+      customToggleBtn.classList.toggle('active', customTechniques.some((t) => t.id === currentBreathTechnique));
+    }
     if (breathTechniqueInfoEl) breathTechniqueInfoEl.innerText = BREATH_TECHNIQUES[currentBreathTechnique].info;
   }
+
+  window.toggleCustomTechPopup = function (event) {
+    if (event) event.stopPropagation();
+    const popup = document.getElementById('custom-tech-popup');
+    if (!popup) return;
+    popup.classList.toggle('visible');
+  };
+
+  function closeCustomTechPopup() {
+    const popup = document.getElementById('custom-tech-popup');
+    if (popup) popup.classList.remove('visible');
+  }
+
+  document.addEventListener('click', function (e) {
+    const popup = document.getElementById('custom-tech-popup');
+    const toggleBtn = document.getElementById('custom-tech-toggle-btn');
+    if (!popup || !popup.classList.contains('visible')) return;
+    if (popup.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target))) return;
+    closeCustomTechPopup();
+  });
 
   // Panel with the guide to the individual breathing techniques
   window.toggleBreathGuide = function() {
@@ -3783,17 +3990,26 @@
   }
 
   function renderCustomTechButtons() {
-    const wrap = document.getElementById('breath-technique-select');
-    if (!wrap) return;
-    wrap.querySelectorAll('.btn-breath-tech.custom').forEach((b) => b.remove());
-    customTechniques.forEach((t) => {
-      const btn = document.createElement('button');
-      btn.className = 'btn-breath-tech custom';
-      btn.dataset.tech = t.id;
-      btn.textContent = t.name.toUpperCase();
-      btn.onclick = function () { selectBreathTechnique(t.id); };
-      wrap.appendChild(btn);
-    });
+    const toggleBtn = document.getElementById('custom-tech-toggle-btn');
+    const popupList = document.getElementById('custom-tech-popup-list');
+    if (!toggleBtn || !popupList) return;
+    popupList.innerHTML = '';
+    if (!customTechniques.length) {
+      popupList.innerHTML = '<p class="custom-tech-popup-empty">No imported exercises yet.</p>';
+    } else {
+      // Imported techniques are sorted alphabetically, kept separate from the default buttons above
+      customTechniques.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach((t) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'custom-tech-popup-item';
+        btn.dataset.tech = t.id;
+        btn.textContent = t.name;
+        btn.onclick = function () { selectBreathTechnique(t.id); };
+        popupList.appendChild(btn);
+      });
+    }
+    toggleBtn.classList.toggle('has-items', customTechniques.length > 0);
+    if (!customTechniques.length) closeCustomTechPopup();
     updateBreathTechniqueUI();
   }
 

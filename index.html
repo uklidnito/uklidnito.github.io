@@ -1156,6 +1156,37 @@
     text-transform: uppercase; max-width: 260px; margin-bottom: 6px; min-height: 10px; text-align: center;
   }
 
+  .btn-custom-tech-toggle {
+    display: none; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; opacity: 0.6; width: 22px; height: 22px; padding: 0; border-radius: 50%;
+    font-size: 11px; line-height: 1; cursor: pointer; transition: 0.3s;
+  }
+  .btn-custom-tech-toggle.has-items { display: inline-flex; }
+  .btn-custom-tech-toggle:hover { opacity: 1; }
+  .btn-custom-tech-toggle.active { opacity: 1; color: var(--accent-color); border-color: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); }
+  .custom-tech-popup {
+    display: none; position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+    width: 230px; max-height: 220px; overflow-y: auto; z-index: 20; text-align: left;
+    background: rgba(18,18,26,0.97); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px;
+    padding: 10px; backdrop-filter: blur(10px); box-shadow: 0 10px 26px rgba(0,0,0,0.45);
+  }
+  .custom-tech-popup.visible { display: block; }
+  .custom-tech-popup-title {
+    font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.45;
+    margin: 0 0 8px; text-align: center;
+  }
+  .custom-tech-popup-item {
+    display: block; width: 100%; text-align: left; background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12); color: #fff; opacity: 0.75; padding: 7px 10px;
+    border-radius: 10px; font-size: 10.5px; letter-spacing: 0.5px; cursor: pointer;
+    transition: 0.25s; margin-bottom: 6px;
+  }
+  .custom-tech-popup-item:last-child { margin-bottom: 0; }
+  .custom-tech-popup-item:hover { opacity: 1; background: rgba(255,255,255,0.08); }
+  .custom-tech-popup-item.active { opacity: 1; color: var(--accent-color); border-color: var(--accent-color); }
+  .custom-tech-popup-empty { font-size: 10px; opacity: 0.5; text-align: center; padding: 6px 0; }
+
   .breath-orb-group { position: relative; display: flex; align-items: center; justify-content: center; }
   .breath-orb-arrows { position: absolute; right: -30px; top: 50%; transform: translateY(-50%); width: 34px; height: 96px; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 2; }
   .breath-orb-wrap {
@@ -1525,7 +1556,7 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
     </div>
     <h2 id="jak-funguje">Jak dechové cvičení funguje</h2>
-    <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe.</p>
+    <p>Po kliknutí na tlačítko se otevře celoobrazovkové dechové cvičení s jemně pulzující koulí. Koule se při nádechu zvětšuje a rozzáří, při zádrži se jemně chvěje a při výdechu se zase zmenšuje a ztlumí. Stačí očima nebo dechem sledovat její rytmus — o tempo a počítání sekund se stará aplikace za tebe. Tlačítkem přímo v cvičení můžeš vizuál kdykoliv přepnout mezi pulzující koulí a rozvíjející se mandalou — obě zobrazení dýchají ve stejném rytmu, jde jen o to, které ti vizuálně sedne víc.</p>
     <p>Kdykoli si můžeš vybrat jednu z osmi vědecky podložených technik podle toho, co zrovna potřebuješ: rychle se zklidnit, usnout, nebo naopak zůstat soustředěný/á pod tlakem. Na podporovaných telefonech cvičení navíc jemně vibruje při každé změně fáze, takže se můžeš soustředit i se zavřenýma očima.</p>
     <p>Nahoře v cvičení vidíš i stopky, které ti ukazují, jak dlouho už dýcháš, a aktuální čas. Vedle ikonky s návodem (ⓘ) je ikonka postavičky 🧍 — druhé, lidštější zobrazení stejného dechu, ne povinná součást cvičení. Po klepnutí se otevře malá zářící postavička, které se hrudník zvedá a klesá a k tomu odpočítává sekundy dané fáze (nádech, zádrž, výdech). Když už hlavní cvičení běží, postavička jede naprosto souběžně s koulí — stejná fáze i stejný odpočet ve stejný okamžik, takže si obě zobrazení nikdy neodporují a klidně sleduješ to, které ti sedí víc. Technika se dá přepnout i s otevřenou ukázkou a obě zobrazení se přepnou a zresetují společně. Ukázku jde otevřít i bez spuštěného hlavního cvičení — pak postavička jede sama v tempu zvolené techniky jako náhled, a jakmile cvičení spustíš, automaticky se napojí na kouli.</p>
     <ul class="benefits-list">
@@ -1543,6 +1574,10 @@
     </div>
     <h2 id="techniky">Techniky dechu</h2>
     <p>Každou techniku můžeš zvolit přímo v dechovém cvičení a kdykoliv mezi nimi za běhu přepínat.</p>
+
+    <div style="text-align:center; margin: -6px 0 20px;">
+      <button type="button" class="panel-nav-btn" onclick="document.getElementById('custom-tech-import-row').scrollIntoView({behavior:'smooth', block:'center'}); return false;">⬇️ Přejít na import vlastních technik</button>
+    </div>
 
     <div style="border: 1px solid rgba(255,119,0,0.35); border-radius: 14px; padding: 18px 20px; margin: 14px 0 22px; background: rgba(255,119,0,0.06);">
       <div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">🎁 36 hotových dechových technik ke stažení</div>
@@ -1598,7 +1633,7 @@
 
       <div class="custom-tech-list" id="custom-tech-list"></div>
 
-      <div class="custom-tech-actions-row">
+      <div class="custom-tech-actions-row" id="custom-tech-import-row">
         <button type="button" class="progress-reset-btn" onclick="showCustomTechForm()">+ Nové vlastní cvičení</button>
         <button type="button" class="progress-reset-btn" onclick="exportCustomTechniques()">💾 Exportovat vlastní cvičení</button>
         <button type="button" class="progress-reset-btn" onclick="triggerCustomTechImport()">📥 Importovat cvičení</button>
@@ -2021,6 +2056,148 @@
       <h3>Dýchání a hudba: proč kombinace s ambientem funguje ještě lépe</h3>
       <p>Řízené dýchání funguje samo o sobě, ale pomalá, nerušivá hudba dokáže efekt ještě podpořit. Ambient a chillout bez výrazného rytmu nenutí tělo se „přizpůsobovat“ tempu skladby tak jako rychlejší hudba, takže nepřebíjí tempo, které právě udává pulzující koule — spíš vytváří zvukové pozadí, které pomáhá udržet pozornost u dechu a odstínit rušivé zvuky okolí.</p>
       <p>Pokud chceš dechové cvičení spojit s ambientní hudbou, můžeš si pustit <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA RELAX PLAYER</a> na pozadí a k tomu spustit dechové cvičení zde na Uklidni To — hudbu si necháš hrát na jedné záložce a dech si necháš vést koulí ve druhé.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Dýchání se sešpulenými rty</h3>
+      <p>Nádech 2 s – výdech 4 s. Používá se např. při potížích s dechem u CHOPN. Krátký nádech nosem, delší výdech přes sešpulené rty pomáhá udržet dýchací cesty otevřené.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Trojúhelníkové dýchání</h3>
+      <p>Nádech 4 s – zádrž 4 s – výdech 4 s. Jednodušší varianta box breathingu bez zádrže po výdechu, vhodná pro každodenní trénink.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Klidné dýchání 5-5 (NHS)</h3>
+      <p>Nádech 5 s – výdech 5 s. Technika doporučovaná britskou zdravotní službou NHS proti úzkosti, prováděná zhruba 3 minuty v kuse.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Relaxační odezva (Herbert Benson)</h3>
+      <p>Nádech 4 s – výdech 6 s. Vychází z výzkumu harvardského kardiologa Herberta Bensona o tzv. relaxační odezvě těla proti chronickému stresu.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Sitali pránájáma (chladivé dýchání)</h3>
+      <p>Nádech 4 s – zádrž 4 s – výdech 6 s. Jógová technika nádechu přes svinutý jazyk, tradičně používaná k ochlazení těla a zklidnění mysli.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Bhrámarí (bzučivé dýchání včely)</h3>
+      <p>Nádech 4 s – zádrž 2 s – výdech 6 s. Jógová technika s bzučivým zvukem při výdechu — vibrace pomáhají rychle utišit mysl.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Ujjayi (oceánské dýchání)</h3>
+      <p>Nádech 4 s – výdech 6 s. Jógová technika s mírným zúžením hrtanu, které vytváří zvuk podobný moři. Časté při józe a meditaci.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Vojenská technika 4-4-6-2</h3>
+      <p>Nádech 4 s – zádrž 4 s – výdech 6 s – zádrž 2 s. Varianta řízeného dýchání se dvěma zádržemi, používaná v programech na zvládání stresu.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Butějkova metoda — redukované dýchání</h3>
+      <p>Nádech 2 s – výdech 3 s. Metoda ruského lékaře Konstantina Butějka založená na jemném, mělčím dýchání. Používá se mimo jiné u astmatu a hyperventilace.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Rovnoměrné dýchání (Sama Vritti)</h3>
+      <p>Nádech 4 s – výdech 4 s. Jógová technika se stejně dlouhým nádechem a výdechem — dobrý start pro vyrovnání dechového rytmu.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Technika 3-4-5 proti úzkosti (NHS)</h3>
+      <p>Nádech 3 s – zádrž 4 s – výdech 5 s. Krátký nádech a nejdelší výdech jako rychlá pomůcka při návalu úzkosti.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Hluboký povzdech s uvolněním</h3>
+      <p>Nádech 5 s – zádrž 2 s – výdech 7 s. Delší nádech a dlouhý, uvolněný výdech navozující pocit tělesného uvolnění.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Kardiální koherence (metoda 365)</h3>
+      <p>Nádech 6 s – výdech 6 s. Francouzská metoda: dýchat tempem 6 dechů za minutu, 5x denně po dobu 5 minut, pro zlepšení srdeční koherence.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Dýchání 4-8 při panice</h3>
+      <p>Nádech 4 s – výdech 8 s. Krátký nádech a dvojnásobně dlouhý výdech, doporučovaný jako rychlá pomoc při panické atace.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>7-11 dýchání</h3>
+      <p>Nádech 7 s – výdech 11 s. Technika používaná např. v armádních programech na zvládání stresu.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Dýchání do čtverce pro děti</h3>
+      <p>Nádech 3 s – zádrž 3 s – výdech 3 s – zádrž 3 s. Kratší a jednodušší varianta box breathingu, vhodná pro děti a nácvik zklidnění ve škole.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Taoistické dýchání 6-6</h3>
+      <p>Nádech 6 s – výdech 6 s. Pomalé, rovnoměrné dýchání používané v tradičních čínských dechových a meditačních cvičeních (čchi-kung).</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Dýchání 4-2-6 na usnutí</h3>
+      <p>Nádech 4 s – zádrž 2 s – výdech 6 s. Mírně prodloužený výdech s krátkou zádrží po nádechu — vhodné jako večerní rituál před spaním.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Kapalabhati (dech ohně — čistící dech)</h3>
+      <p>Rychlé, aktivní výdechy nosem a pasivní nádech (1 s / 1 s), opakovaně. Tradiční jógová technika k rozproudění energie a pročištění mysli. Vyžaduje cvik.</p>
+      <p><strong>⚠️ Nevhodné</strong> v těhotenství, při vysokém krevním tlaku, epilepsii, srdečních obtížích nebo čerstvě po operaci — v případě pochybností se poraďte s lékařem.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Wim Hof Method (zjednodušeně)</h3>
+      <p>Rychlé dýchání (nádech 2 s – výdech 1 s), opakovaně. Plná metoda navíc zahrnuje zádrž na výdechu a zotavovací nádech se zádrží — v aplikaci zjednodušeno na cyklus rychlého dýchání.</p>
+      <p><strong>⚠️ Necvičte</strong> ve vodě, za volantem ani vestoje bez opory (riziko mdloby při hyperventilaci). Nevhodné v těhotenství, při epilepsii, vysokém krevním tlaku nebo srdečních obtížích — v případě pochybností se poraďte s lékařem.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Pokročilý jógový poměr 1:4:2</h3>
+      <p>Nádech 3 s – zádrž 12 s – výdech 6 s. Klasický pránájámový poměr používaný v pokročilejší praxi. Delší zádrž vyžaduje zkušenost.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Tříčásťový jógový dech (Dirga Pranayama)</h3>
+      <p>Nádech 6 s – zádrž 3 s – výdech 6 s. Postupné plnění břicha, hrudníku a horní části plic — základní technika pro plné, vědomé dýchání.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Chandra Bhedana (chladivý/měsíční dech, zjednodušeně)</h3>
+      <p>Nádech 4 s – zádrž 2 s – výdech 8 s. Tradičně nádech levou nosní dírkou, výdech pravou, s chladivým účinkem. V aplikaci zjednodušeno na rytmus bez fyzického střídání dírek.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Surya Bhedana (energizující/sluneční dech, zjednodušeně)</h3>
+      <p>Nádech 4 s – zádrž 4 s – výdech 2 s. Tradičně nádech pravou nosní dírkou, výdech levou, s energizujícím účinkem. V aplikaci zjednodušeno na rytmus bez fyzického střídání dírek.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Dýchání pro stimulaci bloudivého nervu 6-2-7</h3>
+      <p>Nádech 6 s – zádrž 2 s – výdech 7 s. Pomalé dýchání s prodlouženým výdechem, používané v technikách zaměřených na aktivaci parasympatiku přes nervus vagus.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Butějko — kontrolní pauza</h3>
+      <p>Nádech 3 s – zádrž 5 s – výdech 3 s. Varianta Butějkovy metody s krátkou zádrží po výdechu, používaná při nácviku tolerance na oxid uhličitý.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Jógový dechový poměr 1:2 (Vinyasa)</h3>
+      <p>Nádech 3 s – výdech 6 s. Obecné vodítko z jógové praxe (např. Vinyasa) — výdech dvakrát delší než nádech, pro plynulé dýchání během pohybu.</p>
+    </article>
+
+    <article class="article-card">
+      <h3>Alternativní usínací dech 4-7-7</h3>
+      <p>Nádech 4 s – zádrž 7 s – výdech 7 s. Varianta 4-7-8 dýchání s kratším výdechem pro ty, kterým se plný osmivteřinový výdech obtížně drží.</p>
     </article>
 
     <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Pokud máš úzkostnou poruchu, srdeční či plicní onemocnění, jsi těhotná, nebo se během cvičení necítíš dobře, poraď se s lékařem a dýchání okamžitě přeruš, pokud se ti udělá nevolno nebo se ti zatočí hlava.</p>
@@ -2451,6 +2628,11 @@
     <button class="btn-breath-tech" data-tech="branice" onclick="selectBreathTechnique('branice')">BRANICE</button>
     <button class="btn-breath-tech" data-tech="nozdry" onclick="selectBreathTechnique('nozdry')">NOZDRY</button>
     <button class="btn-breath-tech" data-tech="lev" onclick="selectBreathTechnique('lev')">LVÍ DECH</button>
+    <button type="button" class="btn-custom-tech-toggle" id="custom-tech-toggle-btn" onclick="toggleCustomTechPopup(event)" title="Vlastní naimportovaná cvičení">📂</button>
+    <div class="custom-tech-popup" id="custom-tech-popup">
+      <p class="custom-tech-popup-title">Vlastní cvičení</p>
+      <div id="custom-tech-popup-list"></div>
+    </div>
   </div>
   <div class="breath-technique-info" id="breath-technique-info"></div>
 
@@ -3213,6 +3395,7 @@
     if (!BREATH_TECHNIQUES[techId]) return;
     currentBreathTechnique = techId;
     updateBreathTechniqueUI();
+    closeCustomTechPopup();
     breathPhaseIndex = 0;
     clearTimeout(breathPhaseTimeout);
     clearInterval(breathCountdownInterval);
@@ -3245,11 +3428,35 @@
   };
 
   function updateBreathTechniqueUI() {
-    document.querySelectorAll('.btn-breath-tech').forEach((b) => {
+    document.querySelectorAll('.btn-breath-tech, .custom-tech-popup-item').forEach((b) => {
       b.classList.toggle('active', b.dataset.tech === currentBreathTechnique);
     });
+    const customToggleBtn = document.getElementById('custom-tech-toggle-btn');
+    if (customToggleBtn) {
+      customToggleBtn.classList.toggle('active', customTechniques.some((t) => t.id === currentBreathTechnique));
+    }
     if (breathTechniqueInfoEl) breathTechniqueInfoEl.innerText = BREATH_TECHNIQUES[currentBreathTechnique].info;
   }
+
+  window.toggleCustomTechPopup = function (event) {
+    if (event) event.stopPropagation();
+    const popup = document.getElementById('custom-tech-popup');
+    if (!popup) return;
+    popup.classList.toggle('visible');
+  };
+
+  function closeCustomTechPopup() {
+    const popup = document.getElementById('custom-tech-popup');
+    if (popup) popup.classList.remove('visible');
+  }
+
+  document.addEventListener('click', function (e) {
+    const popup = document.getElementById('custom-tech-popup');
+    const toggleBtn = document.getElementById('custom-tech-toggle-btn');
+    if (!popup || !popup.classList.contains('visible')) return;
+    if (popup.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target))) return;
+    closeCustomTechPopup();
+  });
 
   // Panel s návodem k jednotlivým technikám dechu
   window.toggleBreathGuide = function() {
@@ -3784,17 +3991,26 @@
   }
 
   function renderCustomTechButtons() {
-    const wrap = document.getElementById('breath-technique-select');
-    if (!wrap) return;
-    wrap.querySelectorAll('.btn-breath-tech.custom').forEach((b) => b.remove());
-    customTechniques.forEach((t) => {
-      const btn = document.createElement('button');
-      btn.className = 'btn-breath-tech custom';
-      btn.dataset.tech = t.id;
-      btn.textContent = t.name.toUpperCase();
-      btn.onclick = function () { selectBreathTechnique(t.id); };
-      wrap.appendChild(btn);
-    });
+    const toggleBtn = document.getElementById('custom-tech-toggle-btn');
+    const popupList = document.getElementById('custom-tech-popup-list');
+    if (!toggleBtn || !popupList) return;
+    popupList.innerHTML = '';
+    if (!customTechniques.length) {
+      popupList.innerHTML = '<p class="custom-tech-popup-empty">Zatím žádná naimportovaná cvičení.</p>';
+    } else {
+      // Naimportované techniky se řadí abecedně, odděleně od výchozích tlačítek nahoře
+      customTechniques.slice().sort((a, b) => a.name.localeCompare(b.name, 'cs')).forEach((t) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'custom-tech-popup-item';
+        btn.dataset.tech = t.id;
+        btn.textContent = t.name;
+        btn.onclick = function () { selectBreathTechnique(t.id); };
+        popupList.appendChild(btn);
+      });
+    }
+    toggleBtn.classList.toggle('has-items', customTechniques.length > 0);
+    if (!customTechniques.length) closeCustomTechPopup();
     updateBreathTechniqueUI();
   }
 
