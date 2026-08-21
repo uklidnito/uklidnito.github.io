@@ -1,6 +1,6 @@
 // Uklidni To — Service Worker
 // Zvyš CACHE_VERSION při každé větší aktualizaci obsahu, aby si klienti stáhli nová data.
-const CACHE_VERSION = 'v235';
+const CACHE_VERSION = 'v236';
 const CACHE_NAME = `uklidnito-${CACHE_VERSION}`;
 
 // Základní "app shell" — soubory nutné pro fungování appky offline.
