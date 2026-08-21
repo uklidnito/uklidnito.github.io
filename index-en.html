@@ -304,6 +304,78 @@
   }
   .tech-card p { font-size: 12.5px; line-height: 1.7; opacity: 0.72; margin: 0; }
 
+  /* ---------- Custom breathing exercises (create / import / export) ---------- */
+  .custom-tech-list { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
+  .custom-tech-item {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 14px 16px; display: flex; justify-content: space-between;
+    align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .custom-tech-item-name { font-size: 13px; letter-spacing: 0.3px; color: #fff; font-weight: 500; }
+  .custom-tech-item-phases { font-size: 11.5px; opacity: 0.6; margin-top: 4px; line-height: 1.5; }
+  .custom-tech-item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .custom-tech-item-actions button {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.75);
+    font-size: 11px; padding: 7px 12px; border-radius: 20px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: 0.2s;
+  }
+  .custom-tech-item-actions button:hover { border-color: var(--accent-color); color: var(--accent-color); }
+  .custom-tech-item-actions button.danger:hover { border-color: rgba(255,100,100,0.6); color: rgba(255,140,140,0.85); }
+  .custom-tech-empty { font-size: 12.5px; opacity: 0.5; text-align: center; padding: 10px 0 4px; }
+
+  .custom-tech-actions-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+
+  .custom-tech-form {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 18px; margin-top: 18px;
+  }
+  .custom-tech-form label {
+    display: block; font-size: 11px; letter-spacing: 0.4px; opacity: 0.6; margin: 14px 0 6px;
+  }
+  .custom-tech-form label:first-of-type { margin-top: 0; }
+  .custom-tech-form input[type="text"] {
+    width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;
+    font-size: 13px; padding: 10px 12px; font-family: 'Poppins', sans-serif;
+  }
+  .custom-tech-form input[type="text"]:focus { outline: none; border-color: var(--accent-color); }
+  .custom-tech-phase-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .custom-tech-phase-row select {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+    color: #fff; font-size: 12.5px; padding: 9px 8px; font-family: 'Poppins', sans-serif; flex: 1.3;
+  }
+  .custom-tech-phase-row select option { color: #111; background: #fff; }
+  .custom-tech-phase-row input[type="number"] {
+    width: 64px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px; color: #fff; font-size: 12.5px; padding: 9px 6px;
+    font-family: 'Poppins', sans-serif; text-align: center;
+  }
+  .custom-tech-phase-row .phase-unit { font-size: 11px; opacity: 0.5; }
+  .custom-tech-phase-row .phase-remove-btn {
+    background: transparent; border: none; color: rgba(255,140,140,0.7); font-size: 17px;
+    cursor: pointer; padding: 2px 6px; line-height: 1;
+  }
+  .custom-tech-add-phase-btn {
+    background: transparent; border: 1px dashed rgba(255,255,255,0.25); color: rgba(255,255,255,0.6);
+    font-size: 11.5px; padding: 9px 14px; border-radius: 20px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; width: 100%; margin-top: 4px; transition: 0.2s;
+  }
+  .custom-tech-add-phase-btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+  .custom-tech-form-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: center; flex-wrap: wrap; }
+  .custom-tech-save-btn {
+    background: rgba(255,119,0,0.18); border: 1px solid var(--accent-color); color: var(--accent-color);
+    font-size: 12px; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 30px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; font-weight: 600; box-shadow: 0 0 16px rgba(255,119,0,0.3); transition: 0.2s;
+  }
+  .custom-tech-save-btn:hover { background: rgba(255,119,0,0.28); box-shadow: 0 0 22px rgba(255,119,0,0.45); }
+  .custom-tech-cancel-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6);
+    font-size: 12px; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-family: 'Poppins', sans-serif;
+  }
+  .custom-tech-status { font-size: 11px; opacity: 0.75; text-align: center; margin: 12px 0 0; min-height: 14px; }
+  .custom-tech-status.error { color: rgba(255,140,140,0.9); opacity: 1; }
+  .custom-tech-status.success { color: rgba(120,255,150,0.9); opacity: 1; }
+
   .article-card {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 14px; padding: 20px 20px 16px; margin-bottom: 16px;
@@ -1450,6 +1522,7 @@
       <a href="#pokrok" class="hero-progress-link" onclick="showPanel('pokrok'); return false;"><span aria-hidden="true">📊</span> View your progress</a>
     </div>
     <p style="font-size:11px; opacity:0.45; margin-top:16px; letter-spacing:0.3px;">Want music in the background while you breathe? Try <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA Relax Player</a>.</p>
+    <p style="font-size:11px; opacity:0.45; margin-top:8px; letter-spacing:0.3px;">None of the techniques quite fit? <a href="#techniky" onclick="showPanel('sec-techniky'); return false;">Create your own breathing exercise</a>.</p>
   </section>
 
   <section class="content" id="sec-jak-funguje" aria-labelledby="jak-funguje">
@@ -1507,6 +1580,40 @@
       <div class="tech-card">
         <h3>Lion’s breath — Simhasana</h3>
         <p>A deep inhale through the nose for 4 s and a forceful exhale through the mouth for 4 s with the tongue stuck out. Releases tension in the face, jaw and neck and works as a quick release valve for frustration or tension.</p>
+      </div>
+    </div>
+
+    <div class="progress-group">
+      <div class="progress-group-title"><span class="icon">🛠️</span> Custom exercise</div>
+      <p>Build your own breathing technique with your own inhale, hold and exhale rhythm — it will appear right in the technique picker of the breathing exercise, alongside the others. You can download your exercises as a file and load them again later, for example on another device or after reinstalling your browser.</p>
+
+      <div class="custom-tech-list" id="custom-tech-list"></div>
+
+      <div class="custom-tech-actions-row">
+        <button type="button" class="progress-reset-btn" onclick="showCustomTechForm()">+ New custom exercise</button>
+        <button type="button" class="progress-reset-btn" onclick="exportCustomTechniques()">💾 Export custom exercises</button>
+        <button type="button" class="progress-reset-btn" onclick="triggerCustomTechImport()">📥 Import exercises</button>
+        <input type="file" id="custom-tech-import-input" accept="application/json,.json" style="display:none;" onchange="handleCustomTechImportFile(event)">
+      </div>
+      <div class="custom-tech-status" id="custom-tech-list-status"></div>
+
+      <div class="custom-tech-form" id="custom-tech-form" style="display:none;">
+        <input type="hidden" id="custom-tech-edit-id" value="">
+        <label for="custom-tech-name-input">Exercise name</label>
+        <input type="text" id="custom-tech-name-input" maxlength="24" placeholder="E.g. My evening routine">
+
+        <label for="custom-tech-info-input">Short description (optional)</label>
+        <input type="text" id="custom-tech-info-input" maxlength="80" placeholder="E.g. Custom rhythm for falling asleep">
+
+        <label>Breath phases</label>
+        <div id="custom-tech-phases-list"></div>
+        <button type="button" class="custom-tech-add-phase-btn" onclick="addCustomTechPhaseRow()">+ Add phase</button>
+
+        <div class="custom-tech-form-actions">
+          <button type="button" class="custom-tech-save-btn" onclick="saveCustomTechnique()">Save exercise</button>
+          <button type="button" class="custom-tech-cancel-btn" onclick="hideCustomTechForm()">Cancel</button>
+        </div>
+        <div class="custom-tech-status" id="custom-tech-status"></div>
       </div>
     </div>
   </section>
@@ -3591,7 +3698,8 @@
   });
 
   // Keyboard shortcuts in the breathing exercise: spacebar = start/stop, arrows = switch technique
-  const BREATH_TECH_ORDER = ['478', 'box', 'coherent', 'calm', 'sigh', 'branice', 'nozdry', 'lev'];
+  let BREATH_TECH_ORDER = ['478', 'box', 'coherent', 'calm', 'sigh', 'branice', 'nozdry', 'lev'];
+  const BASE_BREATH_TECH_ORDER = BREATH_TECH_ORDER.slice();
   document.addEventListener('keydown', (e) => {
     if (!document.body.classList.contains('breathing-active')) return;
     const tag = (e.target && e.target.tagName) || '';
@@ -3618,6 +3726,334 @@
       return;
     }
   });
+
+  // ---------- Custom breathing exercises (create / import / export) ----------
+  const CUSTOM_TECH_STORAGE_KEY = 'uklidnito_custom_techniques';
+  let customTechniques = [];
+
+  function isValidCustomTechnique(t) {
+    if (!t || typeof t !== 'object') return false;
+    if (typeof t.name !== 'string' || !t.name.trim()) return false;
+    if (!Array.isArray(t.phases) || !t.phases.length || t.phases.length > 12) return false;
+    return t.phases.every((p) => p && (p.type === 'in' || p.type === 'hold' || p.type === 'out')
+      && typeof p.duration === 'number' && p.duration > 0 && p.duration <= 60);
+  }
+
+  function loadCustomTechniques() {
+    try {
+      const raw = localStorage.getItem(CUSTOM_TECH_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed.filter(isValidCustomTechnique) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveCustomTechniquesToStorage() {
+    try { localStorage.setItem(CUSTOM_TECH_STORAGE_KEY, JSON.stringify(customTechniques)); } catch (e) { /* ignore */ }
+  }
+
+  // Registers custom exercises in BREATH_TECHNIQUES and BREATH_TECH_ORDER so they work
+  // exactly like the built-in techniques (selection, keyboard shortcuts, character animation…)
+  function registerCustomTechniquesInEngine() {
+    Object.keys(BREATH_TECHNIQUES).forEach((key) => {
+      if (key.indexOf('custom_') === 0) delete BREATH_TECHNIQUES[key];
+    });
+    customTechniques.forEach((t) => {
+      BREATH_TECHNIQUES[t.id] = {
+        name: t.name,
+        info: t.info || 'Custom exercise',
+        phases: t.phases.map((p) => ({ type: p.type, duration: p.duration }))
+      };
+    });
+    BREATH_TECH_ORDER = BASE_BREATH_TECH_ORDER.concat(customTechniques.map((t) => t.id));
+    if (!BREATH_TECHNIQUES[currentBreathTechnique]) currentBreathTechnique = '478';
+  }
+
+  function renderCustomTechButtons() {
+    const wrap = document.getElementById('breath-technique-select');
+    if (!wrap) return;
+    wrap.querySelectorAll('.btn-breath-tech.custom').forEach((b) => b.remove());
+    customTechniques.forEach((t) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-breath-tech custom';
+      btn.dataset.tech = t.id;
+      btn.textContent = t.name.toUpperCase();
+      btn.onclick = function () { selectBreathTechnique(t.id); };
+      wrap.appendChild(btn);
+    });
+    updateBreathTechniqueUI();
+  }
+
+  function setCustomTechStatus(text, kind) {
+    const el = document.getElementById('custom-tech-list-status');
+    if (el) { el.textContent = text; el.className = 'custom-tech-status' + (kind ? ' ' + kind : ''); }
+  }
+
+  function renderCustomTechList() {
+    const list = document.getElementById('custom-tech-list');
+    if (!list) return;
+    if (!customTechniques.length) {
+      list.innerHTML = '<p class="custom-tech-empty">You don\'t have any custom exercises yet. Create your first one with the button below, or upload an export from another device.</p>';
+      return;
+    }
+    list.innerHTML = '';
+    customTechniques.forEach((t) => {
+      const phasesText = t.phases.map((p) => (DEFAULT_PHASE_LABELS[p.type] || p.type) + ' ' + p.duration + 's').join(' · ');
+      const nameEsc = t.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const infoEsc = (t.info || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const phasesEsc = phasesText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const item = document.createElement('div');
+      item.className = 'custom-tech-item';
+      item.innerHTML =
+        '<div>' +
+          '<div class="custom-tech-item-name">' + nameEsc + '</div>' +
+          '<div class="custom-tech-item-phases">' + phasesEsc + (infoEsc ? ' — ' + infoEsc : '') + '</div>' +
+        '</div>' +
+        '<div class="custom-tech-item-actions">' +
+          '<button type="button">Edit</button>' +
+          '<button type="button" class="danger">Delete</button>' +
+        '</div>';
+      const [editBtn, delBtn] = item.querySelectorAll('.custom-tech-item-actions button');
+      editBtn.onclick = function () { showCustomTechForm(t.id); };
+      delBtn.onclick = function () { deleteCustomTechnique(t.id); };
+      list.appendChild(item);
+    });
+  }
+
+  window.addCustomTechPhaseRow = function (type, duration) {
+    const wrap = document.getElementById('custom-tech-phases-list');
+    if (!wrap) return;
+    const row = document.createElement('div');
+    row.className = 'custom-tech-phase-row';
+
+    const select = document.createElement('select');
+    [['in', DEFAULT_PHASE_LABELS.in], ['hold', DEFAULT_PHASE_LABELS.hold], ['out', DEFAULT_PHASE_LABELS.out]].forEach((pair) => {
+      const opt = document.createElement('option');
+      opt.value = pair[0];
+      opt.textContent = pair[1];
+      if (pair[0] === (type || 'in')) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.min = '1';
+    input.max = '60';
+    input.step = '0.5';
+    input.value = duration || 4;
+    input.setAttribute('aria-label', 'Phase duration in seconds');
+
+    const unit = document.createElement('span');
+    unit.className = 'phase-unit';
+    unit.textContent = 's';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'phase-remove-btn';
+    removeBtn.innerHTML = '✕';
+    removeBtn.setAttribute('aria-label', 'Remove phase');
+    removeBtn.onclick = function () { row.remove(); };
+
+    row.appendChild(select);
+    row.appendChild(input);
+    row.appendChild(unit);
+    row.appendChild(removeBtn);
+    wrap.appendChild(row);
+  };
+
+  window.showCustomTechForm = function (editId) {
+    const form = document.getElementById('custom-tech-form');
+    const phasesList = document.getElementById('custom-tech-phases-list');
+    const nameInput = document.getElementById('custom-tech-name-input');
+    const infoInput = document.getElementById('custom-tech-info-input');
+    const editIdInput = document.getElementById('custom-tech-edit-id');
+    const status = document.getElementById('custom-tech-status');
+    if (!form || !phasesList || !nameInput || !infoInput || !editIdInput) return;
+    phasesList.innerHTML = '';
+    if (status) { status.textContent = ''; status.className = 'custom-tech-status'; }
+
+    const editing = editId ? customTechniques.find((t) => t.id === editId) : null;
+    if (editing) {
+      editIdInput.value = editing.id;
+      nameInput.value = editing.name;
+      infoInput.value = editing.info || '';
+      editing.phases.forEach((p) => addCustomTechPhaseRow(p.type, p.duration));
+    } else {
+      editIdInput.value = '';
+      nameInput.value = '';
+      infoInput.value = '';
+      addCustomTechPhaseRow('in', 4);
+      addCustomTechPhaseRow('out', 6);
+    }
+    form.style.display = 'block';
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
+
+  window.hideCustomTechForm = function () {
+    const form = document.getElementById('custom-tech-form');
+    if (form) form.style.display = 'none';
+  };
+
+  window.saveCustomTechnique = function () {
+    const nameInput = document.getElementById('custom-tech-name-input');
+    const infoInput = document.getElementById('custom-tech-info-input');
+    const editIdInput = document.getElementById('custom-tech-edit-id');
+    const status = document.getElementById('custom-tech-status');
+    const rows = document.querySelectorAll('#custom-tech-phases-list .custom-tech-phase-row');
+
+    const name = (nameInput.value || '').trim();
+    if (!name) {
+      status.textContent = 'Enter a name for the exercise.';
+      status.className = 'custom-tech-status error';
+      return;
+    }
+    if (!rows.length) {
+      status.textContent = 'Add at least one breath phase.';
+      status.className = 'custom-tech-status error';
+      return;
+    }
+    const phases = [];
+    for (let i = 0; i < rows.length; i++) {
+      const type = rows[i].querySelector('select').value;
+      const duration = parseFloat(rows[i].querySelector('input[type="number"]').value);
+      if (!duration || duration <= 0 || duration > 60) {
+        status.textContent = 'Each phase must be between 1 and 60 seconds.';
+        status.className = 'custom-tech-status error';
+        return;
+      }
+      phases.push({ type: type, duration: Math.round(duration * 2) / 2 });
+    }
+
+    const editId = editIdInput.value;
+    if (editId) {
+      const existing = customTechniques.find((t) => t.id === editId);
+      if (existing) {
+        existing.name = name.slice(0, 24);
+        existing.info = (infoInput.value || '').trim().slice(0, 80);
+        existing.phases = phases;
+      }
+    } else {
+      customTechniques.push({
+        id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+        name: name.slice(0, 24),
+        info: (infoInput.value || '').trim().slice(0, 80),
+        phases: phases
+      });
+    }
+
+    saveCustomTechniquesToStorage();
+    registerCustomTechniquesInEngine();
+    renderCustomTechButtons();
+    renderCustomTechList();
+    hideCustomTechForm();
+    setCustomTechStatus('✓ Exercise saved.', 'success');
+  };
+
+  window.deleteCustomTechnique = function (id) {
+    const t = customTechniques.find((x) => x.id === id);
+    if (!t) return;
+    if (!confirm('Really delete the custom exercise "' + t.name + '"?')) return;
+    customTechniques = customTechniques.filter((x) => x.id !== id);
+    saveCustomTechniquesToStorage();
+    if (currentBreathTechnique === id) selectBreathTechnique('478');
+    registerCustomTechniquesInEngine();
+    renderCustomTechButtons();
+    renderCustomTechList();
+    setCustomTechStatus('Exercise deleted.', '');
+  };
+
+  window.exportCustomTechniques = function () {
+    if (!customTechniques.length) {
+      setCustomTechStatus('You don\'t have any custom exercises to export yet.', 'error');
+      return;
+    }
+    const payload = {
+      app: 'uklidnito',
+      type: 'custom-techniques',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      techniques: customTechniques
+    };
+    const json = JSON.stringify(payload, null, 2);
+    const blob = new Blob([json], { type: 'application/json;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'uklidnito-custom-exercises-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setCustomTechStatus('✓ Custom exercises downloaded.', 'success');
+  };
+
+  window.triggerCustomTechImport = function () {
+    const input = document.getElementById('custom-tech-import-input');
+    if (input) { input.value = ''; input.click(); }
+  };
+
+  window.handleCustomTechImportFile = function (event) {
+    const file = event && event.target && event.target.files && event.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setCustomTechStatus('The file is too large - it doesn\'t look like an exercise export from Uklidni To.', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function () {
+      let parsed;
+      try {
+        parsed = JSON.parse(String(reader.result));
+      } catch (e) {
+        setCustomTechStatus('Could not read the file - it isn\'t valid JSON.', 'error');
+        return;
+      }
+      const incoming = Array.isArray(parsed) ? parsed : (parsed && Array.isArray(parsed.techniques) ? parsed.techniques : null);
+      if (!incoming) {
+        setCustomTechStatus('This file doesn\'t look like a custom exercise export from Uklidni To.', 'error');
+        return;
+      }
+      const valid = incoming.filter(isValidCustomTechnique);
+      if (!valid.length) {
+        setCustomTechStatus('No valid exercise was found in the file.', 'error');
+        return;
+      }
+      let added = 0, renamed = 0;
+      valid.forEach((t) => {
+        let id = (typeof t.id === 'string' && t.id) ? t.id : '';
+        if (!id || customTechniques.some((x) => x.id === id)) {
+          id = 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+        }
+        let name = t.name.trim().slice(0, 24);
+        if (customTechniques.some((x) => x.name === name)) {
+          name = (name + ' (import)').slice(0, 24);
+          renamed++;
+        }
+        customTechniques.push({
+          id: id,
+          name: name,
+          info: (t.info || '').toString().trim().slice(0, 80),
+          phases: t.phases.map((p) => ({ type: p.type, duration: p.duration }))
+        });
+        added++;
+      });
+      saveCustomTechniquesToStorage();
+      registerCustomTechniquesInEngine();
+      renderCustomTechButtons();
+      renderCustomTechList();
+      setCustomTechStatus('✓ Imported exercises: ' + added + (renamed ? ' (' + renamed + '× renamed due to a matching name)' : '') + '.', 'success');
+    };
+    reader.onerror = function () {
+      setCustomTechStatus('Could not read the file.', 'error');
+    };
+    reader.readAsText(file);
+  };
+
+  (function initCustomTechniques() {
+    customTechniques = loadCustomTechniques();
+    registerCustomTechniquesInEngine();
+    renderCustomTechButtons();
+    renderCustomTechList();
+  })();
 
   // Loading saved preferences (technique, vibration, logo) on page load
   (function loadBreathSettings() {
