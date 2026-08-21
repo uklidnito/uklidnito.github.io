@@ -1154,17 +1154,21 @@
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
     background: rgba(15,8,0,0.92); backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
-    padding: 14px; width: 220px; max-height: 260px; overflow-y: auto; z-index: 30;
+    padding: 14px; width: 220px; max-height: 260px; overflow-y: auto; overflow-x: hidden; z-index: 30;
     opacity: 0; pointer-events: none; visibility: hidden;
     transition: opacity 0.2s ease, transform 0.2s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    box-sizing: border-box; scrollbar-gutter: stable;
   }
   .breath-theme-picker.open { opacity: 1; pointer-events: auto; visibility: visible; transform: translateX(-50%) translateY(0); }
   .breath-theme-swatch {
-    width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;
+    /* Šířka je relativní k vlastnímu sloupci mřížky (max 40px), ne napevno -
+       díky tomu se kolečka přizpůsobí, i když širší (nativní) posuvník v Edge
+       sebere části místa, a nevznikne kvůli tomu vodorovný přetok/posuvník. */
+    width: 100%; max-width: 40px; aspect-ratio: 1; height: auto; border-radius: 50%; border: 2px solid transparent;
     cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center;
     transition: transform 0.15s ease, border-color 0.15s ease; -webkit-tap-highlight-color: transparent;
-    position: relative; flex-shrink: 0;
+    position: relative; flex-shrink: 0; box-sizing: border-box;
   }
   .breath-theme-swatch:hover { transform: scale(1.08); }
   .breath-theme-swatch:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -1178,7 +1182,7 @@
   .breath-theme-swatch.locked:hover { transform: none; }
   .breath-theme-swatch.locked .dot { opacity: 0.5; }
   .breath-theme-swatch.locked .lock { display: block; }
-  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 230px; } .breath-theme-swatch { width: 36px; height: 36px; } }
+  @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 230px; } .breath-theme-swatch { max-width: 36px; } }
   #breath-logo-btn, #breath-figure-logo-btn { min-width: 96px; }
   #breath-vibe-btn, #breath-figure-vibe-btn { min-width: 108px; }
   #breath-save-btn, #breath-figure-save-btn { min-width: 62px; }
@@ -1313,8 +1317,15 @@
 
   .side-nav-theme { margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
   .side-nav-theme-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.55; margin-bottom: 10px; }
-  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; }
-  .side-nav-theme-picker .breath-theme-swatch { width: 24px; height: 24px; }
+  .side-nav-theme-picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; overflow-x: hidden; box-sizing: border-box; scrollbar-gutter: stable; }
+  /* Tenký, nenápadný posuvník pro paletu motivů (24 barev se nevejde najednou,
+     takže se posouvá záměrně) - jinak Edge/Windows kreslí tlustý výchozí posuvník. */
+  .breath-theme-picker, .side-nav-theme-picker { scrollbar-width: thin; scrollbar-color: var(--accent-color) rgba(255,255,255,0.08); }
+  .breath-theme-picker::-webkit-scrollbar, .side-nav-theme-picker::-webkit-scrollbar { width: 6px; }
+  .breath-theme-picker::-webkit-scrollbar-track, .side-nav-theme-picker::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); border-radius: 3px; }
+  .breath-theme-picker::-webkit-scrollbar-thumb, .side-nav-theme-picker::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 3px; }
+  .breath-theme-picker::-webkit-scrollbar-thumb:hover, .side-nav-theme-picker::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+  .side-nav-theme-picker .breath-theme-swatch { max-width: 24px; }
   .side-nav-theme-picker .breath-theme-swatch .check { font-size: 11px; }
   .side-nav-theme-picker .breath-theme-swatch .lock { font-size: 10px; }
 
