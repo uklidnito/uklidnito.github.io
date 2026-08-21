@@ -1,14 +1,14 @@
 {
   "id": "/",
-  "name": "Uklidni To – Dechové cvičení",
+  "name": "Uklidni To – Breathing Exercise",
   "short_name": "Uklidni To",
-  "description": "Bezplatné dechové cvičení online s pěti technikami a vizuální pulzující koulí pro zklidnění mysli.",
+  "description": "Free online breathing exercise with five techniques and a visual pulsing sphere to help calm the mind.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#1a0033",
   "theme_color": "#1a0033",
-  "lang": "cs",
+  "lang": "en",
   "orientation": "any",
   "categories": ["health", "lifestyle", "wellness"],
   "icons": [
