@@ -916,6 +916,14 @@
     .breath-stat-item { font-size: 8px; }
     .breath-stat-item .breath-stat-value { font-size: 13px; }
   }
+  /* On short, wide windows (typically a laptop browser window with limited height),
+     the centered exercise content can push upward and overlap the stopwatch row,
+     which is otherwise pinned 18px from the top. Fold it into normal flow right
+     below the trophy badge here so the overlap can't happen. */
+  @media (max-height: 760px) and (min-width: 700px) {
+    .breathing-overlay { justify-content: flex-start; }
+    .breath-stats-row { position: static; margin: 0 0 10px; transform: none; }
+  }
 
   /* ---------- XP and cups (breathing exercise gamification) ---------- */
   .breath-xp-badge-wrap { position: relative; margin: 0 0 10px; z-index: 2; }

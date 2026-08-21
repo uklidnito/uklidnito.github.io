@@ -911,6 +911,14 @@
     .breath-stat-item { font-size: 8px; }
     .breath-stat-item .breath-stat-value { font-size: 13px; }
   }
+  /* Na nízkých oknech na šířku (typicky notebook s menší výškou okna) se centrovaný
+     obsah cvičení dokáže vysunout nahoru a překrýt s řádkem stopek, který je jinak
+     pevně ukotven 18px od horního okraje. Zde ho proto zařadíme do běžného toku
+     hned pod odznak s pohárem, aby k překryvu nemohlo dojít. */
+  @media (max-height: 760px) and (min-width: 700px) {
+    .breathing-overlay { justify-content: flex-start; }
+    .breath-stats-row { position: static; margin: 0 0 10px; transform: none; }
+  }
 
   /* ---------- XP a poháry (gamifikace dechového cvičení) ---------- */
   .breath-xp-badge-wrap { position: relative; margin: 0 0 10px; z-index: 2; }
