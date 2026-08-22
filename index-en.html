@@ -218,6 +218,11 @@
     transition: 0.3s;
   }
   .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
+  .cta-btn.blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
+  @keyframes ctaBlinkAttention {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,119,0,0.35); opacity: 1; }
+    50% { box-shadow: 0 0 42px var(--accent-color); opacity: 0.72; }
+  }
   .cta-icon { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); animation: breatheIconPulse 4s ease-in-out infinite; }
 
   .hero-progress-link {
@@ -1713,17 +1718,17 @@
 
     <div class="progress-risk-banner" id="progress-risk-banner" style="display:none;" role="status">
       <span id="progress-risk-text"></span>
-        <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Breathe now</button>
+        <button type="button" onclick="goToBreathingAndBlink();">Breathe now</button>
     </div>
 
     <div class="progress-risk-banner" id="progress-mood-risk-banner" style="display:none;" role="status">
       <span id="progress-mood-risk-text"></span>
-        <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Breathe now</button>
+        <button type="button" onclick="goToBreathingAndBlink();">Breathe now</button>
     </div>
 
     <div class="progress-risk-banner" id="progress-energy-risk-banner" style="display:none;" role="status">
       <span id="progress-energy-risk-text"></span>
-        <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Breathe now</button>
+        <button type="button" onclick="goToBreathingAndBlink();">Breathe now</button>
     </div>
 
     <div class="progress-group" id="progress-nav-stats">
@@ -2005,7 +2010,7 @@
 
     <article class="article-card">
       <h3>Physiological sigh: the fastest way to calm down, according to a Stanford study</h3>
-      <p>In 2023, a Stanford University team (Balban, Spiegel, Huberman et al.) published a month-long randomized controlled trial with 114 participants in the journal <em>Cell Reports Medicine</em>. It compared four daily five-minute practices: cyclic sighing (two inhales through the nose and a long exhale), box breathing, inhale-focused breathing, and classic mindfulness meditation (passively observing the breath).</p>
+      <p>In 2023, a Stanford University team (Balban, Spiegel, Huberman et al.) published a month-long randomized controlled trial with 111 participants in the journal <em>Cell Reports Medicine</em>. It compared four daily five-minute practices: cyclic sighing (two inhales through the nose and a long exhale), box breathing, inhale-focused breathing, and classic mindfulness meditation (passively observing the breath).</p>
       <p>After a month, all four groups reported better mood and lower anxiety, but cyclic sighing had the largest effect on mood improvement of all the practices and lowered resting breathing rate the most — a measurable sign of the body calming down. The difference was already visible after a single five-minute session and kept growing with regular repetition over 28 days.</p>
       <p class="article-source">Zdroj: Balban a kol., <em>Brief structured respiration practices enhance mood and reduce physiological arousal</em>, Cell Reports Medicine, 2023.</p>
     </article>
@@ -2512,6 +2517,7 @@
     <a href="caste-dotazy-en.html">FAQ</a>
   </nav>
   <div>© <span id="year"></span> Uklidni To — free online breathing exercise</div>
+  <div class="made-in">This is educational and relaxation material, not a medical device or a substitute for professional care.</div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
   <div class="made-in"><a href="privacy-en.html">Privacy Policy</a></div>
   <div class="visit-stats" id="visit-stats"><span id="total-visits-badge">–</span> · <span id="online-count-badge">–</span></div>
@@ -3592,8 +3598,20 @@
     breathClockInterval = null;
   }
 
+  // Scrolls to the exercise and makes the Start button blink until the user
+  // presses it themselves - does not start breathing automatically (unlike
+  // calling startBreathing() directly).
+  window.goToBreathingAndBlink = function() {
+    const section = document.getElementById('cviceni');
+    if (section) section.scrollIntoView({ behavior: 'smooth' });
+    const startBtn = document.getElementById('btn-breathe');
+    if (startBtn) startBtn.classList.add('blink-attention');
+  };
+
   window.startBreathing = function() {
     if (breathingActive) return;
+    const startBtn = document.getElementById('btn-breathe');
+    if (startBtn) startBtn.classList.remove('blink-attention');
     breathingActive = true;
     breathingPaused = false;
     breathPhaseIndex = 0;
@@ -5110,7 +5128,7 @@
       : '';
 
     const ctaBtn = zoneValue <= 7
-      ? ' <button type="button" class="cta-link" onclick="document.getElementById(\'cviceni\').scrollIntoView({behavior:\'smooth\'}); startBreathing();">Breathe now →</button>'
+      ? ' <button type="button" class="cta-link" onclick="goToBreathingAndBlink();">Breathe now →</button>'
       : '';
 
     container.innerHTML =

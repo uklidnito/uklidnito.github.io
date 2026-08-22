@@ -214,6 +214,11 @@
     transition: 0.3s;
   }
   .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
+  .cta-btn.blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
+  @keyframes ctaBlinkAttention {
+    0%, 100% { box-shadow: 0 0 20px rgba(255,119,0,0.35); opacity: 1; }
+    50% { box-shadow: 0 0 42px var(--accent-color); opacity: 0.72; }
+  }
   .cta-icon { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-color); animation: breatheIconPulse 4s ease-in-out infinite; }
   @keyframes breatheIconPulse { 0%,100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.25); opacity: 1; } }
 
@@ -1708,17 +1713,17 @@
 
     <div class="progress-risk-banner" id="progress-risk-banner" style="display:none;" role="status">
       <span id="progress-risk-text"></span>
-      <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
+      <button type="button" onclick="goToBreathingAndBlink();">Dýchat teď</button>
     </div>
 
     <div class="progress-risk-banner" id="progress-mood-risk-banner" style="display:none;" role="status">
       <span id="progress-mood-risk-text"></span>
-      <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
+      <button type="button" onclick="goToBreathingAndBlink();">Dýchat teď</button>
     </div>
 
     <div class="progress-risk-banner" id="progress-energy-risk-banner" style="display:none;" role="status">
       <span id="progress-energy-risk-text"></span>
-      <button type="button" onclick="document.getElementById('cviceni').scrollIntoView({behavior:'smooth'}); startBreathing();">Dýchat teď</button>
+      <button type="button" onclick="goToBreathingAndBlink();">Dýchat teď</button>
     </div>
 
     <div class="progress-group" id="progress-nav-stats">
@@ -2000,7 +2005,7 @@
 
     <article class="article-card">
       <h3>Fyziologický vzdech: nejrychlejší zklidnění podle studie ze Stanfordu</h3>
-      <p>V roce 2023 zveřejnil tým Stanfordovy univerzity (Balban, Spiegel, Huberman a kol.) v časopise <em>Cell Reports Medicine</em> měsíční randomizovanou kontrolovanou studii se 114 účastníky. Porovnávala čtyři denní pětiminutové postupy: cyklické vzdechy (dva nádechy nosem a dlouhý výdech), box breathing, dýchání s důrazem na nádech a klasickou meditaci všímavosti (pasivní sledování dechu).</p>
+      <p>V roce 2023 zveřejnil tým Stanfordovy univerzity (Balban, Spiegel, Huberman a kol.) v časopise <em>Cell Reports Medicine</em> měsíční randomizovanou kontrolovanou studii se 111 účastníky. Porovnávala čtyři denní pětiminutové postupy: cyklické vzdechy (dva nádechy nosem a dlouhý výdech), box breathing, dýchání s důrazem na nádech a klasickou meditaci všímavosti (pasivní sledování dechu).</p>
       <p>Všechny čtyři skupiny hlásily po měsíci lepší náladu a nižší úzkost, ale cyklické vzdechy měly ze všech postupů největší efekt na zlepšení nálady a nejvíce snížily klidovou dechovou frekvenci — tedy měřitelný projev zklidnění organismu. Rozdíl byl patrný už po jediném pětiminutovém sezení a dále rostl při pravidelném opakování po dobu 28 dní.</p>
       <p class="article-source">Zdroj: Balban a kol., <em>Brief structured respiration practices enhance mood and reduce physiological arousal</em>, Cell Reports Medicine, 2023.</p>
     </article>
@@ -2507,6 +2512,7 @@
     <a href="caste-dotazy.html">Časté dotazy</a>
   </nav>
   <div>© <span id="year"></span> Uklidni To — dechové cvičení zdarma online</div>
+  <div class="made-in">Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
   <div class="made-in"><a href="privacy.html">Zásady ochrany soukromí</a></div>
   <div class="visit-stats" id="visit-stats"><span id="total-visits-badge">–</span> · <span id="online-count-badge">–</span></div>
@@ -3593,8 +3599,19 @@
     breathClockInterval = null;
   }
 
+  // Odscroluje na cvičení a rozbliká tlačítko Start, dokud ho uživatel sám nestiskne -
+  // nespouští dech automaticky (na rozdíl od přímého volání startBreathing()).
+  window.goToBreathingAndBlink = function() {
+    const section = document.getElementById('cviceni');
+    if (section) section.scrollIntoView({ behavior: 'smooth' });
+    const startBtn = document.getElementById('btn-breathe');
+    if (startBtn) startBtn.classList.add('blink-attention');
+  };
+
   window.startBreathing = function() {
     if (breathingActive) return;
+    const startBtn = document.getElementById('btn-breathe');
+    if (startBtn) startBtn.classList.remove('blink-attention');
     breathingActive = true;
     breathingPaused = false;
     breathPhaseIndex = 0;
@@ -5110,7 +5127,7 @@
       : '';
 
     const ctaBtn = zoneValue <= 7
-      ? ' <button type="button" class="cta-link" onclick="document.getElementById(\'cviceni\').scrollIntoView({behavior:\'smooth\'}); startBreathing();">Dýchat teď →</button>'
+      ? ' <button type="button" class="cta-link" onclick="goToBreathingAndBlink();">Dýchat teď →</button>'
       : '';
 
     container.innerHTML =
