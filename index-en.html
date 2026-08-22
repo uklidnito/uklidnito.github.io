@@ -3620,6 +3620,7 @@
     breathingPaused = true;
     breathPhaseIndex = 0;
     document.body.classList.add('breathing-active');
+    startBreathClock();
 
     lastBreathVisual = OUT_VISUAL;
     setBreathTransitionDuration(0);
@@ -3643,7 +3644,6 @@
     breathingPaused = false;
     breathSessionStartTime = Date.now();
     startBreathStopwatch();
-    startBreathClock();
     clearInterval(breathXpLiveInterval);
     breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
 
