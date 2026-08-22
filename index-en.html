@@ -994,11 +994,13 @@
     .breath-stat-item { font-size: 8px; }
     .breath-stat-item .breath-stat-value { font-size: 13px; }
   }
-  /* On short, wide windows (typically a laptop browser window with limited height),
-     the centered exercise content can push upward and overlap the stopwatch row,
-     which is otherwise pinned 18px from the top. Fold it into normal flow right
-     below the trophy badge here so the overlap can't happen. */
-  @media (max-height: 760px) and (min-width: 700px) {
+  /* On short windows (typically a laptop browser window with limited height, or a
+     mobile browser whose viewport is shrunk by the address bar), the centered
+     exercise content can push upward and overlap the stopwatch row, which is
+     otherwise pinned 18px from the top — the orb then visually slides over the
+     trophy badge. Fold it into normal flow right below the trophy badge here so
+     the overlap can't happen. No min-width limit, so this also applies on mobile. */
+  @media (max-height: 760px) {
     .breathing-overlay { justify-content: flex-start; }
     .breath-stats-row { position: static; margin: 0 0 10px; transform: none; }
   }

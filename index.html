@@ -989,11 +989,13 @@
     .breath-stat-item { font-size: 8px; }
     .breath-stat-item .breath-stat-value { font-size: 13px; }
   }
-  /* Na nízkých oknech na šířku (typicky notebook s menší výškou okna) se centrovaný
-     obsah cvičení dokáže vysunout nahoru a překrýt s řádkem stopek, který je jinak
-     pevně ukotven 18px od horního okraje. Zde ho proto zařadíme do běžného toku
-     hned pod odznak s pohárem, aby k překryvu nemohlo dojít. */
-  @media (max-height: 760px) and (min-width: 700px) {
+  /* Na nízkých oknech (typicky notebook s menší výškou okna, nebo mobilní prohlížeč
+     se zúženou výškou kvůli adresnímu řádku) se centrovaný obsah cvičení dokáže
+     vysunout nahoru a překrýt s řádkem stopek, který je jinak pevně ukotven 18px
+     od horního okraje — koule pak opticky přejíždí přes odznak s pohárem. Zde ho
+     proto zařadíme do běžného toku hned pod odznak s pohárem, aby k překryvu
+     nemohlo dojít. Bez omezení na min-width, aby to platilo i na mobilu. */
+  @media (max-height: 760px) {
     .breathing-overlay { justify-content: flex-start; }
     .breath-stats-row { position: static; margin: 0 0 10px; transform: none; }
   }
