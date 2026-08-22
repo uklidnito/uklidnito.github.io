@@ -218,7 +218,7 @@
     transition: 0.3s;
   }
   .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
-  .cta-btn.blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
+  .blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
   @keyframes ctaBlinkAttention {
     0%, 100% { box-shadow: 0 0 20px rgba(255,119,0,0.35); opacity: 1; }
     50% { box-shadow: 0 0 42px var(--accent-color); opacity: 0.72; }
@@ -3612,29 +3612,50 @@
     if (breathingActive) return;
     const startBtn = document.getElementById('btn-breathe');
     if (startBtn) startBtn.classList.remove('blink-attention');
+
+    // Opens the exercise in a resting state (the orb stands still, nothing
+    // runs yet) and makes the internal START button blink - the actual
+    // cycle only begins via resumeBreathCycle(), once the user presses it.
     breathingActive = true;
-    breathingPaused = false;
+    breathingPaused = true;
     breathPhaseIndex = 0;
-    breathSessionStartTime = Date.now();
-    startBreathStopwatch();
-    startBreathClock();
-    clearInterval(breathXpLiveInterval);
-    breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
     document.body.classList.add('breathing-active');
 
     lastBreathVisual = OUT_VISUAL;
     setBreathTransitionDuration(0);
     applyBreathPhase(OUT_VISUAL);
+
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    breathPhaseRemainingMs = phases[0].duration * 1000;
+    breathCountEl.innerText = Math.ceil(phases[0].duration);
+
+    document.getElementById('breathing-overlay').classList.add('breath-paused');
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn').forEach((b) => b.classList.add('blink-attention'));
+
+    updateBreathTechniqueUI();
+    updateBreathControlsUI();
+  };
+
+  // Actually kicks off the cycle (stopwatch, clock, XP, breath phases) -
+  // called either on the first press of the internal START button, or (see
+  // below) when resuming after the user manually paused mid-session.
+  function actuallyBeginBreathingCycle() {
+    breathingPaused = false;
+    breathSessionStartTime = Date.now();
+    startBreathStopwatch();
+    startBreathClock();
+    clearInterval(breathXpLiveInterval);
+    breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
+
     requestAnimationFrame(() => {
       requestAnimationFrame(runBreathPhase);
     });
 
-    updateBreathTechniqueUI();
     updateBreathControlsUI();
     breathSloganQueue = [];
     breathSloganEl.classList.remove('visible');
     scheduleNextBreathSlogan(10000);
-  };
+  }
 
   // STOP button inside the overlay - pauses the cycle but stays open
   window.pauseBreathCycle = function() {
@@ -3713,10 +3734,21 @@
     }, remainingMs);
   }
 
-  // START button inside the overlay - resumes the exercise if it was paused
+  // START button inside the overlay - either starts the cycle for real the
+  // first time (if the exercise was just waiting, see startBreathing above),
+  // or resumes after a manual pause.
   window.resumeBreathCycle = function() {
     if (!breathingActive) { window.startBreathing(); return; }
     if (!breathingPaused) return;
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn').forEach((b) => b.classList.remove('blink-attention'));
+
+    if (!breathSessionStartTime) {
+      // The exercise never actually ran yet - this is the first real start.
+      document.getElementById('breathing-overlay').classList.remove('breath-paused');
+      actuallyBeginBreathingCycle();
+      return;
+    }
+
     breathingPaused = false;
     resumeBreathStopwatch();
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
@@ -3968,6 +4000,8 @@
     else animateXpBadgeTo(progressData.xp || 0);
     breathingActive = false;
     breathingPaused = false;
+    breathSessionStartTime = 0;
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn, #btn-breathe').forEach((b) => b.classList.remove('blink-attention'));
     stopBreathStopwatch();
     stopBreathClock();
 

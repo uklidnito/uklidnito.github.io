@@ -214,7 +214,7 @@
     transition: 0.3s;
   }
   .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); }
-  .cta-btn.blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
+  .blink-attention { animation: ctaBlinkAttention 1s ease-in-out infinite; }
   @keyframes ctaBlinkAttention {
     0%, 100% { box-shadow: 0 0 20px rgba(255,119,0,0.35); opacity: 1; }
     50% { box-shadow: 0 0 42px var(--accent-color); opacity: 0.72; }
@@ -3612,29 +3612,50 @@
     if (breathingActive) return;
     const startBtn = document.getElementById('btn-breathe');
     if (startBtn) startBtn.classList.remove('blink-attention');
+
+    // Otevře dechové cvičení v klidovém stavu (koule stojí, nic neběží) a
+    // rozbliká vnitřní tlačítko START - skutečný cyklus se spustí až
+    // přes resumeBreathCycle(), když ho uživatel sám stiskne.
     breathingActive = true;
-    breathingPaused = false;
+    breathingPaused = true;
     breathPhaseIndex = 0;
-    breathSessionStartTime = Date.now();
-    startBreathStopwatch();
-    startBreathClock();
-    clearInterval(breathXpLiveInterval);
-    breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
     document.body.classList.add('breathing-active');
 
     lastBreathVisual = OUT_VISUAL;
     setBreathTransitionDuration(0);
     applyBreathPhase(OUT_VISUAL);
+
+    const phases = BREATH_TECHNIQUES[currentBreathTechnique].phases;
+    breathPhaseRemainingMs = phases[0].duration * 1000;
+    breathCountEl.innerText = Math.ceil(phases[0].duration);
+
+    document.getElementById('breathing-overlay').classList.add('breath-paused');
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn').forEach((b) => b.classList.add('blink-attention'));
+
+    updateBreathTechniqueUI();
+    updateBreathControlsUI();
+  };
+
+  // Skutečné rozběhnutí cyklu (časovač, hodiny, XP, fáze dechu) - volá se
+  // buď při prvním stisku vnitřního START tlačítka, nebo (viz níže) při
+  // pokračování po ručním pozastavení uprostřed cvičení.
+  function actuallyBeginBreathingCycle() {
+    breathingPaused = false;
+    breathSessionStartTime = Date.now();
+    startBreathStopwatch();
+    startBreathClock();
+    clearInterval(breathXpLiveInterval);
+    breathXpLiveInterval = setInterval(updateLiveBreathXp, 2000);
+
     requestAnimationFrame(() => {
       requestAnimationFrame(runBreathPhase);
     });
 
-    updateBreathTechniqueUI();
     updateBreathControlsUI();
     breathSloganQueue = [];
     breathSloganEl.classList.remove('visible');
     scheduleNextBreathSlogan(10000);
-  };
+  }
 
   // STOP tlačítko uvnitř overlaye - pozastaví cyklus, ale zůstane otevřený
   window.pauseBreathCycle = function() {
@@ -3713,10 +3734,20 @@
     }, remainingMs);
   }
 
-  // START tlačítko uvnitř overlaye - pokud bylo cvičení pozastaveno, znovu ho spustí
+  // START tlačítko uvnitř overlaye - buď poprvé skutečně spustí cyklus (pokud
+  // cvičení jen čekalo, viz startBreathing výše), nebo pokračuje po ručním pozastavení.
   window.resumeBreathCycle = function() {
     if (!breathingActive) { window.startBreathing(); return; }
     if (!breathingPaused) return;
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn').forEach((b) => b.classList.remove('blink-attention'));
+
+    if (!breathSessionStartTime) {
+      // Cvičení ještě vůbec neběželo - jde o první skutečný start.
+      document.getElementById('breathing-overlay').classList.remove('breath-paused');
+      actuallyBeginBreathingCycle();
+      return;
+    }
+
     breathingPaused = false;
     resumeBreathStopwatch();
     document.getElementById('breathing-overlay').classList.remove('breath-paused');
@@ -3968,6 +3999,8 @@
     else animateXpBadgeTo(progressData.xp || 0);
     breathingActive = false;
     breathingPaused = false;
+    breathSessionStartTime = 0;
+    document.querySelectorAll('#breath-start-btn, #breath-figure-start-btn, #btn-breathe').forEach((b) => b.classList.remove('blink-attention'));
     stopBreathStopwatch();
     stopBreathClock();
 
