@@ -1409,6 +1409,17 @@
     display: flex !important; align-items: center; gap: 8px;
   }
   .side-nav-msstore-link svg { flex-shrink: 0; }
+  .side-nav-install {
+    background: rgba(255,119,0,0.12); border-color: rgba(255,119,0,0.4);
+  }
+  .side-nav-install-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+    background: none; border: none; padding: 0; margin: 0 0 5px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; font-size: 12.5px; letter-spacing: 1px;
+    color: var(--accent-color); font-weight: 500;
+  }
+  .side-nav-install-btn:hover { color: #fff; }
+  .side-nav-install-btn .icon { font-size: 15px; flex-shrink: 0; }
   /* ---------- Contact form in the side menu ---------- */
   .side-nav-contact-toggle {
     display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%;
@@ -1520,6 +1531,13 @@
   <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Supplements &amp; other paths to calm</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">FAQ</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Advice &amp; Guidance</a>
+
+  <div class="side-nav-external side-nav-install" id="side-nav-install-box" hidden>
+    <button type="button" class="side-nav-install-btn" id="side-nav-install-btn">
+      <span class="icon">📲</span> INSTALL APP
+    </button>
+    <p>Add Uklidni To to your home screen or desktop and launch it directly as an app.</p>
+  </div>
 
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
@@ -7671,6 +7689,57 @@ Rules:
     if (input) askPoradna(input.value);
     return false;
   };
+</script>
+
+<script>
+  // ---------- "Install app" button in the left menu ----------
+  // Goal: the user doesn't have to hunt for install in the browser menu.
+  // - Chrome/Edge/Android catch beforeinstallprompt and trigger the native dialog.
+  // - iOS Safari has no beforeinstallprompt, so we show the button right away
+  //   and display short instructions on click (Share -> Add to Home Screen).
+  // - If the site is already running as an installed app (standalone), the
+  //   button never appears.
+  (function () {
+    const installBox = document.getElementById('side-nav-install-box');
+    const installBtn = document.getElementById('side-nav-install-btn');
+    if (!installBox || !installBtn) return;
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    const ua = navigator.userAgent || '';
+    const isIOS = /iphone|ipad|ipod/i.test(ua);
+    const isIOSSafari = isIOS && /safari/i.test(ua) && !/crios|fxios|edgios|opios/i.test(ua);
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBox.hidden = false;
+    });
+
+    window.addEventListener('appinstalled', function () {
+      installBox.hidden = true;
+      deferredPrompt = null;
+    });
+
+    if (isIOSSafari) {
+      installBox.hidden = false;
+    }
+
+    installBtn.addEventListener('click', async function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; } catch (e) {}
+        deferredPrompt = null;
+        return;
+      }
+      if (isIOSSafari) {
+        alert('Install on iPhone/iPad:\n\n1. Tap the Share icon at the bottom (square with an arrow)\n2. Choose "Add to Home Screen"\n3. Confirm with "Add"');
+      }
+    });
+  })();
 </script>
 
 <script>

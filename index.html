@@ -1404,6 +1404,17 @@
     display: flex !important; align-items: center; gap: 8px;
   }
   .side-nav-msstore-link svg { flex-shrink: 0; }
+  .side-nav-install {
+    background: rgba(255,119,0,0.12); border-color: rgba(255,119,0,0.4);
+  }
+  .side-nav-install-btn {
+    display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+    background: none; border: none; padding: 0; margin: 0 0 5px; cursor: pointer;
+    font-family: 'Poppins', sans-serif; font-size: 12.5px; letter-spacing: 1px;
+    color: var(--accent-color); font-weight: 500;
+  }
+  .side-nav-install-btn:hover { color: #fff; }
+  .side-nav-install-btn .icon { font-size: 15px; flex-shrink: 0; }
   /* ---------- Kontaktní formulář v levém menu ---------- */
   .side-nav-contact-toggle {
     display: flex; align-items: center; justify-content: space-between; gap: 6px; width: 100%;
@@ -1515,6 +1526,13 @@
   <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Rady a poradna</a>
+
+  <div class="side-nav-external side-nav-install" id="side-nav-install-box" hidden>
+    <button type="button" class="side-nav-install-btn" id="side-nav-install-btn">
+      <span class="icon">📲</span> NAINSTALOVAT APLIKACI
+    </button>
+    <p>Přidej si Uklidni To na plochu nebo domovskou obrazovku a spouštěj to napřímo jako appku.</p>
+  </div>
 
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
@@ -7667,6 +7685,57 @@ Pravidla:
     if (input) askPoradna(input.value);
     return false;
   };
+</script>
+
+<script>
+  // ---------- Tlačítko "Nainstalovat aplikaci" v levém menu ----------
+  // Cíl: uživatel nemusí sám hledat instalaci v menu prohlížeče.
+  // - Chrome/Edge/Android zachytí beforeinstallprompt a spustí nativní dialog.
+  // - iOS Safari nemá beforeinstallprompt, takže tam tlačítko zobrazíme rovnou
+  //   a po kliknutí ukážeme krátký návod (Sdílet -> Přidat na plochu).
+  // - Pokud web už běží jako nainstalovaná appka (standalone), tlačítko se
+  //   vůbec nezobrazí.
+  (function () {
+    const installBox = document.getElementById('side-nav-install-box');
+    const installBtn = document.getElementById('side-nav-install-btn');
+    if (!installBox || !installBtn) return;
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
+    if (isStandalone) return;
+
+    const ua = navigator.userAgent || '';
+    const isIOS = /iphone|ipad|ipod/i.test(ua);
+    const isIOSSafari = isIOS && /safari/i.test(ua) && !/crios|fxios|edgios|opios/i.test(ua);
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBox.hidden = false;
+    });
+
+    window.addEventListener('appinstalled', function () {
+      installBox.hidden = true;
+      deferredPrompt = null;
+    });
+
+    if (isIOSSafari) {
+      installBox.hidden = false;
+    }
+
+    installBtn.addEventListener('click', async function () {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        try { await deferredPrompt.userChoice; } catch (e) {}
+        deferredPrompt = null;
+        return;
+      }
+      if (isIOSSafari) {
+        alert('Instalace na iPhone/iPad:\n\n1. Klepni dole na ikonu Sdílet (čtvereček se šipkou nahoru)\n2. Zvol "Přidat na plochu"\n3. Potvrď tlačítkem "Přidat"');
+      }
+    });
+  })();
 </script>
 
 <script>
