@@ -104,12 +104,15 @@
   <ul>
     <li>Nemá registraci ani přihlašování</li>
     <li>Nemá newsletter</li>
-    <li>Nepoužívá vlastní analytiku ani sledovací nástroje (např. Google Analytics)</li>
+    <li>Nepoužívá Google Analytics ani jiné sledování napříč weby — návštěvnost měří anonymně bez cookies (viz GoatCounter níže)</li>
     <li>Neukládá žádná data na server - Pouze ADMIN SERVISNÍ SEKCE - FIREBASE</li>
   </ul>
 
   <h2>Lokální úložiště (localStorage)</h2>
   <p>Aby si web pamatoval tvé nastavení dechového cvičení (např. zvolenou techniku, barvu nebo zapnutou vibraci), ukládá tyto údaje pomocí technologie localStorage přímo v tvém prohlížeči. Tato data nikdy neopouští tvé zařízení a nejsou odesílána nikam na server. Můžeš je kdykoliv smazat vymazáním dat stránky v nastavení prohlížeče.</p>
+
+  <h2>Statistika návštěvnosti (GoatCounter)</h2>
+  <p>Pro základní statistiku návštěvnosti (např. počet zobrazení stránky) používáme službu GoatCounter, která je navržená s ohledem na soukromí — nepoužívá cookies ani jiné identifikátory umožňující sledovat tě napříč weby. Zpracovávají se jen agregované, anonymizované údaje (přibližná geografická oblast a typ prohlížeče odvozené z požadavku); samotná IP adresa se neukládá. Více informací najdeš v <a href="https://www.goatcounter.com/privacy" target="_blank" rel="noopener">zásadách ochrany soukromí GoatCounter</a>.</p>
 
   <h2>Kontaktní formulář</h2>
   <p>V levém menu appky najdeš krátký kontaktní formulář (jméno, e-mail, zpráva). Po odeslání se tyto údaje přes službu Web3Forms doručí jako e-mail provozovateli webu — slouží jen k tomu, aby ti mohl odpovědět. Web3Forms funguje jako zprostředkovatel doručení zprávy (podobně jako jiné e-mailové služby) a údaje si sám neukládá k žádnému dalšímu účelu. Formulář použij, jen pokud chceš být kontaktován/a zpět; pokud ho nevyplníš a neodešleš, nic se neděje.</p>
@@ -129,16 +132,16 @@
   <p>Web zobrazuje jednoduché počítadlo celkových a aktuálně online návštěv, které běží přes službu Firebase Realtime Database. Počítadlo pracuje jen s hromadným číslem návštěv, ne s údaji o konkrétní osobě.</p>
 
   <h2>Cookies</h2>
-  <p>Web sám o sobě nenastavuje žádné vlastní cookies. Cookies související s reklamou nastavuje Google, jak je popsáno výše; cookies/technické identifikátory může nastavovat i Google reCAPTCHA v rámci ochrany sekce „Rady a poradna" popsané výše.</p>
+  <p>Web sám o sobě nenastavuje žádné vlastní cookies — statistika návštěvnosti přes GoatCounter funguje bez cookies. Cookies/technické identifikátory může nastavovat Google reCAPTCHA v rámci ochrany sekce „Rady a poradna" popsané výše.</p>
 
   <h2>Odkazy na jiné weby</h2>
   <p>Web obsahuje odkazy na SYNTHLUCIDA Relax Player. Tyto zásady se týkají pouze Uklidni To — pro externí weby platí jejich vlastní zásady ochrany soukromí.</p>
 
   <h2>Mezinárodní přenos dat</h2>
-  <p>Služby třetích stran popsané výše (Google Fonts, Google Gemini / Firebase AI Logic, Google reCAPTCHA, Firebase Realtime Database, Web3Forms) mohou zpracovávat data i na serverech mimo Evropskou unii nebo Evropský hospodářský prostor, například v USA. Tyto společnosti se při takovém přenosu opírají o standardní smluvní doložky nebo jiné mechanismy uznané právem EU pro zajištění odpovídající úrovně ochrany. Podrobnosti najdeš v zásadách ochrany soukromí jednotlivých poskytovatelů (Google, Web3Forms).</p>
+  <p>Služby třetích stran popsané výše (Google Fonts, Google Gemini / Firebase AI Logic, Google reCAPTCHA, Firebase Realtime Database, Web3Forms) mohou zpracovávat data i na serverech mimo Evropskou unii nebo Evropský hospodářský prostor, například v USA. Tyto společnosti se při takovém přenosu opírají o standardní smluvní doložky nebo jiné mechanismy uznané právem EU pro zajištění odpovídající úrovně ochrany. Podrobnosti najdeš v zásadách ochrany soukromí jednotlivých poskytovatelů (Google, Web3Forms). Služba GoatCounter (statistika návštěvnosti) je provozována v Evropské unii.</p>
 
   <h2>Tvá práva</h2>
-  <p>Ve vztahu k osobním údajům, které o tobě zpracovávají výše popsané služby třetích stran (typicky IP adresa nebo technické identifikátory v souvislosti s reklamami, Gemini/AI poradnou nebo reCAPTCHA), máš zejména právo na přístup k údajům, jejich opravu nebo výmaz, právo vznést námitku proti zpracování a právo podat stížnost u dozorového úřadu — v Česku je to <a href="https://www.uoou.cz/" target="_blank" rel="noopener">Úřad pro ochranu osobních údajů (ÚOOÚ)</a>. Protože tato data zpracovává přímo Google/Web3Forms jako samostatný správce, uplatňuje se u nich tato práva primárně přes jejich vlastní nástroje (např. <a href="https://myaccount.google.com/" target="_blank" rel="noopener">Google účet</a> nebo <a href="https://adssettings.google.com/" target="_blank" rel="noopener">Nastavení reklam Google</a>). K datům, která zůstávají jen v tvém prohlížeči (localStorage), má přístup a kontrolu jen tvé zařízení — smažeš je vymazáním dat stránky v nastavení prohlížeče.</p>
+  <p>Ve vztahu k osobním údajům, které o tobě zpracovávají výše popsané služby třetích stran (typicky IP adresa nebo technické identifikátory v souvislosti s Gemini/AI poradnou, reCAPTCHA nebo statistikou návštěvnosti), máš zejména právo na přístup k údajům, jejich opravu nebo výmaz, právo vznést námitku proti zpracování a právo podat stížnost u dozorového úřadu — v Česku je to <a href="https://www.uoou.cz/" target="_blank" rel="noopener">Úřad pro ochranu osobních údajů (ÚOOÚ)</a>. Protože tato data zpracovává přímo Google/Web3Forms jako samostatný správce, uplatňuje se u nich tato práva primárně přes jejich vlastní nástroje (např. <a href="https://myaccount.google.com/" target="_blank" rel="noopener">Google účet</a>). K datům, která zůstávají jen v tvém prohlížeči (localStorage), má přístup a kontrolu jen tvé zařízení — smažeš je vymazáním dat stránky v nastavení prohlížeče.</p>
 
   <h2>Kontakt</h2>
   <p>Máš-li dotaz k těmto zásadám, můžeš nás kontaktovat přes kontaktní formulář v levém menu hlavní stránky Uklidni To.</p>
