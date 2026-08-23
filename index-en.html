@@ -1257,6 +1257,28 @@
   }
   .breath-mandala-wrap .breath-core-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; }
 
+  /* ---------- Alternative breathing-exercise visual: Rays/sun ---------- */
+  .breath-rays-wrap {
+    display: none;
+    position: relative; width: 180px; height: 180px;
+    align-items: center; justify-content: center;
+    transform: scale(0.62) rotate(0deg); transition: transform 4s ease-in-out; will-change: transform;
+  }
+  .breath-orb-group.visual-rays .breath-orb-wrap { display: none; }
+  .breath-orb-group.visual-rays .breath-mandala-wrap { display: none; }
+  .breath-orb-group.visual-rays .breath-rays-wrap { display: flex; }
+  .breath-rays-wrap.holding { animation: breathHoldShimmer 2.4s ease-in-out infinite; }
+  .breath-rays-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .breath-ray-outer {
+    stroke: var(--accent-glow); stroke-width: 5; stroke-linecap: round; opacity: 0.55;
+    filter: drop-shadow(0 0 6px var(--accent-color));
+  }
+  .breath-ray-inner {
+    stroke: var(--accent-color); stroke-width: 4; stroke-linecap: round; opacity: 0.9;
+    filter: drop-shadow(0 0 8px var(--accent-color));
+  }
+  .breath-rays-wrap .breath-core-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; }
+
   .breath-phase { margin-top: 34px; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 12px var(--accent-color); min-height: 18px; }
   .breath-count { margin-top: 8px; font-size: 50px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 20px var(--accent-color); }
   .breath-hint { margin-top: 36px; font-size: 9px; opacity: 0.3; letter-spacing: 1.5px; text-transform: uppercase; }
@@ -1321,9 +1343,9 @@
   @media (max-width: 380px) { .breath-theme-picker { width: 196px; grid-template-columns: repeat(4, 1fr); gap: 8px; max-height: 230px; } .breath-theme-swatch { max-width: 36px; } }
 
   @media (prefers-reduced-motion: reduce) {
-    .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow, .breath-mandala-wrap { transition-duration: 0.6s !important; }
+    .breath-orb-wrap, .breath-orb, .breath-core-mark, .breath-figure-torso, .breath-figure-glow, .breath-mandala-wrap, .breath-rays-wrap { transition-duration: 0.6s !important; }
     .breath-orb.holding, .cta-icon, .breath-ring, .breath-blob, .hero-orb-preview .ring,
-    .breath-figure-glow.holding, .breath-figure-ring, .breath-mandala-wrap.holding { animation: none; }
+    .breath-figure-glow.holding, .breath-figure-ring, .breath-mandala-wrap.holding, .breath-rays-wrap.holding { animation: none; }
     .breath-ring, .hero-orb-preview .ring, .breath-figure-ring { display: none; }
     .arrow-chevron, .breath-arrow-hold span { animation: none !important; opacity: 0.9 !important; transform: none !important; }
   }
@@ -1583,7 +1605,7 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
     <h2 id="jak-funguje">How the breathing exercise works</h2>
-    <p>After clicking the button, a fullscreen breathing exercise opens with a gently pulsing orb. The orb grows and glows brighter on the inhale, gently trembles during the hold, and shrinks and dims again on the exhale. Just follow its rhythm with your eyes or your breath — the app handles the timing and counting for you. A button inside the exercise lets you switch the visual at any time between the pulsing orb and an unfolding mandala — both breathe in the exact same rhythm, so it's just a matter of which one you find more soothing to look at.</p>
+    <p>After clicking the button, a fullscreen breathing exercise opens with a gently pulsing orb. The orb grows and glows brighter on the inhale, gently trembles during the hold, and shrinks and dims again on the exhale. Just follow its rhythm with your eyes or your breath — the app handles the timing and counting for you. A button inside the exercise lets you switch the visual at any time between the pulsing orb, an unfolding mandala, and glowing sun rays — all three breathe in the exact same rhythm, so it's just a matter of which one you find more soothing to look at.</p>
     <p>You can pick any of eight science-based techniques at any time, depending on what you need right now: to calm down quickly, to fall asleep, or to stay focused under pressure. On supported phones the exercise also gently vibrates with every phase change, so you can focus even with your eyes closed.</p>
     <p>At the top of the exercise you'll also see a stopwatch showing how long you've been breathing, plus the current time. Next to the guide icon (ⓘ) there's a little figure icon 🧍 — a second, more human view of the same breath, not a required part of the exercise. Tap it and a small glowing figure opens whose chest rises and falls while counting down the seconds of each phase (inhale, hold, exhale). Once the main exercise is running, the figure moves in perfect lockstep with the sphere — same phase, same countdown, at the exact same moment — so the two views never contradict each other and you can just watch whichever one suits you. You can switch technique while the demo is open too, and both views switch and reset together. You can also open the demo without the main exercise running — then the figure paces itself through the selected technique as a preview, and as soon as you start the exercise it locks onto the sphere automatically.</p>
     <ul class="benefits-list">
@@ -2479,6 +2501,12 @@
       <p>SAMe (S-adenosylmethionine) is a compound the body naturally produces from the amino acid methionine and ATP in virtually every cell. It acts as a key methyl-group donor in dozens of biochemical reactions — contributing, for example, to the synthesis of the neurotransmitters serotonin, dopamine, and noradrenaline, to phospholipid production, and to liver metabolism. Because of its role in neurotransmitter synthesis, SAMe has been studied for decades as a possible supplement for treating depression, and in some European countries it's even available as a prescription medication.</p><p>The results of these studies, however, are inconsistent. Older, smaller studies and open-label observations suggested that SAMe, at doses of 800 to 1600 mg per day, might have effects comparable to classic antidepressants. An updated systematic review and meta-analysis of randomized controlled trials published in 2024 (General Hospital Psychiatry), however, found no statistically significant difference between SAMe and placebo, or between SAMe and antidepressants, in reducing depressive symptoms — the authors attribute this to the small number of included studies and the wide range of doses used (200 to 3200 mg per day). Clinical guidelines therefore generally advise against SAMe as a standalone treatment for major depression, while cautiously allowing higher doses as a possible add-on to other treatment for milder depression. Given the mixed results and possible interactions with antidepressants, taking SAMe is always worth discussing with a doctor.</p>
       <p class="article-source">Source: Peng T. R., Cheng H. Y., Wu T. W., <em>S-Adenosylmethionine (SAMe) as an adjuvant therapy for patients with depression: An updated systematic review and meta-analysis</em>, General Hospital Psychiatry, 2024.</p>
     </article>
+
+    <article class="article-card">
+      <h3>N-acetylcysteine (NAC): how it affects glutamate and mental tension</h3>
+      <p>N-acetylcysteine (NAC) is a compound derived from the amino acid L-cysteine, long used in medicine mainly as an antidote for paracetamol (acetaminophen) overdose and as a mucolytic for breathing problems. Over the past decade, though, it has become clear that NAC also has a notable effect on the central nervous system: it acts as a precursor of glutathione, the body's main antioxidant, and it also helps regulate the transport and level of glutamate — the brain's main excitatory neurotransmitter, whose imbalance has been linked to anxiety, tension, and a range of psychiatric conditions.</p><p>According to a systematic review and meta-analysis of randomized controlled trials published in Frontiers in Psychiatry (2024), which included six trials with a total of 195 patients, adding NAC to standard SSRI treatment for obsessive-compulsive disorder led to greater symptom improvement compared with placebo, with good tolerability — the most common side effects were mild nausea, digestive changes, or headache. It's specifically in OCD, where glutamate dysregulation is particularly well documented, that NAC has its strongest scientific support. For ordinary anxiety and stress without a diagnosed disorder, the evidence is still more preliminary and smaller in scale, so NAC shouldn't be considered a proven remedy for everyday tension — it's a promising but not yet settled area of research, and its use is worth discussing with a doctor.</p>
+      <p class="article-source">Source: Eghdami S., Eissazade N., Heidari Mokarar M., Boroon M., Orsolini L., Shalbafan M., <em>The safety and efficacy of N-acetylcysteine as an augmentation in the treatment of obsessive-compulsive disorder in adults: a systematic review and meta-analysis of randomized clinical trials</em>, Frontiers in Psychiatry, 2024.</p>
+    </article>
     <!-- DOPLNKY:AUTO:END -->
 
     <p class="article-disclaimer">The text on this page summarizes publicly available peer-reviewed studies and is for general information only — it is not medical advice or a diagnosis. Don’t start taking supplements without consulting a doctor, especially if you take other medication, are pregnant or breastfeeding.</p>
@@ -2796,6 +2824,39 @@
         </g>
       </svg>
       <div class="breath-core-mark" id="breath-mandala-logo" aria-hidden="true"></div>
+    </div>
+    <div class="breath-rays-wrap" id="breath-rays-wrap">
+      <svg class="breath-rays-svg" viewBox="0 0 200 200" aria-hidden="true">
+        <g id="breath-rays-outer">
+          <line class="breath-ray-outer" transform="rotate(0 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(30 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(60 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(90 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(120 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(150 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(180 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(210 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(240 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(270 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(300 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+          <line class="breath-ray-outer" transform="rotate(330 100 100)" x1="100" y1="50" x2="100" y2="12"></line>
+        </g>
+        <g id="breath-rays-inner">
+          <line class="breath-ray-inner" transform="rotate(15 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(45 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(75 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(105 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(135 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(165 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(195 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(225 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(255 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(285 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(315 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+          <line class="breath-ray-inner" transform="rotate(345 100 100)" x1="100" y1="52" x2="100" y2="28"></line>
+        </g>
+      </svg>
+      <div class="breath-core-mark" id="breath-rays-logo" aria-hidden="true"></div>
     </div>
     <div class="breath-orb-arrows" id="breath-orb-arrows" aria-hidden="true">
       <svg class="breath-arrow-icon breath-arrow-in" id="breath-orb-arrow-in" viewBox="0 0 40 96">
@@ -3231,7 +3292,8 @@
   const breathOrbWrap = document.getElementById('breath-orb-wrap');
   const breathOrbEl = document.getElementById('breath-orb');
   const breathMandalaWrap = document.getElementById('breath-mandala-wrap');
-  const breathCoreMarks = document.querySelectorAll('#breath-logo, #breath-mandala-logo');
+  const breathRaysWrap = document.getElementById('breath-rays-wrap');
+  const breathCoreMarks = document.querySelectorAll('#breath-logo, #breath-mandala-logo, #breath-rays-logo');
   const breathPhaseEl = document.getElementById('breath-phase');
   const breathCountEl = document.getElementById('breath-count');
   const breathSloganEl = document.getElementById('breath-slogan');
@@ -3263,6 +3325,7 @@
     breathOrbWrap.style.transitionDuration = seconds + 's';
     breathOrbEl.style.transitionDuration = seconds + 's';
     breathMandalaWrap.style.transitionDuration = seconds + 's';
+    breathRaysWrap.style.transitionDuration = seconds + 's';
     breathCoreMarks.forEach(function (el) { el.style.transitionDuration = seconds + 's'; });
   }
 
@@ -3271,6 +3334,8 @@
     breathOrbEl.style.opacity = visual.orbOpacity;
     breathMandalaWrap.style.transform = `scale(${visual.scale}) rotate(${visual.rotate}deg)`;
     breathMandalaWrap.classList.toggle('holding', visual.isHold);
+    breathRaysWrap.style.transform = `scale(${visual.scale}) rotate(${visual.rotate * 0.5}deg)`;
+    breathRaysWrap.classList.toggle('holding', visual.isHold);
     breathCoreMarks.forEach(function (el) { el.style.filter = `drop-shadow(0 0 ${visual.glowPx}px var(--accent-color))`; });
     breathOrbEl.classList.toggle('holding', visual.isHold);
     const orbArrowIn = document.getElementById('breath-orb-arrow-in');
@@ -3725,6 +3790,7 @@
     freezeBreathVisual(breathOrbWrap, ['transform']);
     freezeBreathVisual(breathOrbEl, ['opacity']);
     freezeBreathVisual(breathMandalaWrap, ['transform']);
+    freezeBreathVisual(breathRaysWrap, ['transform']);
     if (breathFigureActive) {
       freezeBreathFigureVisual(phase, elapsed);
     }
@@ -3832,18 +3898,24 @@
     });
   }
 
-  // Toggle the graphic visual of the breathing exercise (orb / mandala)
+  // Toggle the graphic visual of the breathing exercise (orb / mandala / rays)
+  const BREATH_VISUAL_ORDER = ['orb', 'mandala', 'rays'];
+  const BREATH_VISUAL_LABELS = { orb: 'VISUAL: ORB', mandala: 'VISUAL: MANDALA', rays: 'VISUAL: RAYS' };
   let currentBreathVisual = 'orb';
   window.toggleBreathVisualStyle = function() {
-    currentBreathVisual = currentBreathVisual === 'orb' ? 'mandala' : 'orb';
+    const idx = BREATH_VISUAL_ORDER.indexOf(currentBreathVisual);
+    currentBreathVisual = BREATH_VISUAL_ORDER[(idx + 1) % BREATH_VISUAL_ORDER.length];
     applyBreathVisualStyle();
   };
 
   function applyBreathVisualStyle() {
     const group = document.querySelector('.breath-orb-group');
-    if (group) group.classList.toggle('visual-mandala', currentBreathVisual === 'mandala');
+    if (group) {
+      group.classList.toggle('visual-mandala', currentBreathVisual === 'mandala');
+      group.classList.toggle('visual-rays', currentBreathVisual === 'rays');
+    }
     document.querySelectorAll('#breath-visual-btn').forEach(function (btn) {
-      btn.innerText = currentBreathVisual === 'mandala' ? 'VISUAL: MANDALA' : 'VISUAL: ORB';
+      btn.innerText = BREATH_VISUAL_LABELS[currentBreathVisual] || BREATH_VISUAL_LABELS.orb;
     });
   }
 
@@ -4474,7 +4546,7 @@
         if (typeof settings.vibrationEnabled === 'boolean') vibrationEnabled = settings.vibrationEnabled;
         if (typeof settings.breathLogoHidden === 'boolean') breathLogoHidden = settings.breathLogoHidden;
         if (settings.themeColor) currentThemeId = settings.themeColor;
-        if (settings.breathVisual === 'mandala' || settings.breathVisual === 'orb') currentBreathVisual = settings.breathVisual;
+        if (settings.breathVisual === 'mandala' || settings.breathVisual === 'orb' || settings.breathVisual === 'rays') currentBreathVisual = settings.breathVisual;
       }
     } catch (e) { /* ignore */ }
     updateBreathTechniqueUI();
