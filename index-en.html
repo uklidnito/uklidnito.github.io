@@ -539,6 +539,7 @@
   .overall-gauge-msg { font-size: 12.5px; line-height: 1.6; opacity: 0.85; margin: 10px 0 0; max-width: 420px; margin-left: auto; margin-right: auto; }
   .overall-gauge-msg .cta-link { color: var(--accent-color); text-decoration: underline; cursor: pointer; background: none; border: none; font: inherit; padding: 0; }
   .overall-gauge-empty { font-size: 12.5px; opacity: 0.6; line-height: 1.7; }
+  .overall-gauge-moon { font-size: 11px; opacity: 0.55; margin: 8px 0 0; letter-spacing: 0.2px; }
 
   /* ---------- Overall lifetime index (combines all data) ---------- */
   .lifetime-gauge-card { border: 1px solid var(--accent-color); box-shadow: 0 0 24px rgba(255,119,0,0.12); }
@@ -1459,6 +1460,7 @@
     header, main, footer { margin-left: 230px; }
   }
 </style>
+<script data-goatcounter="https://uklidnito.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="theme-amber" id="body">
 
@@ -1673,7 +1675,7 @@
         <input type="text" id="custom-tech-name-input" maxlength="60" placeholder="E.g. My evening routine">
 
         <label for="custom-tech-info-input">Short description (optional)</label>
-        <input type="text" id="custom-tech-info-input" maxlength="200" placeholder="E.g. Custom rhythm for falling asleep">
+        <input type="text" id="custom-tech-info-input" maxlength="500" placeholder="E.g. Custom rhythm for falling asleep">
 
         <label>Breath phases</label>
         <div id="custom-tech-phases-list"></div>
@@ -1952,7 +1954,7 @@
         <div class="progress-data-table-wrap">
           <table class="progress-data-table" id="progress-data-table">
             <thead>
-              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Overall</th><th>Note</th></tr>
+              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Overall</th><th>Moon phase</th><th>Note</th></tr>
             </thead>
             <tbody id="progress-data-tbody"></tbody>
           </table>
@@ -4314,14 +4316,14 @@
       const existing = customTechniques.find((t) => t.id === editId);
       if (existing) {
         existing.name = name.slice(0, 60);
-        existing.info = (infoInput.value || '').trim().slice(0, 200);
+        existing.info = (infoInput.value || '').trim().slice(0, 500);
         existing.phases = phases;
       }
     } else {
       customTechniques.push({
         id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
         name: name.slice(0, 60),
-        info: (infoInput.value || '').trim().slice(0, 200),
+        info: (infoInput.value || '').trim().slice(0, 500),
         phases: phases
       });
     }
@@ -4417,7 +4419,7 @@
         customTechniques.push({
           id: id,
           name: name,
-          info: (t.info || '').toString().trim().slice(0, 200),
+          info: (t.info || '').toString().trim().slice(0, 500),
           phases: t.phases.map((p) => ({ type: p.type, duration: p.duration }))
         });
         added++;
@@ -4474,6 +4476,42 @@
   // Local date in YYYY-MM-DD format (not UTC, so the day matches the user's time zone)
   function dateKey(d) {
     return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  // ---------- Moon phase (for patterns and charts in the Your Progress section) ----------
+  // Simple astronomical calculation based on the synodic month (29.53 days) from a known
+  // new moon (Jan 6, 2000, 18:14 UTC) - day-level accuracy is enough for the app's purposes,
+  // no external API is called, everything is computed purely locally.
+  const MOON_PHASE_NAMES = ['New moon', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full moon', 'Waning gibbous', 'Last quarter', 'Waning crescent'];
+  const MOON_PHASE_EMOJI = ['🌑', '🌒', '🌓', '🌔', '🌕', '🌖', '🌗', '🌘'];
+  function getMoonPhaseInfo(dateStr) {
+    const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14, 0);
+    const SYNODIC_MONTH = 29.530588853;
+    const d = new Date(dateStr + 'T12:00:00Z').getTime();
+    const diffDays = (d - KNOWN_NEW_MOON) / 86400000;
+    let phase = (diffDays % SYNODIC_MONTH) / SYNODIC_MONTH;
+    if (phase < 0) phase += 1;
+    const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2; // 0 = new moon, 1 = full moon
+    const idx = Math.floor(((phase + 1 / 16) % 1) * 8);
+    return {
+      phase: phase,
+      illumination: illumination,
+      name: MOON_PHASE_NAMES[idx],
+      emoji: MOON_PHASE_EMOJI[idx],
+      isNew: illumination < 0.06,
+      isFull: illumination > 0.94
+    };
+  }
+
+  // Small emoji markers above chart points on new-moon/full-moon days - shared by all
+  // charts (overall rating, stress, mood, energy) and the PDF export.
+  function moonMarkersSvg(points, fontSize) {
+    return points.map(p => {
+      const info = getMoonPhaseInfo(p.entry.date);
+      if (!info.isFull && !info.isNew) return '';
+      const y = Math.max(7, p.y - 8);
+      return '<text x="' + p.x.toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="middle" font-size="' + (fontSize || 9) + '" style="pointer-events:none;">' + info.emoji + '<title>' + info.name + ' (' + p.entry.date + ')</title></text>';
+    }).join('');
   }
 
   function loadProgressData() {
@@ -5050,6 +5088,7 @@
       '<td data-label="Mood">' + esc(r.mood) + '</td>' +
       '<td data-label="Energy">' + esc(r.energy) + '</td>' +
       '<td data-label="Overall" class="col-overall">' + esc(r.overall ? r.overall + '/10' : '') + '</td>' +
+      '<td data-label="Moon phase">' + esc(r.moon) + '</td>' +
       '<td data-label="Note">' + esc(r.note) + '</td>' +
       '</tr>'
     ).join('');
@@ -5203,12 +5242,16 @@
       ? ' <button type="button" class="cta-link" onclick="goToBreathingAndBlink();">Breathe now →</button>'
       : '';
 
+    const moonInfo = getMoonPhaseInfo(todayKeyStr);
+    const moonLine = '<p class="overall-gauge-moon">' + moonInfo.emoji + ' Today’s moon phase: ' + moonInfo.name + '</p>';
+
     container.innerHTML =
       '<div class="overall-gauge-wrap">' +
         dial.svg.replace('class="mood-gauge-svg"', 'class="mood-gauge-svg overall-gauge-svg"') +
         '<div class="overall-gauge-verdict" style="color:' + status.color + ';">' + verdictText + '</div>' +
         '<div class="overall-gauge-score">Day score: ' + avg.toFixed(1) + '/10</div>' +
         '<p class="overall-gauge-msg">' + msg + ctaBtn + '</p>' +
+        moonLine +
       '</div>' +
       missingNote;
 
@@ -5382,7 +5425,7 @@
       '<path d="' + areaPath + '" fill="url(#overallAreaGrad)" stroke="none" />' +
       trendLineSvg +
       '<path d="' + linePath + '" class="stress-chart-line" />' +
-      dots + labels;
+      dots + labels + moonMarkersSvg(points);
 
     renderProgressOverallPatterns(fullLog);
   }
@@ -5429,6 +5472,30 @@
         patterns.push(
           'Days when you do a breathing exercise tend to score ' + diff.toFixed(1) + ' points higher on average (' +
           avgWith.toFixed(1) + ' vs ' + avgWithout.toFixed(1) + ' without one).'
+        );
+      }
+    }
+
+    // ---- Moon phase pattern ----
+    // The eight phases are grouped into 4 broader buckets (~7 days each) for enough samples.
+    const moonGroupNames = ['around the new moon', 'in the waxing phase', 'around the full moon', 'in the waning phase'];
+    const byMoonGroup = Array.from({ length: 4 }, () => []);
+    fullLog.forEach(e => {
+      const info = getMoonPhaseInfo(e.date);
+      const idx = Math.floor(((info.phase + 1 / 16) % 1) * 8);
+      byMoonGroup[Math.floor(idx / 2)].push(e.value);
+    });
+    const moonGroupAvgs = byMoonGroup
+      .map((arr, i) => (arr.length >= 3 ? { group: i, avg: arr.reduce((a, b) => a + b, 0) / arr.length, count: arr.length } : null))
+      .filter(Boolean);
+
+    if (moonGroupAvgs.length >= 3) {
+      const bestMoon = moonGroupAvgs.reduce((a, b) => (b.avg > a.avg ? b : a));
+      const worstMoon = moonGroupAvgs.reduce((a, b) => (b.avg < a.avg ? b : a));
+      if (bestMoon.group !== worstMoon.group && (bestMoon.avg - worstMoon.avg) >= 0.8) {
+        patterns.push(
+          'Your ratings tend to be best <strong>' + moonGroupNames[bestMoon.group] + '</strong> (avg ' + bestMoon.avg.toFixed(1) +
+          '/10), and lowest <strong>' + moonGroupNames[worstMoon.group] + '</strong> (avg ' + worstMoon.avg.toFixed(1) + '/10).'
         );
       }
     }
@@ -5500,7 +5567,7 @@
       '<path d="' + areaPath + '" fill="url(#overallAreaGradExport)" stroke="none" />' +
       trendLineSvg +
       '<path d="' + linePath + '" fill="none" stroke="#c8590c" stroke-width="2" stroke-linecap="round" />' +
-      dots + labels +
+      dots + labels + moonMarkersSvg(points) +
       '</svg>';
   }
 
@@ -5648,7 +5715,7 @@
       '<path d="' + areaPath + '" fill="url(#stressAreaGrad)" stroke="none" />' +
       trendLine +
       '<path d="' + linePath + '" class="stress-chart-line" />' +
-      dots;
+      dots + moonMarkersSvg(points);
   }
 
   function renderProgressMoodScale() {
@@ -5795,7 +5862,7 @@
       '<path d="' + areaPath + '" fill="url(#moodAreaGrad)" stroke="none" />' +
       trendLine +
       '<path d="' + linePath + '" class="stress-chart-line" />' +
-      dots;
+      dots + moonMarkersSvg(points);
   }
 
   function renderProgressEnergyScale() {
@@ -5942,7 +6009,7 @@
       '<path d="' + areaPath + '" fill="url(#energyAreaGrad)" stroke="none" />' +
       trendLine +
       '<path d="' + linePath + '" class="stress-chart-line" />' +
-      dots;
+      dots + moonMarkersSvg(points);
   }
 
   // ---------- Mood journal: optional notes for today (can have several) ----------
@@ -6234,6 +6301,7 @@
 
     return sortedDates.map(d => {
       const overall = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+      const moonInfo = getMoonPhaseInfo(d);
       return {
         date: d,
         sessions: progressData.days[d] ? (progressData.days[d].sessions || 0) : '',
@@ -6241,6 +6309,7 @@
         mood: moodByDate[d] !== undefined ? moodByDate[d] : '',
         energy: energyByDate[d] !== undefined ? energyByDate[d] : '',
         overall: overall ? overall.avg.toFixed(1) : '',
+        moon: moonInfo.emoji + ' ' + moonInfo.name,
         note: Array.isArray(progressData.journal[d]) ? progressData.journal[d].join(' | ') : ''
       };
     });
@@ -6258,9 +6327,9 @@
       ['current_streak', lifetime.current]
     ];
 
-    const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'overall_score', 'note']];
+    const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'overall_score', 'moon_phase', 'note']];
     getProgressExportRows().forEach(r => {
-      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.note].map(csvField));
+      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.moon, r.note].map(csvField));
     });
 
     const summaryCsv = summaryRows.map(r => r.map(csvField).join(';')).join('\n');
@@ -6322,9 +6391,10 @@
           <td>${pdfEscapeHtml(r.mood)}</td>
           <td>${pdfEscapeHtml(r.energy)}</td>
           <td>${pdfEscapeHtml(r.overall)}</td>
+          <td>${pdfEscapeHtml(r.moon)}</td>
           <td>${pdfEscapeHtml(r.note)}</td>
         </tr>`).join('')
-      : `<tr><td colspan="7" class="empty">No data recorded yet.</td></tr>`;
+      : `<tr><td colspan="8" class="empty">No data recorded yet.</td></tr>`;
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -6362,7 +6432,7 @@
   ${chartHtml}
   <table>
     <thead>
-      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Note</th></tr>
+      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Moon phase</th><th>Note</th></tr>
     </thead>
     <tbody>
       ${tableRows}
