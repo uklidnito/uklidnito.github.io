@@ -1130,7 +1130,7 @@
   .figure-brow { stroke: #8a6238; stroke-width: 1.6; fill: none; stroke-linecap: round; }
   .figure-nose { stroke: #c98a5e; stroke-width: 1.3; fill: none; stroke-linecap: round; opacity: 0.65; }
   .figure-mouth { stroke: #c98a5e; stroke-width: 2; fill: none; stroke-linecap: round; }
-  .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; }
+  .breath-figure-phase { margin-top: 22px; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); min-height: 18px; line-height: 1.4; max-width: 240px; }
   .breath-figure-count { margin-top: 6px; font-size: 34px; font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; text-shadow: 0 0 14px var(--accent-color); }
   .breath-figure-hint { margin-top: 26px; font-size: 10px; opacity: 0.35; letter-spacing: 1px; text-transform: uppercase; max-width: 220px; }
   .breath-figure-stats-row { display: flex; gap: 22px; margin-top: 18px; }
@@ -1274,7 +1274,7 @@
   }
   .breath-rays-wrap .breath-core-mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1; }
 
-  .breath-phase { margin-top: 34px; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 12px var(--accent-color); min-height: 18px; }
+  .breath-phase { margin-top: 34px; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-color); text-shadow: 0 0 12px var(--accent-color); min-height: 18px; line-height: 1.5; max-width: 300px; margin-left: auto; margin-right: auto; }
   .breath-count { margin-top: 8px; font-size: 50px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 20px var(--accent-color); }
   .breath-hint { margin-top: 36px; font-size: 9px; opacity: 0.3; letter-spacing: 1.5px; text-transform: uppercase; }
 
@@ -1680,7 +1680,7 @@
       </div>
       <div class="tech-card">
         <h3>Nozdry — Nadi Shodhana</h3>
-        <p>Nádech 4 s, zádrž 4 s, výdech 8 s — poměr vycházející z jógové techniky střídavého dýchání nosními dírkami. Pomalý rytmus s delším výdechem zklidňuje podobně jako klasická Nadi Shodhana.</p>
+        <p>Zacpi si pravou nosní dírku a nadechni se levou (4 s), zadrž s oběma zacpanými (4 s), pak uvolni pravou a vydechni jí (8 s). Následně stejně opačně: nádech pravou, zádrž, výdech levou. Cvičení tě tímto pořadím provede přímo v aplikaci.</p>
       </div>
       <div class="tech-card">
         <h3>Lví dech — Simhasana</h3>
@@ -2767,7 +2767,7 @@
       </div>
       <div class="breath-guide-tech">
         <h4>Nozdry — střídavé dýchání</h4>
-        <p>Nádech na 4 s, zádrž na 4 s, výdech na 8 s — poměr vycházející z jógové techniky Nadi Shodhana (střídavé dýchání nosními dírkami). Tady ji sleduješ jen podle koule, ale stejný pomalý rytmus s delším výdechem má podobný zklidňující efekt.</p>
+        <p>Palcem zacpi pravou nosní dírku a nadechni se levou (4 s), zadrž dech s oběma zacpanými (4 s), pak uvolni pravou a vydechni jí (8 s). Poté to samé opačně: nádech pravou dírkou, zádrž, výdech levou. Cvičení tě přesně tímto pořadím provede a řekne ti u každé fáze, kterou dírku máš zrovna zacpat.</p>
       </div>
       <div class="breath-guide-tech">
         <h4>Lví dech — Simhasana</h4>
@@ -3232,62 +3232,65 @@
       name: '4-7-8',
       info: 'Dr. Weil · zklidní mysl, pomůže usnout',
       phases: [
-        { type: 'in',   duration: 4 },
-        { type: 'hold', duration: 7 },
-        { type: 'out',  duration: 8 },
+        { type: 'in',   duration: 4, label: 'Tichý nádech nosem' },
+        { type: 'hold', duration: 7, label: 'Zadrž dech' },
+        { type: 'out',  duration: 8, label: 'Výdech ústy se zvukem „vúúš“' },
       ]
     },
     box: {
       name: 'Box',
       info: 'Navy SEAL metoda · stabilizuje pozornost ve stresu',
       phases: [
-        { type: 'in',   duration: 4 },
-        { type: 'hold', duration: 4 },
-        { type: 'out',  duration: 4 },
-        { type: 'hold', duration: 4 },
+        { type: 'in',   duration: 4, label: 'Nádech nosem' },
+        { type: 'hold', duration: 4, label: 'Zádrž, plné plíce' },
+        { type: 'out',  duration: 4, label: 'Výdech nosem nebo ústy' },
+        { type: 'hold', duration: 4, label: 'Zádrž, prázdné plíce' },
       ]
     },
     coherent: {
       name: 'Coherent',
       info: '~5,5 dechů/min · rezonanční dýchání pro vyšší HRV',
       phases: [
-        { type: 'in',  duration: 5.5 },
-        { type: 'out', duration: 5.5 },
+        { type: 'in',  duration: 5.5, label: 'Pomalý nádech nosem' },
+        { type: 'out', duration: 5.5, label: 'Pomalý výdech nosem' },
       ]
     },
     calm: {
       name: 'Calm',
       info: 'Prodloužený výdech · zapojuje bloudivý nerv',
       phases: [
-        { type: 'in',  duration: 4 },
-        { type: 'out', duration: 6 },
+        { type: 'in',  duration: 4, label: 'Nádech nosem' },
+        { type: 'out', duration: 6, label: 'Pomalý výdech ústy' },
       ]
     },
     sigh: {
       name: 'Vzdech',
       info: 'Fyziologický vzdech (Huberman Lab) · nejrychlejší reset',
       phases: [
-        { type: 'in',  duration: 2, label: 'Nádech' },
-        { type: 'in',  duration: 1, label: 'Ještě nádech' },
-        { type: 'out', duration: 6, label: 'Dlouhý výdech' },
+        { type: 'in',  duration: 2, label: 'Nádech nosem' },
+        { type: 'in',  duration: 1, label: 'Ještě přisaj nosem' },
+        { type: 'out', duration: 6, label: 'Dlouhý výdech ústy' },
       ]
     },
     branice: {
       name: 'Bránice',
       info: 'Břišní dýchání · zlepšuje pozornost, snižuje kortizol',
       phases: [
-        { type: 'in',   duration: 4 },
-        { type: 'hold', duration: 2 },
-        { type: 'out',  duration: 6 },
+        { type: 'in',   duration: 4, label: 'Nádech nosem, bříško ven' },
+        { type: 'hold', duration: 2, label: 'Zádrž s plným bříškem' },
+        { type: 'out',  duration: 6, label: 'Výdech ústy, bříško klesá' },
       ]
     },
     nozdry: {
       name: 'Nozdry',
-      info: 'Nadi Shodhana · rytmus střídavého dýchání',
+      info: 'Nadi Shodhana · střídavé dýchání nosními dírkami',
       phases: [
-        { type: 'in',   duration: 4 },
-        { type: 'hold', duration: 4 },
-        { type: 'out',  duration: 8 },
+        { type: 'in',   duration: 4, label: 'Zacpi pravou dírku, nádech levou' },
+        { type: 'hold', duration: 4, label: 'Zacpi obě dírky, zadrž' },
+        { type: 'out',  duration: 8, label: 'Uvolni pravou, výdech pravou dírkou' },
+        { type: 'in',   duration: 4, label: 'Nádech pravou dírkou (levá zacpená)' },
+        { type: 'hold', duration: 4, label: 'Zacpi obě dírky, zadrž' },
+        { type: 'out',  duration: 8, label: 'Uvolni levou, výdech levou dírkou' },
       ]
     },
     lev: {
