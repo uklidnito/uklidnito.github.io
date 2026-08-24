@@ -3740,6 +3740,7 @@
   // presses it themselves - does not start breathing automatically (unlike
   // calling startBreathing() directly).
   window.goToBreathingAndBlink = function() {
+    if (typeof closePanel === 'function') closePanel();
     const section = document.getElementById('cviceni');
     if (section) section.scrollIntoView({ behavior: 'smooth' });
     const startBtn = document.getElementById('btn-breathe');

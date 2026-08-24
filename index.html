@@ -3743,6 +3743,7 @@
   // Odscroluje na cvičení a rozbliká tlačítko Start, dokud ho uživatel sám nestiskne -
   // nespouští dech automaticky (na rozdíl od přímého volání startBreathing()).
   window.goToBreathingAndBlink = function() {
+    if (typeof closePanel === 'function') closePanel();
     const section = document.getElementById('cviceni');
     if (section) section.scrollIntoView({ behavior: 'smooth' });
     const startBtn = document.getElementById('btn-breathe');
