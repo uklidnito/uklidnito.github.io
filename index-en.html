@@ -686,6 +686,7 @@
   .progress-feel-group .progress-stress-wrap { border-left: 3px solid var(--accent-color); }
   .progress-feel-group .progress-stress-wrap.mood-block { border-left-color: #9b8cff; }
   .progress-feel-group .progress-stress-wrap.energy-block { border-left-color: #33c17a; }
+  .progress-feel-group .progress-stress-wrap.sleep-block { border-left-color: #4aa3ff; }
   .progress-feel-group .progress-stress-wrap h3 { font-size: 14.5px; }
   .progress-feel-group .progress-stress-wrap + .progress-stress-wrap { margin-top: 14px; }
 
@@ -1749,7 +1750,7 @@
       <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" aria-label="Back to top of section" title="Back to top">↑</button>
     </div>
     <h2 id="pokrok-nadpis">Your progress</h2>
-    <p>Every completed session is automatically logged in the calendar below. You can also manually check or clear a day — say, if you breathed outside the app. Everything — the calendar, stress, mood and energy ratings, journal entries and weekly/monthly summaries — is stored only locally in this browser (localStorage); nothing is sent or analyzed elsewhere. If you clear your browser data or switch devices, you won’t see this progress.</p>
+    <p>Every completed session is automatically logged in the calendar below. You can also manually check or clear a day — say, if you breathed outside the app. Everything — the calendar, stress, mood, energy and sleep ratings, journal entries and weekly/monthly summaries — is stored only locally in this browser (localStorage); nothing is sent or analyzed elsewhere. If you clear your browser data or switch devices, you won’t see this progress.</p>
 
     <div class="progress-storage-warning" id="progress-storage-warning" style="display:none;" role="alert">
       <span id="progress-storage-warning-text">⚠️ This browser couldn't save your progress (e.g. private browsing, or storage is full or blocked). Without a backup you could lose your data.</span>
@@ -1795,6 +1796,11 @@
 
     <div class="progress-risk-banner" id="progress-energy-risk-banner" style="display:none;" role="status">
       <span id="progress-energy-risk-text"></span>
+        <button type="button" onclick="goToBreathingAndBlink();">Breathe now</button>
+    </div>
+
+    <div class="progress-risk-banner" id="progress-sleep-risk-banner" style="display:none;" role="status">
+      <span id="progress-sleep-risk-text"></span>
         <button type="button" onclick="goToBreathingAndBlink();">Breathe now</button>
     </div>
 
@@ -1944,12 +1950,40 @@
         <p class="progress-stress-trend" id="progress-energy-trend"></p>
       </div>
     </div>
+
+    <div class="progress-stress-wrap sleep-block">
+      <h3>😴 How did you sleep last night?</h3>
+      <p class="progress-stress-hint">Optional — rate the quality of last night's sleep (1 = very poor sleep, 10 = excellent sleep). Tracking it over time will show how your sleep develops. Saved only in this browser, never sent anywhere.</p>
+      <div class="progress-stress-scale" id="progress-sleep-scale" role="group" aria-label="Rate your sleep quality 1 to 10"></div>
+      <p class="progress-stress-feedback" id="progress-sleep-feedback"></p>
+      <div class="mood-gauge-wrap" id="progress-sleep-gauge" aria-hidden="true"></div>
+
+      <p class="progress-stress-unlock-hint" id="progress-sleep-unlock-hint" style="display:none;"></p>
+
+      <div class="progress-stress-chart-wrap" id="progress-sleep-chart-wrap" style="display:none;">
+        <h4>Trend over time</h4>
+
+        <div class="stress-index-badge" id="sleep-index-badge" style="display:none;">
+          <div class="stress-index-number" id="sleep-index-number">–<span>/10</span></div>
+          <div class="stress-index-meta">
+            <div class="stress-index-trend-row" id="sleep-index-trend-row">
+              <span class="arrow" id="sleep-index-arrow"></span>
+              <span id="sleep-index-trend-label"></span>
+            </div>
+            <p class="stress-index-sub" id="sleep-index-sub"></p>
+          </div>
+        </div>
+
+        <svg class="progress-stress-chart" id="progress-sleep-chart" viewBox="0 0 300 70" preserveAspectRatio="none"></svg>
+        <p class="progress-stress-trend" id="progress-sleep-trend"></p>
+      </div>
+    </div>
     </div>
 
     <div class="progress-group" id="progress-nav-overall">
     <div class="overall-gauge-card" id="overall-gauge-card">
       <h3>🎯 Overall day rating</h3>
-      <p class="overall-gauge-hint">Combines today’s stress, mood and energy ratings into one overall gauge.</p>
+      <p class="overall-gauge-hint">Combines today’s stress, mood, energy and sleep ratings into one overall gauge.</p>
       <div id="overall-gauge-content"></div>
 
       <p class="progress-stress-unlock-hint" id="progress-overall-unlock-hint" style="display:none;"></p>
@@ -2005,7 +2039,7 @@
         <div class="progress-data-table-wrap">
           <table class="progress-data-table" id="progress-data-table">
             <thead>
-              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Overall</th><th>Moon phase</th><th>Note</th></tr>
+              <tr><th>Date</th><th>Sessions</th><th>Stress</th><th>Mood</th><th>Energy</th><th>Sleep</th><th>Overall</th><th>Moon phase</th><th>Note</th></tr>
             </thead>
             <tbody id="progress-data-tbody"></tbody>
           </table>
@@ -2019,7 +2053,7 @@
       <div class="progress-group-title"><span class="icon">🏆</span> Overall index</div>
       <div class="overall-gauge-card lifetime-gauge-card" id="lifetime-gauge-card">
         <h3>🏆 How you're doing overall</h3>
-        <p class="overall-gauge-hint">Combines absolutely all the data recorded so far — how consistently you practice, your longest streak, and how stress, mood and energy have developed over time.</p>
+        <p class="overall-gauge-hint">Combines absolutely all the data recorded so far — how consistently you practice, your longest streak, and how stress, mood, energy and sleep have developed over time.</p>
         <div id="lifetime-gauge-content"></div>
 
         <button type="button" class="progress-calendar-toggle lifetime-info-toggle" id="lifetime-info-toggle" onclick="toggleLifetimeInfo()" aria-expanded="false" aria-controls="lifetime-info-body">
@@ -2030,7 +2064,7 @@
           <p class="lifetime-info-text">The 0–10 index is made of two equally weighted parts:</p>
           <ul class="lifetime-info-list">
             <li><strong>Consistency (50%)</strong> — the share of days, counted from your very first ever record, that you actually practiced on. For example, 15 practiced days out of 30 days since your first session = 50%.</li>
-            <li><strong>Average wellbeing (50%)</strong> — the average across every day you rated stress, mood or energy. Stress is inverted (lower stress = better score), then averaged with mood and energy for that day, and finally averaged across all days.</li>
+            <li><strong>Average wellbeing (50%)</strong> — the average across every day you rated stress, mood, energy or sleep. Stress is inverted (lower stress = better score), then averaged with mood, energy and sleep for that day, and finally averaged across all days.</li>
           </ul>
           <p class="lifetime-info-text">If you only have one type of data (say, only sessions with no feeling ratings), the index is based on that alone. Everything recalculates automatically with every new entry and is included in the CSV/PDF export.</p>
         </div>
@@ -4648,12 +4682,13 @@
           stressLog: Array.isArray(parsed.stressLog) ? parsed.stressLog : [],
           moodLog: Array.isArray(parsed.moodLog) ? parsed.moodLog : [],
           energyLog: Array.isArray(parsed.energyLog) ? parsed.energyLog : [],
+          sleepLog: Array.isArray(parsed.sleepLog) ? parsed.sleepLog : [],
           journal: journal,
           xp: typeof parsed.xp === 'number' && parsed.xp >= 0 ? parsed.xp : 0
         };
       }
     } catch (e) { /* ignore */ }
-    return { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {}, xp: 0 };
+    return { days: {}, stressLog: [], moodLog: [], energyLog: [], sleepLog: [], journal: {}, xp: 0 };
   }
 
   function showStorageWarning() {
@@ -4907,8 +4942,8 @@
   };
 
   window.resetBreathProgress = function() {
-    if (!confirm('Are you sure you want to clear your entire progress (calendar, stress, mood and energy logs and journal)? This cannot be undone.')) return;
-    progressData = { days: {}, stressLog: [], moodLog: [], energyLog: [], journal: {}, xp: 0 };
+    if (!confirm('Are you sure you want to clear your entire progress (calendar, stress, mood, energy and sleep logs and journal)? This cannot be undone.')) return;
+    progressData = { days: {}, stressLog: [], moodLog: [], energyLog: [], sleepLog: [], journal: {}, xp: 0 };
     saveProgressData(progressData);
     renderProgress();
     renderXpBadge();
@@ -4960,6 +4995,22 @@
     // keep only the last 365 entries (about a year) so localStorage doesn't grow indefinitely
     if (progressData.energyLog.length > 365) {
       progressData.energyLog = progressData.energyLog.slice(progressData.energyLog.length - 365);
+    }
+    saveProgressData(progressData);
+    renderProgress();
+  };
+
+  window.logProgressSleep = function(value) {
+    const key = dateKey(new Date());
+    const existingIdx = progressData.sleepLog.findIndex(e => e.date === key);
+    if (existingIdx !== -1) {
+      progressData.sleepLog[existingIdx].value = value;
+    } else {
+      progressData.sleepLog.push({ date: key, value: value });
+    }
+    // keep only the last 365 entries (about a year) so localStorage doesn't grow indefinitely
+    if (progressData.sleepLog.length > 365) {
+      progressData.sleepLog = progressData.sleepLog.slice(progressData.sleepLog.length - 365);
     }
     saveProgressData(progressData);
     renderProgress();
@@ -5200,6 +5251,7 @@
       '<td data-label="Stress">' + esc(r.stress) + '</td>' +
       '<td data-label="Mood">' + esc(r.mood) + '</td>' +
       '<td data-label="Energy">' + esc(r.energy) + '</td>' +
+      '<td data-label="Sleep">' + esc(r.sleep) + '</td>' +
       '<td data-label="Overall" class="col-overall">' + esc(r.overall ? r.overall + '/10' : '') + '</td>' +
       '<td data-label="Moon phase">' + esc(r.moon) + '</td>' +
       '<td data-label="Note">' + esc(r.note) + '</td>' +
@@ -5298,16 +5350,17 @@
   // Same formula as "Overall day rating": stress is inverted (lower = better),
   // then averaged with whichever ratings exist for that day.
   // Returns { avg, count } or null if there are no ratings for that day.
-  function computeDayOverallScore(dateStr, stressByDate, moodByDate, energyByDate) {
+  function computeDayOverallScore(dateStr, stressByDate, moodByDate, energyByDate, sleepByDate) {
     const parts = [];
     if (stressByDate[dateStr] !== undefined) parts.push(11 - stressByDate[dateStr]);
     if (moodByDate[dateStr] !== undefined) parts.push(moodByDate[dateStr]);
     if (energyByDate[dateStr] !== undefined) parts.push(energyByDate[dateStr]);
+    if (sleepByDate && sleepByDate[dateStr] !== undefined) parts.push(sleepByDate[dateStr]);
     if (parts.length === 0) return null;
     return { avg: parts.reduce((a, b) => a + b, 0) / parts.length, count: parts.length };
   }
 
-  // ---------- Final gauge: overall day rating (combines stress, mood, energy) ----------
+  // ---------- Final gauge: overall day rating (combines stress, mood, energy, sleep) ----------
   function renderProgressOverallGauge() {
     const container = document.getElementById('overall-gauge-content');
     if (!container) return;
@@ -5316,14 +5369,16 @@
     const stressEntry = progressData.stressLog.find(e => e.date === todayKeyStr);
     const moodEntry = progressData.moodLog.find(e => e.date === todayKeyStr);
     const energyEntry = progressData.energyLog.find(e => e.date === todayKeyStr);
+    const sleepEntry = progressData.sleepLog.find(e => e.date === todayKeyStr);
 
     const parts = [];
     if (stressEntry) parts.push(11 - stressEntry.value); // invert - for stress, lower = better
     if (moodEntry) parts.push(moodEntry.value);
     if (energyEntry) parts.push(energyEntry.value);
+    if (sleepEntry) parts.push(sleepEntry.value);
 
     if (parts.length === 0) {
-      container.innerHTML = '<p class="overall-gauge-empty">You haven’t rated yourself yet today. Rate stress, mood or energy above and an overall day rating will appear here.</p>';
+      container.innerHTML = '<p class="overall-gauge-empty">You haven’t rated yourself yet today. Rate stress, mood, energy or sleep above and an overall day rating will appear here.</p>';
       return;
     }
 
@@ -5334,7 +5389,7 @@
     let verdictText, msg;
     if (zoneValue >= 8) {
       verdictText = 'Great day';
-      msg = 'Stress, mood and energy all look good today. Great job!';
+      msg = 'Stress, mood, energy and sleep all look good today. Great job!';
     } else if (zoneValue >= 4) {
       verdictText = 'Average day';
       msg = 'Something might be weighing on you a bit today. A few minutes of breathing exercise can help you get going or calm down.';
@@ -5346,9 +5401,9 @@
     const needleId = 'overall-gauge-needle';
     const dial = gaugeDialSvg(avg, false, needleId);
 
-    const missingCount = 3 - parts.length;
+    const missingCount = 4 - parts.length;
     const missingNote = missingCount > 0
-      ? ('<p class="overall-gauge-hint" style="margin-top:12px;">Based on ' + parts.length + ' of 3 ratings today' + (missingCount === 1 ? ' — add the last one for a more accurate result.' : ' — add the rest for a more accurate result.') + '</p>')
+      ? ('<p class="overall-gauge-hint" style="margin-top:12px;">Based on ' + parts.length + ' of 4 ratings today' + (missingCount === 1 ? ' — add the last one for a more accurate result.' : ' — add the rest for a more accurate result.') + '</p>')
       : '';
 
     const ctaBtn = zoneValue <= 7
@@ -5379,11 +5434,13 @@
     progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
     const energyByDate = {};
     progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
+    const sleepByDate = {};
+    progressData.sleepLog.forEach(e => { sleepByDate[e.date] = e.value; });
 
-    const allDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate)]);
+    const allDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate), ...Object.keys(sleepByDate)]);
 
     return [...allDates].sort().map(d => {
-      const score = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+      const score = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate, sleepByDate);
       return score ? { date: d, value: score.avg } : null;
     }).filter(Boolean);
   }
@@ -5990,7 +6047,7 @@
       btn.className = 'stress-btn';
       if (todayEntry && todayEntry.value === i) btn.classList.add('selected-today');
       btn.innerText = i;
-      btn.setAttribute('aria-label', 'Energie ' + i + ' z 10');
+      btn.setAttribute('aria-label', 'Energy ' + i + ' out of 10');
       btn.onclick = () => logProgressEnergy(i);
       wrap.appendChild(btn);
     }
@@ -6125,6 +6182,153 @@
       dots + moonMarkersSvg(points);
   }
 
+  function renderProgressSleepScale() {
+    const wrap = document.getElementById('progress-sleep-scale');
+    wrap.innerHTML = '';
+    const todayKeyStr = dateKey(new Date());
+    const todayEntry = progressData.sleepLog.find(e => e.date === todayKeyStr);
+
+    for (let i = 1; i <= 10; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'stress-btn';
+      if (todayEntry && todayEntry.value === i) btn.classList.add('selected-today');
+      btn.innerText = i;
+      btn.setAttribute('aria-label', 'Sleep ' + i + ' out of 10');
+      btn.onclick = () => logProgressSleep(i);
+      wrap.appendChild(btn);
+    }
+
+    const feedback = document.getElementById('progress-sleep-feedback');
+    feedback.innerText = todayEntry ? ('Today’s rating: ' + todayEntry.value + '/10. Click another number to change it.') : '';
+
+    renderRatingGauge('progress-sleep-gauge', todayEntry ? todayEntry.value : null, 'sleep');
+  }
+
+  function renderProgressSleepChart() {
+    const chartWrap = document.getElementById('progress-sleep-chart-wrap');
+    const unlockHint = document.getElementById('progress-sleep-unlock-hint');
+    const log = progressData.sleepLog.slice().sort((a, b) => a.date.localeCompare(b.date));
+
+    if (log.length < 4) {
+      const remaining = 4 - log.length;
+      unlockHint.style.display = 'block';
+      unlockHint.innerText = log.length === 0
+        ? 'Once you’ve rated yourself at least 4 times, you’ll see a trend chart and a sleep index showing how your sleep is gradually changing.'
+        : 'Rate yourself ' + remaining + ' more times (on any days) to unlock the trend chart and sleep index.';
+    } else {
+      unlockHint.style.display = 'none';
+    }
+
+    if (log.length < 4) {
+      chartWrap.style.display = 'none';
+      return;
+    }
+    chartWrap.style.display = 'block';
+
+    const avg = arr => arr.reduce((s, e) => s + e.value, 0) / arr.length;
+
+    // ---- Result gauge: current sleep index + trend vs earlier entries ----
+    const badge = document.getElementById('sleep-index-badge');
+    const numberEl = document.getElementById('sleep-index-number');
+    const rowEl = document.getElementById('sleep-index-trend-row');
+    const arrowEl = document.getElementById('sleep-index-arrow');
+    const labelEl = document.getElementById('sleep-index-trend-label');
+    const subEl = document.getElementById('sleep-index-sub');
+    const trendEl = document.getElementById('progress-sleep-trend');
+
+    if (log.length >= 4) {
+      badge.style.display = 'flex';
+      const mid = Math.floor(log.length / 2);
+      const firstHalf = log.slice(0, mid);
+      const secondHalf = log.slice(mid);
+      const avgFirst = avg(firstHalf);
+      const avgSecond = avg(secondHalf);
+      const diff = avgSecond - avgFirst; // positive = improvement (better sleep)
+      const pct = avgFirst > 0 ? Math.round((diff / avgFirst) * 100) : 0;
+
+      numberEl.innerHTML = avgSecond.toFixed(1) + '<span>/10</span>';
+
+      rowEl.className = 'stress-index-trend-row';
+      if (diff >= 0.5) {
+        rowEl.classList.add('improving');
+        arrowEl.innerText = '↑';
+        labelEl.innerText = 'improving (by ' + Math.abs(pct) + '%)';
+      } else if (diff <= -0.5) {
+        rowEl.classList.add('worsening');
+        arrowEl.innerText = '↓';
+        labelEl.innerText = 'worsening (by ' + Math.abs(pct) + '%)';
+      } else {
+        rowEl.classList.add('stable');
+        arrowEl.innerText = '→';
+        labelEl.innerText = 'staying stable';
+      }
+      subEl.innerText = 'vs earlier ' + avgFirst.toFixed(1) + '/10 (' + log.length + ' entries)';
+
+      if (diff >= 0.5) {
+        trendEl.innerText = 'Your sleep has, on average, improved from ' + avgFirst.toFixed(1) + ' to ' + avgSecond.toFixed(1) + ' points — nice progress.';
+      } else if (diff <= -0.5) {
+        trendEl.innerText = 'Your sleep has lately been worse on average (' + avgSecond.toFixed(1) + ' vs earlier ' + avgFirst.toFixed(1) + '). Try a short breathing exercise before bed (like 4-7-8 or Calm) to help you fall asleep.';
+      } else {
+        trendEl.innerText = 'Your sleep has stayed roughly the same in recent entries (around ' + avgSecond.toFixed(1) + ' points).';
+      }
+    } else {
+      badge.style.display = 'none';
+      trendEl.innerText = '';
+    }
+
+    // ---- Chart: smooth curve with gradient fill + trend line (top = better sleep) ----
+    const recent = log.slice(-14);
+    const svg = document.getElementById('progress-sleep-chart');
+    const W = 300, H = 70, padX = 8, padY = 8;
+    const n = recent.length;
+    const xFor = i => (n === 1 ? W / 2 : padX + (i * (W - padX * 2)) / (n - 1));
+    const yFor = v => padY + ((10 - v) / 9) * (H - padY * 2); // 10 = excellent sleep (top), 1 = very poor sleep (bottom)
+    const points = recent.map((e, i) => ({ x: xFor(i), y: yFor(e.value), entry: e }));
+
+    let linePath = 'M ' + points[0].x.toFixed(1) + ',' + points[0].y.toFixed(1);
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i], p1 = points[i + 1];
+      const mx = (p0.x + p1.x) / 2, my = (p0.y + p1.y) / 2;
+      linePath += ' Q ' + p0.x.toFixed(1) + ',' + p0.y.toFixed(1) + ' ' + mx.toFixed(1) + ',' + my.toFixed(1);
+    }
+    const last = points[points.length - 1];
+    linePath += ' L ' + last.x.toFixed(1) + ',' + last.y.toFixed(1);
+
+    const areaPath = linePath + ' L ' + last.x.toFixed(1) + ',' + (H - 2) + ' L ' + points[0].x.toFixed(1) + ',' + (H - 2) + ' Z';
+
+    // Linear regression for the dotted trend line across the displayed entries
+    let trendLine = '';
+    if (n >= 2) {
+      const xs = points.map((p, i) => i);
+      const ys = recent.map(e => e.value);
+      const xMean = xs.reduce((s, x) => s + x, 0) / n;
+      const yMean = ys.reduce((s, y) => s + y, 0) / n;
+      let num = 0, den = 0;
+      for (let i = 0; i < n; i++) { num += (xs[i] - xMean) * (ys[i] - yMean); den += (xs[i] - xMean) ** 2; }
+      const slope = den !== 0 ? num / den : 0;
+      const intercept = yMean - slope * xMean;
+      const y0 = yFor(Math.max(1, Math.min(10, intercept)));
+      const y1 = yFor(Math.max(1, Math.min(10, intercept + slope * (n - 1))));
+      trendLine = '<line x1="' + points[0].x.toFixed(1) + '" y1="' + y0.toFixed(1) + '" x2="' + last.x.toFixed(1) + '" y2="' + y1.toFixed(1) + '" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" stroke-dasharray="3,3" />';
+    }
+
+    const dots = points.map((p, i) => {
+      const isLast = i === points.length - 1;
+      return '<circle class="stress-chart-dot' + (isLast ? ' last' : '') + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (isLast ? 3.2 : 2.2) + '"><title>' + p.entry.date + ': ' + p.entry.value + '/10</title></circle>';
+    }).join('');
+
+    svg.innerHTML =
+      '<defs><linearGradient id="sleepAreaGrad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" class="stress-chart-area-stop-start" />' +
+      '<stop offset="100%" class="stress-chart-area-stop-end" />' +
+      '</linearGradient></defs>' +
+      '<path d="' + areaPath + '" fill="url(#sleepAreaGrad)" stroke="none" />' +
+      trendLine +
+      '<path d="' + linePath + '" class="stress-chart-line" />' +
+      dots + moonMarkersSvg(points);
+  }
+
   // ---------- Mood journal: optional notes for today (can have several) ----------
   window.handleProgressJournalInput = function(value) {
     const btn = document.getElementById('progress-journal-save-btn');
@@ -6204,7 +6408,9 @@
     const avgMood = moodVals.length ? (moodVals.reduce((s, v) => s + v, 0) / moodVals.length) : null;
     const energyVals = progressData.energyLog.filter(e => e.date >= startKey && e.date <= endKey).map(e => e.value);
     const avgEnergy = energyVals.length ? (energyVals.reduce((s, v) => s + v, 0) / energyVals.length) : null;
-    return { sessions, avgStress, stressCount: stressVals.length, avgMood, moodCount: moodVals.length, avgEnergy, energyCount: energyVals.length };
+    const sleepVals = progressData.sleepLog.filter(e => e.date >= startKey && e.date <= endKey).map(e => e.value);
+    const avgSleep = sleepVals.length ? (sleepVals.reduce((s, v) => s + v, 0) / sleepVals.length) : null;
+    return { sessions, avgStress, stressCount: stressVals.length, avgMood, moodCount: moodVals.length, avgEnergy, energyCount: energyVals.length, avgSleep, sleepCount: sleepVals.length };
   }
 
   function renderProgressSummary() {
@@ -6219,14 +6425,15 @@
     const monthEl = document.getElementById('progress-summary-month');
 
     const format = (data) => {
-      if (data.sessions === 0 && data.stressCount === 0 && data.moodCount === 0 && data.energyCount === 0) {
+      if (data.sessions === 0 && data.stressCount === 0 && data.moodCount === 0 && data.energyCount === 0 && data.sleepCount === 0) {
         return '<span class="summary-empty">No activity yet.</span>';
       }
       const sessionsPart = 'practiced ' + data.sessions + 'x';
       const stressPart = data.avgStress !== null ? ', stress averaging ' + data.avgStress.toFixed(1) + '/10' : '';
       const moodPart = data.avgMood !== null ? ', mood averaging ' + data.avgMood.toFixed(1) + '/10' : '';
       const energyPart = data.avgEnergy !== null ? ', energy averaging ' + data.avgEnergy.toFixed(1) + '/10' : '';
-      return sessionsPart + stressPart + moodPart + energyPart + '.';
+      const sleepPart = data.avgSleep !== null ? ', sleep averaging ' + data.avgSleep.toFixed(1) + '/10' : '';
+      return sessionsPart + stressPart + moodPart + energyPart + sleepPart + '.';
     };
 
     weekEl.innerHTML = format(week);
@@ -6284,6 +6491,23 @@
     banner.style.display = 'none';
   }
 
+  function renderProgressSleepRiskBanner() {
+    const banner = document.getElementById('progress-sleep-risk-banner');
+    const textEl = document.getElementById('progress-sleep-risk-text');
+    const log = progressData.sleepLog.slice().sort((a, b) => a.date.localeCompare(b.date));
+    const recent = log.slice(-3);
+
+    if (recent.length >= 3) {
+      const avgRecent = recent.reduce((s, e) => s + e.value, 0) / recent.length;
+      if (avgRecent <= 3) {
+        textEl.innerText = 'You’ve been rating your sleep as mostly poor lately. A short breathing exercise before bed (like 4-7-8 or Calm) can help you fall asleep — and if it lasts longer, don’t hesitate to talk to a doctor.';
+        banner.style.display = 'flex';
+        return;
+      }
+    }
+    banner.style.display = 'none';
+  }
+
   // ---------- Overall lifetime index: combines absolutely all data (not just today) ----------
   // Combines two components, each 0-10:
   // 1) consistency = share of days practiced from the first ever record until today
@@ -6301,13 +6525,15 @@
     progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
     const energyByDate = {};
     progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
-    const ratedDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate)]);
+    const sleepByDate = {};
+    progressData.sleepLog.forEach(e => { sleepByDate[e.date] = e.value; });
+    const ratedDates = new Set([...Object.keys(stressByDate), ...Object.keys(moodByDate), ...Object.keys(energyByDate), ...Object.keys(sleepByDate)]);
 
     let wellbeingAvg = null;
     if (ratedDates.size > 0) {
       let sum = 0, cnt = 0;
       ratedDates.forEach(d => {
-        const day = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+        const day = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate, sleepByDate);
         if (day) { sum += day.avg; cnt++; }
       });
       wellbeingAvg = cnt > 0 ? sum / cnt : null;
@@ -6402,6 +6628,7 @@
       ...progressData.stressLog.map(e => e.date),
       ...progressData.moodLog.map(e => e.date),
       ...progressData.energyLog.map(e => e.date),
+      ...progressData.sleepLog.map(e => e.date),
       ...Object.keys(progressData.journal)
     ]);
     const sortedDates = [...allDates].sort();
@@ -6411,9 +6638,11 @@
     progressData.moodLog.forEach(e => { moodByDate[e.date] = e.value; });
     const energyByDate = {};
     progressData.energyLog.forEach(e => { energyByDate[e.date] = e.value; });
+    const sleepByDate = {};
+    progressData.sleepLog.forEach(e => { sleepByDate[e.date] = e.value; });
 
     return sortedDates.map(d => {
-      const overall = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate);
+      const overall = computeDayOverallScore(d, stressByDate, moodByDate, energyByDate, sleepByDate);
       const moonInfo = getMoonPhaseInfo(d);
       return {
         date: d,
@@ -6421,6 +6650,7 @@
         stress: stressByDate[d] !== undefined ? stressByDate[d] : '',
         mood: moodByDate[d] !== undefined ? moodByDate[d] : '',
         energy: energyByDate[d] !== undefined ? energyByDate[d] : '',
+        sleep: sleepByDate[d] !== undefined ? sleepByDate[d] : '',
         overall: overall ? overall.avg.toFixed(1) : '',
         moon: moonInfo.emoji + ' ' + moonInfo.name,
         note: Array.isArray(progressData.journal[d]) ? progressData.journal[d].join(' | ') : ''
@@ -6440,9 +6670,9 @@
       ['current_streak', lifetime.current]
     ];
 
-    const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'overall_score', 'moon_phase', 'note']];
+    const rows = [['date', 'session_count', 'stress_rating', 'mood_rating', 'energy_rating', 'sleep_rating', 'overall_score', 'moon_phase', 'note']];
     getProgressExportRows().forEach(r => {
-      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.overall, r.moon, r.note].map(csvField));
+      rows.push([r.date, r.sessions, r.stress, r.mood, r.energy, r.sleep, r.overall, r.moon, r.note].map(csvField));
     });
 
     const summaryCsv = summaryRows.map(r => r.map(csvField).join(';')).join('\n');
@@ -6503,11 +6733,12 @@
           <td>${pdfEscapeHtml(r.stress)}</td>
           <td>${pdfEscapeHtml(r.mood)}</td>
           <td>${pdfEscapeHtml(r.energy)}</td>
+          <td>${pdfEscapeHtml(r.sleep)}</td>
           <td>${pdfEscapeHtml(r.overall)}</td>
           <td>${pdfEscapeHtml(r.moon)}</td>
           <td>${pdfEscapeHtml(r.note)}</td>
         </tr>`).join('')
-      : `<tr><td colspan="8" class="empty">No data recorded yet.</td></tr>`;
+      : `<tr><td colspan="9" class="empty">No data recorded yet.</td></tr>`;
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -6545,7 +6776,7 @@
   ${chartHtml}
   <table>
     <thead>
-      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Overall score</th><th>Moon phase</th><th>Note</th></tr>
+      <tr><th>Date</th><th>Sessions</th><th>Stress rating</th><th>Mood rating</th><th>Energy rating</th><th>Sleep rating</th><th>Overall score</th><th>Moon phase</th><th>Note</th></tr>
     </thead>
     <tbody>
       ${tableRows}
@@ -6610,6 +6841,7 @@
       || (progressData.stressLog || []).length
       || (progressData.moodLog || []).length
       || (progressData.energyLog || []).length
+      || (progressData.sleepLog || []).length
       || Object.keys(progressData.journal || {}).length;
     if (!hasData) {
       el.textContent = '';
@@ -6674,6 +6906,7 @@
       stressLog: mergeImportedLogs(local.stressLog, imported.stressLog),
       moodLog: mergeImportedLogs(local.moodLog, imported.moodLog),
       energyLog: mergeImportedLogs(local.energyLog, imported.energyLog),
+      sleepLog: mergeImportedLogs(local.sleepLog, imported.sleepLog),
       xp: Math.max((local && local.xp) || 0, (imported && imported.xp) || 0)
     };
     // If the same day is recorded in both sources, keep the higher session count.
@@ -6700,6 +6933,7 @@
       && (d.stressLog === undefined || Array.isArray(d.stressLog))
       && (d.moodLog === undefined || Array.isArray(d.moodLog))
       && (d.energyLog === undefined || Array.isArray(d.energyLog))
+      && (d.sleepLog === undefined || Array.isArray(d.sleepLog))
       && (d.journal === undefined || (typeof d.journal === 'object' && d.journal !== null && !Array.isArray(d.journal)));
   }
 
@@ -6735,6 +6969,7 @@
         stressLog: Array.isArray(incoming.stressLog) ? incoming.stressLog : [],
         moodLog: Array.isArray(incoming.moodLog) ? incoming.moodLog : [],
         energyLog: Array.isArray(incoming.energyLog) ? incoming.energyLog : [],
+        sleepLog: Array.isArray(incoming.sleepLog) ? incoming.sleepLog : [],
         journal: importedJournal,
         xp: typeof incoming.xp === 'number' && incoming.xp >= 0 ? incoming.xp : 0
       };
@@ -6742,6 +6977,7 @@
         || (progressData.stressLog || []).length
         || (progressData.moodLog || []).length
         || (progressData.energyLog || []).length
+        || (progressData.sleepLog || []).length
         || Object.keys(progressData.journal || {}).length;
       if (hasExisting && !confirm('This browser already has some progress saved. The uploaded backup will be merged with it - nothing gets deleted, only missing days and entries are added. Continue?')) {
         return;
@@ -6850,6 +7086,8 @@
     renderProgressMoodChart();
     renderProgressEnergyScale();
     renderProgressEnergyChart();
+    renderProgressSleepScale();
+    renderProgressSleepChart();
     renderProgressOverallGauge();
     renderProgressOverallChart();
     renderProgressLifetimeGauge();
@@ -6858,6 +7096,7 @@
     renderProgressRiskBanner();
     renderProgressMoodRiskBanner();
     renderProgressEnergyRiskBanner();
+    renderProgressSleepRiskBanner();
     renderProgressDataTable();
     updateLastBackupInfo();
   }
@@ -7132,6 +7371,7 @@
         stressLog: mergeLogs(local.stressLog, remote.stressLog),
         moodLog: mergeLogs(local.moodLog, remote.moodLog),
         energyLog: mergeLogs(local.energyLog, remote.energyLog),
+        sleepLog: mergeLogs(local.sleepLog, remote.sleepLog),
         xp: Math.max((local && local.xp) || 0, (remote && remote.xp) || 0)
       };
       const journalKeys = new Set([
