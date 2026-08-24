@@ -303,11 +303,45 @@
   .tech-card {
     background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
     border-radius: 14px; padding: 18px 18px 16px;
+    display: flex; flex-direction: column;
   }
   .tech-card h3 {
     margin: 0 0 8px; font-size: 12px; letter-spacing: 1.5px; color: var(--accent-color);
   }
-  .tech-card p { font-size: 12.5px; line-height: 1.7; opacity: 0.72; margin: 0; }
+  .tech-card p { font-size: 12.5px; line-height: 1.7; opacity: 0.72; margin: 0 0 14px; }
+  .tech-card > p:first-of-type { flex: 1 0 auto; }
+
+  .tech-legend {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px;
+    margin: 0 0 4px; font-size: 11px; letter-spacing: 0.2px; opacity: 0.68;
+  }
+  .tech-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .tech-legend i { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+  .tech-legend i.in { background: #34e0c4; color: #34e0c4; }
+  .tech-legend i.hold-full { background: #b48cff; color: #b48cff; }
+  .tech-legend i.out { background: #ff6fa8; color: #ff6fa8; }
+  .tech-legend i.hold-empty { background: #5b6fd8; color: #5b6fd8; }
+
+  .tech-bar {
+    display: flex; align-items: stretch; height: 9px; border-radius: 7px;
+    overflow: hidden; background: rgba(255,255,255,0.05); gap: 2px;
+  }
+  .tech-bar .seg { height: 100%; min-width: 4px; border-radius: 3px; }
+  .tech-bar .seg.in { background: linear-gradient(90deg, #21c4a8, #34e0c4); }
+  .tech-bar .seg.hold-full { background: linear-gradient(90deg, #9068e6, #b48cff); }
+  .tech-bar .seg.out { background: linear-gradient(90deg, #e0508e, #ff6fa8); }
+  .tech-bar .seg.hold-empty { background: linear-gradient(90deg, #4655c4, #5b6fd8); }
+  .tech-bar-caption {
+    font-size: 11px; letter-spacing: 0.2px; opacity: 0.55; text-align: center; margin-top: 9px;
+  }
+  .tech-card-start-btn {
+    display: block; width: 100%; margin-top: 16px; padding: 9px 14px;
+    background: rgba(255,119,0,0.12); border: 1px solid rgba(255,119,0,0.45);
+    border-radius: 30px; color: var(--accent-color); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.4px; cursor: pointer; transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .tech-card-start-btn:hover { background: rgba(255,119,0,0.22); }
+  .tech-card-start-btn:active { transform: scale(0.97); }
 
   /* ---------- Custom breathing exercises (create / import / export) ---------- */
   .custom-tech-list { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
@@ -1659,38 +1693,102 @@
       <a href="https://uklidnito.gumroad.com/l/v2" target="_blank" rel="noopener" style="display: inline-block; background: var(--accent-color); color: #fff; font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px; padding: 10px 20px; border-radius: 30px; text-decoration: none;">View on Gumroad →</a>
     </details>
 
+    <div class="tech-legend">
+      <span><i class="in"></i>inhale</span>
+      <span><i class="hold-full"></i>hold (full lungs)</span>
+      <span><i class="out"></i>exhale</span>
+      <span><i class="hold-empty"></i>hold (empty lungs)</span>
+    </div>
+
     <div class="tech-grid">
       <div class="tech-card">
         <h3>4-7-8 — Dr. Weil</h3>
         <p>A quiet inhale through the nose for 4 s, a hold for 7 s, then a full exhale through the mouth for 8 s. A ratio popularized by Dr. Andrew Weil, widely used to ease anxiety and calm down before sleep.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 7 seconds hold, 8 seconds exhale">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg hold-full" style="flex-grow:7"></span>
+          <span class="seg out" style="flex-grow:8"></span>
+        </div>
+        <p class="tech-bar-caption">4 s inhale · 7 s hold · 8 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('478')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Box — Navy SEAL</h3>
         <p>Inhale 4 s, hold 4 s, exhale 4 s, hold with empty lungs 4 s. An even pattern used to stay calm and focused under pressure.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 4 seconds hold, 4 seconds exhale, 4 seconds hold with empty lungs">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg hold-full" style="flex-grow:4"></span>
+          <span class="seg out" style="flex-grow:4"></span>
+          <span class="seg hold-empty" style="flex-grow:4"></span>
+        </div>
+        <p class="tech-bar-caption">4 s inhale · 4 s hold · 4 s exhale · 4 s hold</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('box')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Coherent</h3>
         <p>Inhale and exhale evenly for about 5.5 s each — roughly 5-6 breaths per minute. A resonant frequency linked to better heart rate variability (HRV).</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 5.5 seconds inhale, 5.5 seconds exhale">
+          <span class="seg in" style="flex-grow:5.5"></span>
+          <span class="seg out" style="flex-grow:5.5"></span>
+        </div>
+        <p class="tech-bar-caption">5.5 s inhale · 5.5 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('coherent')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Calm</h3>
         <p>Inhale 4 s, exhale 6 s. A longer exhale stimulates the vagus nerve and slows the heart rate — a quick way to calm down after a stressful moment.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 6 seconds exhale">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg out" style="flex-grow:6"></span>
+        </div>
+        <p class="tech-bar-caption">4 s inhale · 6 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('calm')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Vzdech — Huberman Lab</h3>
         <p>Two inhales through the nose in a row (a long one and a short top-up), then one long, slow exhale through the mouth. One of the fastest ways to reduce acute stress.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 2 seconds inhale, 1 second top-up, 6 seconds exhale">
+          <span class="seg in" style="flex-grow:2"></span>
+          <span class="seg in" style="flex-grow:1; opacity:0.7;"></span>
+          <span class="seg out" style="flex-grow:6"></span>
+        </div>
+        <p class="tech-bar-caption">2 s inhale · 1 s top-up · 6 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('sigh')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Diaphragmatic — belly breathing</h3>
         <p>Inhale through the nose for 4 s, consciously into the belly, a brief 2 s hold, a slow 6 s exhale. Engaging the diaphragm deepens and slows the breath, and research shows it improves attention and lowers cortisol levels.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 2 seconds hold, 6 seconds exhale">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg hold-full" style="flex-grow:2"></span>
+          <span class="seg out" style="flex-grow:6"></span>
+        </div>
+        <p class="tech-bar-caption">4 s inhale · 2 s hold · 6 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('branice')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Nozdry — Nadi Shodhana</h3>
         <p>Close your right nostril and inhale through the left (4 s), hold with both closed (4 s), then release the right and exhale through it (8 s). Then the same in reverse: inhale right, hold, exhale left. The exercise walks you through this order right in the app.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 4 seconds hold, 8 seconds exhale, repeated for the other nostril">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg hold-full" style="flex-grow:4"></span>
+          <span class="seg out" style="flex-grow:8"></span>
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg hold-full" style="flex-grow:4"></span>
+          <span class="seg out" style="flex-grow:8"></span>
+        </div>
+        <p class="tech-bar-caption">4-4-8 s right nostril · 4-4-8 s left nostril</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('nozdry')">▶ Start with this technique</button>
       </div>
       <div class="tech-card">
         <h3>Lion’s breath — Simhasana</h3>
         <p>A deep inhale through the nose for 4 s and a forceful exhale through the mouth for 4 s with the tongue stuck out. Releases tension in the face, jaw and neck and works as a quick release valve for frustration or tension.</p>
+        <div class="tech-bar" role="img" aria-label="Rhythm: 4 seconds inhale, 4 seconds exhale">
+          <span class="seg in" style="flex-grow:4"></span>
+          <span class="seg out" style="flex-grow:4"></span>
+        </div>
+        <p class="tech-bar-caption">4 s inhale · 4 s exhale</p>
+        <button type="button" class="tech-card-start-btn" onclick="startTechniqueFromCard('lev')">▶ Start with this technique</button>
       </div>
     </div>
 
@@ -3634,6 +3732,14 @@
   }
 
   // Switching breathing technique - at any time, even while the exercise is running
+  // Start button on a technique card in the overview: sets that technique,
+  // closes the Techniques panel, and opens the breathing exercise ready to start.
+  window.startTechniqueFromCard = function (techId) {
+    selectBreathTechnique(techId);
+    closePanel();
+    startBreathing();
+  };
+
   window.selectBreathTechnique = function(techId) {
     if (!BREATH_TECHNIQUES[techId]) return;
     currentBreathTechnique = techId;
