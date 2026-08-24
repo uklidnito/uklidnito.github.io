@@ -35,6 +35,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="seo.css">
 
+<style>
+/* --- Graphical representation of breathing techniques --- */
+.bv-wrap{display:flex;flex-direction:column;align-items:center;gap:.55rem;margin:.9rem 0 .35rem;}
+.bv-orb-holder{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center;}
+.bv-orb-holder::before{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(180,140,255,.18);}
+.bv-orb{width:38px;height:38px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#d9c6ff 0%,#a56bff 42%,#6c2bd9 75%,#3a0ca3 100%);
+  box-shadow:0 0 16px 2px rgba(150,90,255,.55),0 0 2px rgba(255,255,255,.4) inset;
+  transform:scale(.6);
+  animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;}
+.bv-caption{font-family:'Poppins',sans-serif;font-size:.68rem;letter-spacing:.02em;color:#c9b8e8;opacity:.8;text-align:center;}
+.bv-bar{display:flex;width:100%;max-width:220px;height:8px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 1px rgba(180,140,255,.18) inset;}
+.bv-bar span{display:block;height:100%;}
+.bv-in{background:#57e0c9;}
+.bv-hold{background:#a56bff;}
+.bv-out{background:#ff6bc9;}
+.bv-hold2{background:#3a2a5e;}
+.bv-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;font-family:'Poppins',sans-serif;font-size:.66rem;color:#c9b8e8;opacity:.85;}
+.bv-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.3em;vertical-align:middle;}
+
+@keyframes bv-478  {0%{transform:scale(.6);} 21.1%{transform:scale(1);} 57.9%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-box  {0%{transform:scale(.6);} 25%{transform:scale(1);} 50%{transform:scale(1);} 75%{transform:scale(.6);} 100%{transform:scale(.6);}}
+@keyframes bv-coh  {0%{transform:scale(.6);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-calm {0%{transform:scale(.6);} 40%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-sigh {0%{transform:scale(.6);} 14%{transform:scale(.82);} 29%{transform:scale(1);} 100%{transform:scale(.55);}}
+@keyframes bv-diap {0%{transform:scale(.6);} 33.3%{transform:scale(1);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-nadi {0%{transform:scale(.6);} 25%{transform:scale(1);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-lion {0%{transform:scale(.6);} 50%{transform:scale(1);} 62%{transform:scale(.7);} 100%{transform:scale(.6);}}
+
+.bv-478{animation-name:bv-478;animation-duration:19s;}
+.bv-box{animation-name:bv-box;animation-duration:16s;}
+.bv-coh{animation-name:bv-coh;animation-duration:11s;}
+.bv-calm{animation-name:bv-calm;animation-duration:10s;}
+.bv-sigh{animation-name:bv-sigh;animation-duration:7s;}
+.bv-diap{animation-name:bv-diap;animation-duration:12s;}
+.bv-nadi{animation-name:bv-nadi;animation-duration:16s;}
+.bv-lion{animation-name:bv-lion;animation-duration:8s;}
+
+@media (prefers-reduced-motion: reduce){
+  .bv-orb{animation:none !important;transform:scale(.85);}
+}
+</style>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,38 +123,84 @@
   </section>
 
   <section class="content">
+    <div class="bv-legend" style="margin-bottom:1.1rem;">
+      <span><i style="background:#57e0c9"></i>inhale</span>
+      <span><i style="background:#a56bff"></i>hold (full lungs)</span>
+      <span><i style="background:#ff6bc9"></i>exhale</span>
+      <span><i style="background:#3a2a5e"></i>hold (empty lungs)</span>
+    </div>
     <div class="tech-grid">
       <div class="tech-card">
         <h3>4-7-8 — Dr. Weil</h3>
         <p>Inhale through the nose for 4 s, hold 7 s, exhale through the mouth 8 s. A classic for calming down before sleep and easing anxiety.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-478"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:7"></span><span class="bv-out" style="flex:8"></span></div>
+          <p class="bv-caption">4 s inhale · 7 s hold · 8 s exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Box — Navy SEAL</h3>
         <p>4 s inhale, 4 s hold, 4 s exhale, 4 s hold with empty lungs. An even rhythm for calm and focus under pressure.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-box"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:4"></span><span class="bv-out" style="flex:4"></span><span class="bv-hold2" style="flex:4"></span></div>
+          <p class="bv-caption">4 s inhale · 4 s hold · 4 s exhale · 4 s hold</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Coherent</h3>
         <p>Inhale and exhale each about 5.5 s, i.e. 5-6 breaths per minute. A frequency linked to better heart rate variability (HRV).</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-coh"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:5.5"></span><span class="bv-out" style="flex:5.5"></span></div>
+          <p class="bv-caption">5.5 s inhale · 5.5 s exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Calm</h3>
         <p>Inhale 4 s, exhale 6 s. The extended exhale engages the vagus nerve and quickly slows the heart rate.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-calm"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-out" style="flex:6"></span></div>
+          <p class="bv-caption">4 s inhale · 6 s exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Sigh — Huberman Lab</h3>
         <p>Two short inhales through the nose in a row, then one long exhale through the mouth. One of the fastest ways to bring down acute stress.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-sigh"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:1"></span><span class="bv-in" style="flex:1;opacity:.7"></span><span class="bv-out" style="flex:5"></span></div>
+          <p class="bv-caption">2× short inhale · 1 long exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Diaphragmatic — belly breathing</h3>
         <p>Inhale 4 s consciously into the belly, a brief 2 s hold, exhale 6 s. Deep breathing that engages the diaphragm, linked to lower cortisol.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-diap"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:2"></span><span class="bv-out" style="flex:6"></span></div>
+          <p class="bv-caption">4 s inhale · 2 s hold · 6 s exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Nostril — Nadi Shodhana</h3>
         <p>Inhale 4 s, hold 4 s, exhale 8 s — a ratio drawn from the yogic alternate-nostril breathing technique.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-nadi"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:4"></span><span class="bv-out" style="flex:8"></span></div>
+          <p class="bv-caption">4 s inhale · 4 s hold · 8 s exhale</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Lion's breath — Simhasana</h3>
         <p>Inhale through the nose 4 s, forceful exhale through the mouth 4 s with the tongue stuck out. A quick release valve for tension in the face and jaw.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-lion"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-out" style="flex:4"></span></div>
+          <p class="bv-caption">4 s inhale · forceful 4 s exhale</p>
+        </div>
       </div>
     </div>
 

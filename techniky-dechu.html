@@ -34,6 +34,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="seo.css">
 
+<style>
+/* --- Grafické znázornění dechových technik --- */
+.bv-wrap{display:flex;flex-direction:column;align-items:center;gap:.55rem;margin:.9rem 0 .35rem;}
+.bv-orb-holder{position:relative;width:64px;height:64px;display:flex;align-items:center;justify-content:center;}
+.bv-orb-holder::before{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(180,140,255,.18);}
+.bv-orb{width:38px;height:38px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#d9c6ff 0%,#a56bff 42%,#6c2bd9 75%,#3a0ca3 100%);
+  box-shadow:0 0 16px 2px rgba(150,90,255,.55),0 0 2px rgba(255,255,255,.4) inset;
+  transform:scale(.6);
+  animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;}
+.bv-caption{font-family:'Poppins',sans-serif;font-size:.68rem;letter-spacing:.02em;color:#c9b8e8;opacity:.8;text-align:center;}
+.bv-bar{display:flex;width:100%;max-width:220px;height:8px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 1px rgba(180,140,255,.18) inset;}
+.bv-bar span{display:block;height:100%;}
+.bv-in{background:#57e0c9;}
+.bv-hold{background:#a56bff;}
+.bv-out{background:#ff6bc9;}
+.bv-hold2{background:#3a2a5e;}
+.bv-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;font-family:'Poppins',sans-serif;font-size:.66rem;color:#c9b8e8;opacity:.85;}
+.bv-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.3em;vertical-align:middle;}
+
+@keyframes bv-478  {0%{transform:scale(.6);} 21.1%{transform:scale(1);} 57.9%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-box  {0%{transform:scale(.6);} 25%{transform:scale(1);} 50%{transform:scale(1);} 75%{transform:scale(.6);} 100%{transform:scale(.6);}}
+@keyframes bv-coh  {0%{transform:scale(.6);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-calm {0%{transform:scale(.6);} 40%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-sigh {0%{transform:scale(.6);} 14%{transform:scale(.82);} 29%{transform:scale(1);} 100%{transform:scale(.55);}}
+@keyframes bv-diap {0%{transform:scale(.6);} 33.3%{transform:scale(1);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-nadi {0%{transform:scale(.6);} 25%{transform:scale(1);} 50%{transform:scale(1);} 100%{transform:scale(.6);}}
+@keyframes bv-lion {0%{transform:scale(.6);} 50%{transform:scale(1);} 62%{transform:scale(.7);} 100%{transform:scale(.6);}}
+
+.bv-478{animation-name:bv-478;animation-duration:19s;}
+.bv-box{animation-name:bv-box;animation-duration:16s;}
+.bv-coh{animation-name:bv-coh;animation-duration:11s;}
+.bv-calm{animation-name:bv-calm;animation-duration:10s;}
+.bv-sigh{animation-name:bv-sigh;animation-duration:7s;}
+.bv-diap{animation-name:bv-diap;animation-duration:12s;}
+.bv-nadi{animation-name:bv-nadi;animation-duration:16s;}
+.bv-lion{animation-name:bv-lion;animation-duration:8s;}
+
+@media (prefers-reduced-motion: reduce){
+  .bv-orb{animation:none !important;transform:scale(.85);}
+}
+</style>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -78,38 +122,84 @@
   </section>
 
   <section class="content">
+    <div class="bv-legend" style="margin-bottom:1.1rem;">
+      <span><i style="background:#57e0c9"></i>nádech</span>
+      <span><i style="background:#a56bff"></i>zádrž (plné plíce)</span>
+      <span><i style="background:#ff6bc9"></i>výdech</span>
+      <span><i style="background:#3a2a5e"></i>zádrž (prázdné plíce)</span>
+    </div>
     <div class="tech-grid">
       <div class="tech-card">
         <h3>4-7-8 — Dr. Weil</h3>
         <p>Nádech nosem 4 s, zádrž 7 s, výdech ústy 8 s. Klasika na zklidnění před spaním a zmírnění úzkosti.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-478"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:7"></span><span class="bv-out" style="flex:8"></span></div>
+          <p class="bv-caption">4 s nádech · 7 s zádrž · 8 s výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Box — Navy SEAL</h3>
         <p>4 s nádech, 4 s zádrž, 4 s výdech, 4 s zádrž s prázdnými plícemi. Rovnoměrný rytmus pro klid a soustředění pod tlakem.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-box"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:4"></span><span class="bv-out" style="flex:4"></span><span class="bv-hold2" style="flex:4"></span></div>
+          <p class="bv-caption">4 s nádech · 4 s zádrž · 4 s výdech · 4 s zádrž</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Coherent</h3>
         <p>Nádech i výdech po cca 5,5 s, tedy 5-6 dechů za minutu. Frekvence spojovaná s lepší variabilitou srdečního tepu (HRV).</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-coh"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:5.5"></span><span class="bv-out" style="flex:5.5"></span></div>
+          <p class="bv-caption">5,5 s nádech · 5,5 s výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Calm</h3>
         <p>Nádech 4 s, výdech 6 s. Prodloužený výdech zapojuje bloudivý nerv a rychle zpomaluje tep.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-calm"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-out" style="flex:6"></span></div>
+          <p class="bv-caption">4 s nádech · 6 s výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Vzdech — Huberman Lab</h3>
         <p>Dva krátké nádechy nosem za sebou, poté jeden dlouhý výdech ústy. Jeden z nejrychlejších způsobů, jak srazit akutní stres.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-sigh"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:1"></span><span class="bv-in" style="flex:1;opacity:.7"></span><span class="bv-out" style="flex:5"></span></div>
+          <p class="bv-caption">2× krátký nádech · 1 dlouhý výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Bránice — břišní dýchání</h3>
         <p>Nádech 4 s vědomě do břicha, krátká zádrž 2 s, výdech 6 s. Hluboký dech zapojující bránici, spojovaný s nižším kortizolem.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-diap"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:2"></span><span class="bv-out" style="flex:6"></span></div>
+          <p class="bv-caption">4 s nádech · 2 s zádrž · 6 s výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Nozdry — Nadi Shodhana</h3>
         <p>Nádech 4 s, zádrž 4 s, výdech 8 s — poměr vycházející z jógového střídavého dýchání nosními dírkami.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-nadi"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-hold" style="flex:4"></span><span class="bv-out" style="flex:8"></span></div>
+          <p class="bv-caption">4 s nádech · 4 s zádrž · 8 s výdech</p>
+        </div>
       </div>
       <div class="tech-card">
         <h3>Lví dech — Simhasana</h3>
         <p>Nádech nosem 4 s, razantní výdech ústy 4 s s vyplazeným jazykem. Rychlý ventil na napětí v obličeji a čelisti.</p>
+        <div class="bv-wrap">
+          <div class="bv-orb-holder"><div class="bv-orb bv-lion"></div></div>
+          <div class="bv-bar"><span class="bv-in" style="flex:4"></span><span class="bv-out" style="flex:4"></span></div>
+          <p class="bv-caption">4 s nádech · razantní 4 s výdech</p>
+        </div>
       </div>
     </div>
 
