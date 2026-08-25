@@ -495,6 +495,26 @@
   .progress-lock-status.error { color: #ff6b6b; }
   .progress-lock-status.success { color: #4ade80; }
   .progress-lock-hint { font-size: 10.5px; line-height: 1.6; opacity: 0.55; margin: 14px 0 0; text-align: left; }
+  .progress-lock-gallery { margin: 0 0 16px; }
+  .progress-lock-gallery-viewport {
+    position: relative; width: 100%; border-radius: 14px; overflow: hidden;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+  }
+  .progress-lock-gallery-track { display: flex; transition: transform 0.35s ease; touch-action: pan-y; }
+  .progress-lock-gallery-slide {
+    flex: 0 0 100%; display: flex; align-items: center; justify-content: center; height: 230px;
+  }
+  .progress-lock-gallery-slide img {
+    width: 100%; height: 100%; object-fit: contain; object-position: center; display: block;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+  }
+  .progress-lock-gallery-dots { display: flex; justify-content: center; align-items: center; gap: 7px; margin-top: 10px; }
+  .progress-lock-gallery-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.25);
+    cursor: pointer; transition: 0.25s; border: none; padding: 0; flex-shrink: 0;
+  }
+  .progress-lock-gallery-dot.active { background: var(--accent-color); box-shadow: 0 0 8px rgba(255,119,0,0.6); width: 18px; border-radius: 4px; }
+  @media (min-width: 480px) { .progress-lock-gallery-slide { height: 300px; } }
   .progress-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 24px; }
   .progress-stat {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
@@ -1882,6 +1902,20 @@
           <li>🎯 týdenní/měsíční souhrny a celkový index pokroku</li>
           <li>💾 export a import zálohy (JSON, CSV, PDF)</li>
         </ul>
+        <div class="progress-lock-gallery" id="progress-lock-gallery">
+          <div class="progress-lock-gallery-viewport">
+            <div class="progress-lock-gallery-track" id="progress-lock-gallery-track">
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-1.jpg" alt="Náhled sekce Tvůj pokrok – přehled a statistiky" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-2.jpg" alt="Náhled sekce Tvůj pokrok – vývoj hodnocení stresu v čase" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-3.jpg" alt="Náhled sekce Tvůj pokrok – celkové zhodnocení dne" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-4.jpg" alt="Náhled sekce Tvůj pokrok – rozpoznané vzorce a připomínka" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-5.jpg" alt="Náhled sekce Tvůj pokrok – celkový index pokroku" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-6.jpg" alt="Náhled sekce Tvůj pokrok – zálohování a export dat" loading="lazy" draggable="false"></div>
+              <div class="progress-lock-gallery-slide"><img src="screenshots/pokrok-preview-7.jpg" alt="Náhled sekce Tvůj pokrok – denní check-in" loading="lazy" draggable="false"></div>
+            </div>
+          </div>
+          <div class="progress-lock-gallery-dots" id="progress-lock-gallery-dots"></div>
+        </div>
         <p class="progress-lock-desc">Heslo pro odemčení získáš přes Gumroad: <a href="https://uklidnito.gumroad.com/" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>Cena je 0&nbsp;€ a víc — pokud tě aplikace baví a chceš projekt podpořit, budeme moc rádi. Děkujeme! 🙏</p>
         <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Zadej heslo" autocomplete="off">
         <button type="button" class="progress-lock-btn" onclick="submitProgressUnlock()">🔓 Odemknout</button>
@@ -3324,6 +3358,70 @@
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') submitProgressUnlock();
     });
+  })();
+
+  // Náhledová galerie na zamykací obrazovce "Tvůj pokrok" — ruční
+  // procházení tažením/swipem (dotyk i myš) plus tečky dole pro přímý skok
+  // na konkrétní snímek.
+  (function initProgressLockGallery() {
+    const track = document.getElementById('progress-lock-gallery-track');
+    const dotsWrap = document.getElementById('progress-lock-gallery-dots');
+    if (!track || !dotsWrap) return;
+    const slides = track.children;
+    const count = slides.length;
+    let index = 0;
+
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'progress-lock-gallery-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Náhled ' + (i + 1) + ' z ' + count);
+      dot.addEventListener('click', function () { goTo(i); });
+      dotsWrap.appendChild(dot);
+    }
+    const dots = dotsWrap.children;
+
+    function goTo(i) {
+      index = Math.max(0, Math.min(count - 1, i));
+      track.style.transform = 'translateX(-' + (index * 100) + '%)';
+      for (let j = 0; j < dots.length; j++) dots[j].classList.toggle('active', j === index);
+    }
+
+    let startX = 0, currentX = 0, dragging = false;
+    const SWIPE_THRESHOLD = 40;
+
+    function onDragStart(x) {
+      dragging = true;
+      startX = x;
+      currentX = x;
+      track.style.transition = 'none';
+    }
+    function onDragMove(x) {
+      if (!dragging) return;
+      currentX = x;
+      const dx = currentX - startX;
+      track.style.transform = 'translateX(calc(-' + (index * 100) + '% + ' + dx + 'px))';
+    }
+    function onDragEnd() {
+      if (!dragging) return;
+      dragging = false;
+      track.style.transition = '';
+      const dx = currentX - startX;
+      if (dx > SWIPE_THRESHOLD && index > 0) goTo(index - 1);
+      else if (dx < -SWIPE_THRESHOLD && index < count - 1) goTo(index + 1);
+      else goTo(index);
+    }
+
+    track.addEventListener('touchstart', function (e) { onDragStart(e.touches[0].clientX); }, { passive: true });
+    track.addEventListener('touchmove', function (e) { onDragMove(e.touches[0].clientX); }, { passive: true });
+    track.addEventListener('touchend', onDragEnd);
+
+    let mouseDown = false;
+    track.addEventListener('mousedown', function (e) { mouseDown = true; onDragStart(e.clientX); e.preventDefault(); });
+    window.addEventListener('mousemove', function (e) { if (mouseDown) onDragMove(e.clientX); });
+    window.addEventListener('mouseup', function () { if (mouseDown) { mouseDown = false; onDragEnd(); } });
+
+    goTo(0);
   })();
 
   // ---------- Plovoucí šipka nahoru v sekci "Tvůj pokrok" ----------
