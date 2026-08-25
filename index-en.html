@@ -1042,6 +1042,19 @@
   }
   .section-disclaimer-confirm:hover { box-shadow: 0 0 14px var(--accent-color); }
 
+  /* ---------- "How it came to be" section ---------- */
+  .vznik-photo { margin: 22px auto; text-align: center; }
+  .vznik-photo img {
+    max-width: 260px; width: 100%; border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12);
+  }
+  .vznik-wish {
+    margin-top: 20px; padding: 16px 18px; border-radius: 14px;
+    background: rgba(255,119,0,0.08); border: 1px solid rgba(255,119,0,0.25);
+    font-style: italic; line-height: 1.8;
+  }
+  .vznik-signature { display: inline-block; margin-top: 6px; font-style: normal; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; color: var(--accent-color); }
+
   .benefits-list { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
   .benefits-list li { font-size: 13.5px; opacity: 0.82; padding-left: 22px; position: relative; line-height: 1.6; }
   .benefits-list li::before { content: "○"; position: absolute; left: 0; color: var(--accent-color); }
@@ -1656,6 +1669,7 @@
   <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Breathing articles</a>
   <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Supplements &amp; other paths to calm</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">FAQ</a>
+  <a href="#vznik" data-panel="sec-vznik" onclick="showPanel('sec-vznik'); toggleSideNav(false); return false;">How it came to be</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Advice &amp; Guidance</a>
 
   <div class="side-nav-external side-nav-install" id="side-nav-install-box" hidden>
@@ -2816,6 +2830,21 @@
     </div>
   </section>
 
+  <section class="content" id="sec-vznik" aria-labelledby="vznik-nadpis">
+    <div class="panel-topbar">
+      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
+    </div>
+    <h2 id="vznik-nadpis">How it came to be</h2>
+    <p>Uklidni To originally started as something purely personal. I was looking for different breathing exercises for relaxation and stress relief, and the information was scattered all over the place — a bit here, a bit there, never all in one spot. So I decided to build my own app: something simple to use, with everything I needed in one place, available anytime and anywhere, whether at home or on the go.</p>
+
+    <figure class="vznik-photo">
+      <img src="david.jpg" alt="David, the creator of Uklidni To" loading="lazy">
+    </figure>
+
+    <p>Over time I decided to make the app available for free to everyone, so that people looking for the same thing would have an easier time and wouldn't have to spend hours searching and figuring things out the way I did.</p>
+    <p class="vznik-wish">I hope this app helps and brings a little joy to everyone who finds a moment of calm in it.<br><span class="vznik-signature">David</span></p>
+  </section>
+
   <section class="content" id="poradna" aria-labelledby="poradna-nadpis">
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
@@ -3271,7 +3300,7 @@
   initArticleSearch('doplnky', 'doplnky-search-input', 'doplnky-search-clear', 'doplnky-search-count', 'doplnky-search-empty');
 
   // ---------- Expandable panels (sections from the side menu) ----------
-  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'poradna'];
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'sec-vznik', 'poradna'];
 
   function renderPanel(id, subId) {
     const hero = document.getElementById('cviceni');
@@ -3596,7 +3625,7 @@
 
   (function initPanelFromHash() {
     const hashId = location.hash ? location.hash.slice(1) : '';
-    const hashToPanel = { 'jak-funguje': 'sec-jak-funguje', 'techniky': 'sec-techniky', 'faq': 'sec-faq' };
+    const hashToPanel = { 'jak-funguje': 'sec-jak-funguje', 'techniky': 'sec-techniky', 'faq': 'sec-faq', 'vznik': 'sec-vznik' };
     let startId = null;
     let subId = null;
     if (PANEL_IDS.indexOf(hashId) !== -1) startId = hashId;
