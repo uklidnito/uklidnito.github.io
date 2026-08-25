@@ -3318,7 +3318,7 @@
   // ne zdravotnický nástroj, a u AI poradny navíc upozornění, ať si uživatel
   // vygenerovanou odpověď vždy sám ověří. Zobrazuje se při každém vstupu
   // do sekce (nepamatuje se), aby na upozornění uživatel nezapomněl.
-  const DISCLAIMER_GATED_PANELS = ['doplnky', 'poradna'];
+  const DISCLAIMER_GATED_PANELS = ['clanky', 'doplnky', 'poradna'];
   let pendingDisclaimerNav = null;
 
   function activatePanelNav(id, subId) {
@@ -3340,6 +3340,10 @@
       bodyEl.innerHTML =
         '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
         '<p>Odpovědi v této sekci generuje umělá inteligence a mohou obsahovat nepřesnosti či chyby. <strong>Vygenerovanou odpověď si prosím vždy sám/sama ověř</strong> — zejména vše, co se týká zdraví — a v případě potíží se poraď s lékařem nebo jiným kvalifikovaným odborníkem.</p>';
+    } else if (id === 'clanky') {
+      bodyEl.innerHTML =
+        '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
+        '<p>Články v této sekci slouží jen jako obecná informace a mohou obsahovat nepřesnosti nebo chyby. <strong>Uvedené informace si prosím ověř</strong> a v případě zdravotních potíží se poraď s lékařem nebo jiným kvalifikovaným odborníkem.</p>';
     } else {
       bodyEl.innerHTML =
         '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
