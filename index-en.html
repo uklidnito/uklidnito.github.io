@@ -470,6 +470,33 @@
   .article-search-empty.visible { display: block; }
 
   /* ---------- Your progress ---------- */
+  .progress-lock-screen { display: flex; align-items: center; justify-content: center; padding: 30px 0 10px; }
+  .progress-lock-box {
+    width: 100%; max-width: 380px; background: rgba(255,255,255,0.03); border: 1px solid var(--accent-color);
+    border-radius: 16px; padding: 26px 20px; box-shadow: 0 0 30px rgba(255,119,0,0.15); text-align: center;
+  }
+  .progress-lock-icon { font-size: 34px; margin-bottom: 6px; }
+  .progress-lock-box h3 { margin: 0 0 12px; font-size: 15px; letter-spacing: 0.5px; font-family: 'Poppins', sans-serif; font-weight: 600; }
+  .progress-lock-desc { font-size: 12.5px; line-height: 1.6; opacity: 0.75; margin: 0 0 12px; text-align: left; }
+  .progress-lock-desc a { color: var(--accent-color); }
+  .progress-lock-list { list-style: none; margin: 0 0 14px; padding: 0; text-align: left; }
+  .progress-lock-list li { font-size: 12px; line-height: 1.9; opacity: 0.85; }
+  .progress-lock-input {
+    display: block; width: 100%; margin-bottom: 10px; padding: 11px 12px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 13px; text-align: center;
+  }
+  .progress-lock-input:focus { outline: none; border-color: var(--accent-color); }
+  .progress-lock-btn {
+    width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--accent-color);
+    background: rgba(255,119,0,0.15); color: #fff; cursor: pointer; font-family: 'Orbitron', sans-serif;
+    font-size: 12px; letter-spacing: 1px;
+  }
+  .progress-lock-btn:hover { background: rgba(255,119,0,0.3); }
+  .progress-lock-status { font-size: 11.5px; opacity: 0.85; margin: 10px 0 0; min-height: 14px; }
+  .progress-lock-status.error { color: #ff6b6b; }
+  .progress-lock-status.success { color: #4ade80; }
+  .progress-lock-hint { font-size: 10.5px; line-height: 1.6; opacity: 0.55; margin: 14px 0 0; text-align: left; }
   .progress-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0 24px; }
   .progress-stat {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
@@ -1844,6 +1871,27 @@
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
     </div>
+    <div class="progress-lock-screen" id="progress-lock-screen" style="display:none;">
+      <div class="progress-lock-box">
+        <div class="progress-lock-icon">🔒</div>
+        <h3>Your progress is locked</h3>
+        <p class="progress-lock-desc">Once unlocked, you'll be able to see and track (and back up):</p>
+        <ul class="progress-lock-list">
+          <li>📅 a calendar of practiced days with streaks</li>
+          <li>📈 stress, mood, energy and sleep ratings with trend charts</li>
+          <li>📝 a journal for daily notes</li>
+          <li>🎯 weekly/monthly summaries and the overall progress index</li>
+          <li>💾 backup export and import (JSON, CSV, PDF)</li>
+        </ul>
+        <p class="progress-lock-desc">Get the password to unlock via Gumroad: <a href="https://uklidnito.gumroad.com/" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>The price is €0 and up — if you enjoy the app and want to support the project, we'd really appreciate it. Thank you! 🙏</p>
+        <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Enter password" autocomplete="off">
+        <button type="button" class="progress-lock-btn" onclick="submitProgressUnlock()">🔓 Unlock</button>
+        <p class="progress-lock-status" id="progress-lock-status"></p>
+        <p class="progress-lock-hint">💡 This browser will remember the password once entered, so you won't need to enter it again next time. If you clear your browser data (or use a different browser/device), you'll need to enter it again.</p>
+      </div>
+    </div>
+
+    <div class="progress-content" id="progress-content">
     <div class="progress-scrolltop-wrap">
       <button type="button" class="progress-scrolltop-btn" id="progress-scrolltop-btn" aria-label="Back to top of section" title="Back to top">↑</button>
     </div>
@@ -2187,6 +2235,7 @@
       <button class="progress-reset-btn" id="progress-reset-btn" onclick="resetBreathProgress()">Clear my progress</button>
       <button class="progress-reset-btn" id="progress-export-btn" onclick="exportProgressCSV()">Export data (CSV)</button>
       <button class="progress-reset-btn" id="progress-export-pdf-btn" onclick="exportProgressPDF()">Export data (PDF)</button>
+    </div>
     </div>
   </section>
 
@@ -3163,6 +3212,7 @@
     hero.classList.add('hero-hidden');
     const panel = document.getElementById(id);
     if (panel) panel.classList.add('panel-active');
+    if (id === 'pokrok' && typeof updateProgressLockUI === 'function') updateProgressLockUI();
     window.scrollTo({ top: 0, behavior: 'auto' });
 
     if (subId) {
@@ -3197,6 +3247,60 @@
     const id = e.state && e.state.panel ? e.state.panel : null;
     renderPanel(id);
   });
+
+  // ---------- Lock for the "Your progress" section ----------
+  // The section is locked behind a password obtained via Gumroad. Once the
+  // correct password is entered, the unlock is remembered in localStorage so
+  // the user isn't asked again (until browser data is cleared). Admin (signed
+  // in via the hidden 3x logo tap + Firebase Auth) never sees the lock.
+  const PROGRESS_UNLOCK_KEY = 'uklidnitoProgressUnlocked';
+  const PROGRESS_UNLOCK_PASSWORD = 'Uklidnito2026@309';
+
+  function isAdminActiveForLock() {
+    return !!document.getElementById('admin-badge');
+  }
+
+  function isProgressUnlocked() {
+    return isAdminActiveForLock() || localStorage.getItem(PROGRESS_UNLOCK_KEY) === '1';
+  }
+
+  window.updateProgressLockUI = function () {
+    const lockScreen = document.getElementById('progress-lock-screen');
+    const content = document.getElementById('progress-content');
+    if (!lockScreen || !content) return;
+    const unlocked = isProgressUnlocked();
+    lockScreen.style.display = unlocked ? 'none' : 'flex';
+    content.style.display = unlocked ? '' : 'none';
+    if (!unlocked) {
+      const input = document.getElementById('progress-lock-input');
+      if (input) setTimeout(function () { input.focus(); }, 60);
+    }
+  };
+
+  window.submitProgressUnlock = function () {
+    const input = document.getElementById('progress-lock-input');
+    const status = document.getElementById('progress-lock-status');
+    const value = input ? input.value : '';
+    if (value === PROGRESS_UNLOCK_PASSWORD) {
+      try { localStorage.setItem(PROGRESS_UNLOCK_KEY, '1'); } catch (e) {}
+      if (status) { status.textContent = '✓ Unlocked!'; status.className = 'progress-lock-status success'; }
+      setTimeout(function () {
+        updateProgressLockUI();
+        if (typeof renderProgress === 'function') renderProgress();
+      }, 250);
+    } else {
+      if (status) { status.textContent = 'Incorrect password, please try again.'; status.className = 'progress-lock-status error'; }
+      if (input) { input.value = ''; input.focus(); }
+    }
+  };
+
+  (function initProgressLockInput() {
+    const input = document.getElementById('progress-lock-input');
+    if (!input) return;
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') submitProgressUnlock();
+    });
+  })();
 
   // ---------- Floating scroll-to-top arrow in "Your progress" section ----------
   (function initProgressScrollTop() {
@@ -7460,6 +7564,7 @@
       } else if (!active && badge) {
         badge.remove();
       }
+      if (typeof updateProgressLockUI === 'function') updateProgressLockUI();
     }
 
     function mergeLogs(a, b) {
