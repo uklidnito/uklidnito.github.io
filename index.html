@@ -869,6 +869,14 @@
     padding: 12px 14px; border: 1px solid rgba(255,119,0,0.3); border-radius: 10px;
     background: rgba(255,119,0,0.05);
   }
+  .crisis-box {
+    font-size: 12.5px; line-height: 1.75; margin: 0 0 18px;
+    padding: 14px 16px; border: 1px solid rgba(255,90,90,0.35); border-radius: 10px;
+    background: rgba(255,90,90,0.08);
+  }
+  .crisis-box strong { color: #ff9a9a; }
+  .footer-crisis { font-size: 11px; opacity: 0.8; margin: 4px 0 10px; line-height: 1.7; }
+  .footer-crisis strong { opacity: 1; }
   .poradna-search-form {
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.18);
@@ -2849,6 +2857,12 @@
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
     </div>
     <h2 id="poradna-nadpis">Rady a poradna</h2>
+    <div class="crisis-box">
+      <strong>🆘 Jsi teď v akutní krizi nebo tě napadají myšlenky ublížit si?</strong> Nejsi na to sám/sama — tahle poradna na to není a nenahradí okamžitou pomoc člověka. Ozvi se hned:
+      <br>📞 Linka první psychické pomoci (dospělí, nonstop, zdarma): <strong>116 123</strong>
+      <br>📞 Linka bezpečí (děti a mladiství do 26 let, nonstop, zdarma): <strong>116 111</strong>
+      <br>🚨 Přímé ohrožení života: <strong>112</strong> (tísňová linka) nebo <strong>155</strong> (záchranná služba)
+    </div>
     <p class="poradna-intro">Zeptej se na cokoliv ohledně klidu, zvládání stresu, zdravého životního stylu, doplňků stravy, spánku nebo kondice. Odpověď generuje umělá inteligence (Google Gemini) a hledá jen v těchto tématech.</p>
     <p class="poradna-disclaimer-top">⚠️ Odpovědi jsou obecné informace generované AI, ne lékařská rada ani diagnóza. Než cokoliv začneš užívat nebo měnit svůj životní styl kvůli zdravotnímu problému, ověř si to prosím u lékaře nebo jiného kvalifikovaného odborníka. Text tvého dotazu se kvůli vygenerování odpovědi odešle a zpracuje na serverech Google (Gemini) — nepiš sem prosím jméno ani jiné osobní údaje.</p>
 
@@ -2901,6 +2915,7 @@
     <a href="doplnky.html">Doplňky</a> ·
     <a href="caste-dotazy.html">Časté dotazy</a>
   </nav>
+  <div class="footer-crisis">🆘 V akutní krizi nejsi sám/sama: Linka první psychické pomoci <strong>116 123</strong> · Linka bezpečí (do 26 let) <strong>116 111</strong> · tísňová linka <strong>112</strong> — vše nonstop a zdarma.</div>
   <div>© <span id="year"></span> Uklidni To — dechové cvičení zdarma online</div>
   <div class="made-in">Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
@@ -7989,6 +8004,16 @@ Pravidla:
   odmítni a nasměruj uživatele zpět k tématům klidu a zdraví.
 - Nikdy nestanovuj diagnózu, nepředepisuj konkrétní dávkování léků
   nebo doplňků a nenahrazuj lékaře, psychologa ani jiného odborníka.
+- Pokud dotaz naznačuje akutní krizi, sebevražedné myšlenky, úmysl
+  ublížit si nebo někomu jinému, nebo jiné bezprostřední ohrožení
+  zdraví či života, NEODPOVÍDEJ na něj věcně jako na běžný dotaz
+  o zvládání stresu. Místo toho stručně, s péčí a bez hodnocení
+  uznej, že to zní těžce, a hned na prvním místě uveď: Linku první
+  psychické pomoci 116 123 (nonstop, zdarma, pro dospělé), Linku
+  bezpečí 116 111 (nonstop, zdarma, do 26 let) a že při
+  bezprostředním ohrožení života je potřeba volat 112 nebo 155.
+  Doporuč kontaktovat některou z těchto linek nebo blízkého člověka
+  hned teď, a teprve pak stručně dodej případné obecné informace.
 - Odpovídej věcně, stručně a v češtině, v krátkých odstavcích nebo
   odrážkách, maximálně asi 200 slov.
 - Na konec KAŽDÉ odpovědi vždy připoj větu, že jde o obecnou informaci
