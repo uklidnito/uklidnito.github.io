@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="cs" class="no-js">
+<head>
+<script>document.documentElement.classList.replace('no-js','js');</script>
+<script>
+  // Načtení uloženého barevného motivu co nejdřív, ať stránka drží stejnou
+  // barvu jako zbytek webu (motiv se ukládá v localStorage z hlavní appky).
+  (function applySavedThemeEarly() {
+    var THEME_COLORS = {
+      amber:  ['#ff7700', '#993300'],
+      blue:   ['#2196f3', '#0d3d7a'],
+      purple: ['#9c27b0', '#4a0e59'],
+      green:  ['#43a047', '#1b5e20'],
+      pink:   ['#ff4d8d', '#85114a'],
+      teal:   ['#12c2c2', '#0a5c5c'],
+      red:    ['#ef4444', '#7f1d1d'],
+      indigo: ['#6366f1', '#312e81'],
+      gold:   ['#fbbf24', '#78350f'],
+      sky:    ['#0ea5e9', '#0c4a6e'],
+      mint:   ['#34d399', '#065f46'],
+      rose:   ['#f43f5e', '#831843']
+    };
+    try {
+      var raw = localStorage.getItem('uklidnito_settings');
+      var id = raw && JSON.parse(raw).themeColor;
+      var pair = THEME_COLORS[id];
+      if (pair) {
+        var root = document.documentElement.style;
+        root.setProperty('--accent-color', pair[0]);
+        root.setProperty('--accent-glow', pair[1]);
+      }
+    } catch (e) { /* ignore */ }
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a0033">
+
+<title>5 rychlých cvičení na zklidnění – protažení a uvolnění za pár minut | Uklidni To</title>
+<meta name="description" content="5 lehkých cvičení a protažení na rychlé zklidnění – šíje, ramena, záda i ruce. Bez pomůcek, hotovo za pár minut, skvěle doplní dechové cvičení. Zdarma.">
+<meta name="keywords" content="rychlé cvičení na zklidnění, protažení proti stresu, uvolnění napětí, lehké cvičení proti úzkosti, jak se rychle zklidnit, cvičení na uvolnění svalů, strečink na stres, protažení šíje a ramen, cvičení v práci proti stresu">
+<meta name="author" content="SYNTHLUCIDA">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://uklidnito.eu/rychla-cviceni-na-zklidneni.html">
+<link rel="alternate" hreflang="cs" href="https://uklidnito.eu/rychla-cviceni-na-zklidneni.html">
+<link rel="alternate" hreflang="en" href="https://uklidnito.eu/rychla-cviceni-na-zklidneni-en.html">
+<link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/rychla-cviceni-na-zklidneni.html">
+<meta name="language" content="Czech">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Uklidni To">
+<meta property="og:title" content="5 rychlých cvičení na zklidnění – protažení a uvolnění za pár minut">
+<meta property="og:description" content="Pět lehkých cvičení bez pomůcek na rychlé zklidnění těla i mysli – šíje, ramena, záda a ruce. Skvěle doplní dechové cvičení Uklidni To.">
+<meta property="og:url" content="https://uklidnito.eu/rychla-cviceni-na-zklidneni.html">
+<meta property="og:image" content="https://uklidnito.eu/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Uklidni To – rychlá cvičení na zklidnění">
+<meta property="og:locale" content="cs_CZ">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="5 rychlých cvičení na zklidnění – protažení a uvolnění za pár minut">
+<meta name="twitter:description" content="Pět lehkých cvičení bez pomůcek na rychlé zklidnění těla i mysli. Zdarma, bez registrace.">
+<meta name="twitter:image" content="https://uklidnito.eu/og-image.png">
+<meta name="twitter:image:alt" content="Uklidni To – rychlá cvičení na zklidnění">
+
+<!-- Icons / PWA -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Uklidni To">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://uklidnito.eu/rychla-cviceni-na-zklidneni.html",
+      "url": "https://uklidnito.eu/rychla-cviceni-na-zklidneni.html",
+      "name": "5 rychlých cvičení na zklidnění – protažení a uvolnění za pár minut",
+      "description": "Pět lehkých cvičení a protažení bez pomůcek na rychlé zklidnění těla i mysli. Zdarma, bez registrace.",
+      "inLanguage": "cs",
+      "isPartOf": { "@type": "WebSite", "name": "Uklidni To", "url": "https://uklidnito.eu/" },
+      "breadcrumb": { "@id": "https://uklidnito.eu/rychla-cviceni-na-zklidneni.html#breadcrumb" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://uklidnito.eu/rychla-cviceni-na-zklidneni.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Uklidni To", "item": "https://uklidnito.eu/" },
+        { "@type": "ListItem", "position": 2, "name": "Rychlá cvičení na zklidnění", "item": "https://uklidnito.eu/rychla-cviceni-na-zklidneni.html" }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "5 rychlých cvičení na zklidnění",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Protažení šíje (úklony hlavy)", "description": "Pomalé úklony hlavy do stran pro uvolnění napětí v krku a šíji." },
+        { "@type": "ListItem", "position": 2, "name": "Kroužení rameny", "description": "Velké pomalé kruhy rameny dozadu a dopředu pro rozproudění horní části zad." },
+        { "@type": "ListItem", "position": 3, "name": "Předklon vstoje (rag doll)", "description": "Volný předklon s uvolněnou hlavou a pažemi pro protažení zad a šíje." },
+        { "@type": "ListItem", "position": 4, "name": "Protřepání rukou a nohou", "description": "Rychlé protřepání končetin pro uvolnění nahromaděné nervozity." },
+        { "@type": "ListItem", "position": 5, "name": "Objetí kolen k hrudníku", "description": "Jemné přitažení kolen k hrudníku pro protažení dolních zad a pocit klidu." }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Jak dlouho mají cvičení na zklidnění trvat?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Stačí 2-3 minuty. Klidně vyber jen jedno cvičení podle toho, kde cítíš napětí nejvíc, nebo projdi všech pět jako krátkou rutinu." }
+        },
+        {
+          "@type": "Question",
+          "name": "Musím cvičení dělat v určitém pořadí?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Ne. Pořadí není důležité, vyber si podle chuti nebo podle toho, která část těla je zrovna nejvíc napnutá." }
+        },
+        {
+          "@type": "Question",
+          "name": "Jsou cvičení vhodná i do práce nebo do školy?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Ano. Všechna jdou dělat vsedě nebo vstoje v běžném oblečení, bez pomůcek a bez převlékání, klidně u stolu nebo o přestávce." }
+        },
+        {
+          "@type": "Question",
+          "name": "Dá se to kombinovat s dechovým cvičením Uklidni To?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Ano, je to ideální kombinace. Nejdřív pár minut protažení pro uvolnění těla a hned potom řízené dechové cvičení pro zklidnění mysli." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  @property --accent-color { syntax: '<color>'; inherits: true; initial-value: #ff7700; }
+  @property --accent-glow { syntax: '<color>'; inherits: true; initial-value: #993300; }
+
+  :root {
+    --bg-color-1: #3a1a00;
+    --bg-color-2: #0a0500;
+    --accent-color: #ff7700;
+    --accent-glow: #993300;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  html, body { overscroll-behavior-y: none; }
+  body {
+    margin: 0; min-height: 100vh; color: #fff;
+    font-family: 'Poppins', sans-serif; font-weight: 300;
+    background: radial-gradient(circle at 50% 15%, var(--bg-color-1), var(--bg-color-2) 65%, #000);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .brand, .cta-btn { font-family: 'Orbitron', sans-serif; }
+  a { color: var(--accent-color); }
+  img, svg { max-width: 100%; }
+
+  .ambient-blobs { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.16; background: var(--accent-color); animation: floatBlobs 50s infinite linear alternate; }
+  .blob.b1 { width: 340px; height: 340px; top: -6%; left: -10%; }
+  .blob.b2 { width: 420px; height: 420px; bottom: -8%; right: -12%; background: var(--accent-glow); animation-duration: 60s; animation-delay: -12s; }
+  @keyframes floatBlobs { 0% { transform: translate(0,0); } 100% { transform: translate(60px,40px); } }
+
+  header, main, footer { position: relative; z-index: 1; }
+
+  /* ---------- Top nav ---------- */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    gap: 12px; max-width: 900px; margin: 0 auto; padding: 22px 20px 10px;
+  }
+  .brand-link { text-decoration: none; }
+  .brand { font-size: 15px; letter-spacing: 4px; opacity: 0.9; }
+  .brand .dot { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
+  .topnav { display: flex; flex-wrap: wrap; gap: 6px 4px; }
+  .topnav a {
+    color: #fff; text-decoration: none; font-size: 12px; letter-spacing: 0.4px; opacity: 0.75;
+    padding: 8px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); transition: 0.25s;
+  }
+  .topnav a:hover { opacity: 1; border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 12px rgba(255,119,0,0.25); }
+  .topnav a.primary { border-color: var(--accent-color); color: var(--accent-color); }
+
+  nav.breadcrumb { max-width: 900px; margin: 0 auto; padding: 0 22px; font-size: 11px; opacity: 0.5; letter-spacing: 0.3px; }
+  nav.breadcrumb a { color: rgba(255,255,255,0.7); text-decoration: none; }
+  nav.breadcrumb a:hover { color: var(--accent-color); }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: 22px 20px 26px; max-width: 680px; margin: 0 auto; }
+  .hero h1 {
+    font-size: clamp(24px, 5.5vw, 38px); letter-spacing: 1.5px; margin: 6px 0 14px;
+    color: #fff; text-shadow: 0 0 22px var(--accent-color); line-height: 1.3;
+  }
+  .hero .subtitle { font-size: clamp(13px, 3vw, 16px); line-height: 1.75; opacity: 0.82; margin: 0 auto 22px; max-width: 560px; }
+
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.06); border: 1px solid var(--accent-color);
+    color: #fff; padding: 14px 26px; border-radius: 40px; cursor: pointer; text-decoration: none;
+    font-size: 12.5px; letter-spacing: 1.5px; box-shadow: 0 0 20px rgba(255,119,0,0.35);
+    transition: 0.3s;
+  }
+  .cta-btn:hover { background: rgba(255,119,0,0.15); box-shadow: 0 0 30px var(--accent-color); color: #fff; }
+
+  /* ---------- Content ---------- */
+  section.content { max-width: 720px; margin: 0 auto; padding: 10px 22px 20px; }
+  section.content h2 {
+    font-size: 15px; letter-spacing: 2.2px; text-transform: uppercase; color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-color); margin: 34px 0 16px; text-align: center;
+  }
+  section.content > p { font-size: 14px; line-height: 1.85; opacity: 0.82; margin: 0 0 14px; }
+
+  /* ---------- Exercise cards ---------- */
+  .exercise-list { display: flex; flex-direction: column; gap: 18px; margin: 10px 0 8px; }
+  .exercise-card {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px; padding: 20px 22px 22px; display: grid;
+    grid-template-columns: 96px 1fr; gap: 18px; align-items: start;
+  }
+  @media (max-width: 540px) {
+    .exercise-card { grid-template-columns: 1fr; text-align: center; }
+    .exercise-card .exercise-fig { margin: 0 auto; }
+  }
+  .exercise-fig {
+    width: 96px; height: 120px; display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.03); border-radius: 14px; padding: 6px; flex-shrink: 0;
+  }
+  .exercise-fig svg { width: 100%; height: 100%; }
+  .exercise-num {
+    display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px;
+    border-radius: 50%; background: rgba(255,119,0,0.15); border: 1px solid var(--accent-color);
+    color: var(--accent-color); font-size: 11px; font-weight: 600; font-family: 'Orbitron', sans-serif;
+    margin-right: 8px; flex-shrink: 0;
+  }
+  .exercise-card h3 {
+    margin: 0 0 4px; font-size: 15px; letter-spacing: 0.5px; color: #fff;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  }
+  .exercise-duration {
+    display: inline-block; font-size: 10.5px; letter-spacing: 0.5px; color: var(--accent-color);
+    opacity: 0.9; margin: 0 0 10px; text-transform: uppercase;
+  }
+  .exercise-card p { font-size: 13px; line-height: 1.75; opacity: 0.78; margin: 0 0 10px; }
+  .exercise-card p:last-child { margin-bottom: 0; }
+  .exercise-benefit {
+    font-size: 12px; opacity: 0.65; border-left: 2px solid var(--accent-color); padding-left: 10px;
+    margin-top: 10px;
+  }
+
+  .tip-box {
+    background: rgba(255,119,0,0.06); border: 1px solid rgba(255,119,0,0.3); border-radius: 14px;
+    padding: 16px 20px; font-size: 13px; line-height: 1.75; opacity: 0.9; margin: 26px 0 8px;
+  }
+
+  /* ---------- FAQ (native details/summary, funguje bez JS) ---------- */
+  .faq-item {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 4px 20px; margin-bottom: 12px;
+  }
+  .faq-item summary {
+    font-size: 13.5px; font-weight: 500; padding: 14px 0; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #fff;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after { content: '+'; color: var(--accent-color); font-size: 18px; flex-shrink: 0; }
+  .faq-item[open] summary::after { content: '–'; }
+  .faq-item p { font-size: 13px; line-height: 1.75; opacity: 0.78; margin: 0 0 16px; }
+
+  footer {
+    max-width: 720px; margin: 30px auto 0; padding: 20px 22px 40px;
+    text-align: center; font-size: 11px; opacity: 0.55; line-height: 1.9;
+  }
+  .footer-links a { color: rgba(255,255,255,0.75); text-decoration: none; margin: 0 2px; }
+  .footer-links a:hover { color: var(--accent-color); }
+</style>
+</head>
+<body class="theme-amber" id="body">
+
+<div class="ambient-blobs" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+</div>
+
+<header>
+  <div class="topbar">
+    <a href="index.html" class="brand-link"><div class="brand">UKLIDNI <span class="dot">TO</span></div></a>
+    <nav class="topnav" aria-label="Rychlá navigace">
+      <a href="index.html#cviceni">Dechové cvičení</a>
+      <a href="techniky-dechu.html">Techniky dechu</a>
+      <a href="rychla-cviceni-na-zklidneni-en.html">EN</a>
+      <a href="index.html#cviceni" class="primary">🎧 Spustit cvičení</a>
+    </nav>
+  </div>
+  <nav class="breadcrumb" aria-label="Drobečková navigace">
+    <a href="index.html">Uklidni To</a> › Rychlá cvičení na zklidnění
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>5 rychlých cvičení na zklidnění</h1>
+    <p class="subtitle">Lehké protažení a uvolnění těla, které zvládneš kdekoliv za pár minut a bez pomůcek — v práci, doma nebo na cestách. Skvěle doplní <a href="index.html#cviceni">dechové cvičení Uklidni To</a> pro ještě rychlejší reset.</p>
+    <a href="index.html#cviceni" class="cta-btn">
+      <span aria-hidden="true">🌬️</span> Přejít na dechové cvičení
+    </a>
+  </section>
+
+  <section class="content" aria-labelledby="proc-cviceni">
+    <h2 id="proc-cviceni">Proč pomáhá i krátké protažení</h2>
+    <p>Stres a úzkost se neusazují jen v hlavě, ale i ve svalech — nejčastěji v šíji, ramenou a zádech. Pár minut lehkého pohybu pomůže tělu „vybít“ nahromaděné napětí a signalizuje nervovému systému, že už není důvod k poplachu. Cvičení níže jsou záměrně krátká a jednoduchá, aby je šlo zařadit kdykoliv během dne — samostatně, nebo jako rozehřátí před dechovým cvičením.</p>
+  </section>
+
+  <section class="content" aria-labelledby="cviky">
+    <h2 id="cviky">5 cviků na rychlé zklidnění</h2>
+
+    <div class="exercise-list">
+
+      <article class="exercise-card">
+        <div class="exercise-fig" aria-hidden="true">
+          <svg viewBox="0 0 100 130" fill="none" stroke="var(--accent-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="50" cy="20" r="13" transform="rotate(18 50 20)"/>
+            <line x1="50" y1="33" x2="46" y2="90"/>
+            <line x1="46" y1="90" x2="34" y2="122"/>
+            <line x1="46" y1="90" x2="58" y2="122"/>
+            <line x1="49" y1="50" x2="24" y2="62"/>
+            <line x1="49" y1="55" x2="70" y2="45"/>
+          </svg>
+        </div>
+        <div>
+          <h3><span class="exercise-num">1</span>Protažení šíje</h3>
+          <span class="exercise-duration">30–45 vteřin</span>
+          <p>Sedni si nebo se postav rovně, ramena uvolněná dolů od uší. Pomalu nakloň hlavu k pravému rameni, dokud neucítíš jemné protažení na levé straně krku. Vydrž 15–20 vteřin, pak se pomalu vrať zpět a vyměň strany.</p>
+          <p class="exercise-benefit">Uvolňuje napětí v krku a šíji — místa, kam se stres ukládá jako první.</p>
+        </div>
+      </article>
+
+      <article class="exercise-card">
+        <div class="exercise-fig" aria-hidden="true">
+          <svg viewBox="0 0 100 130" fill="none" stroke="var(--accent-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="50" cy="18" r="12"/>
+            <line x1="50" y1="30" x2="50" y2="90"/>
+            <line x1="50" y1="90" x2="38" y2="122"/>
+            <line x1="50" y1="90" x2="62" y2="122"/>
+            <path d="M30 40 a13 13 0 1 1 4 18" stroke-dasharray="3 6"/>
+            <path d="M70 40 a13 13 0 1 0 -4 18" stroke-dasharray="3 6"/>
+          </svg>
+        </div>
+        <div>
+          <h3><span class="exercise-num">2</span>Kroužení rameny</h3>
+          <span class="exercise-duration">20–30 vteřin</span>
+          <p>Paže volně podél těla. Pomalu krouž rameny dozadu velkými kruhy — nahoru, dozadu, dolů a dopředu. Po 5–8 kolech směr obrať.</p>
+          <p class="exercise-benefit">Rozproudí krev v horní části zad a pomáhá „shodit“ napětí ze shrbených ramen.</p>
+        </div>
+      </article>
+
+      <article class="exercise-card">
+        <div class="exercise-fig" aria-hidden="true">
+          <svg viewBox="0 0 100 130" fill="none" stroke="var(--accent-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="55" cy="70" r="12"/>
+            <line x1="50" y1="80" x2="40" y2="55"/>
+            <line x1="40" y1="55" x2="20" y2="20"/>
+            <line x1="40" y1="55" x2="60" y2="18"/>
+            <line x1="40" y1="55" x2="45" y2="112"/>
+            <line x1="40" y1="55" x2="65" y2="105"/>
+          </svg>
+        </div>
+        <div>
+          <h3><span class="exercise-num">3</span>Předklon vstoje</h3>
+          <span class="exercise-duration">30–60 vteřin</span>
+          <p>Postav se, nohy na šířku boků. Pomalu se skláněj dopředu od boků, kolena mírně pokrčená, hlava i paže volně visí k zemi. Nech hlavu a šíji úplně povolit, dýchej klidně.</p>
+          <p class="exercise-benefit">Protahuje záda a šíji — obrácená poloha hlavy krátkodobě zklidňuje nervový systém.</p>
+        </div>
+      </article>
+
+      <article class="exercise-card">
+        <div class="exercise-fig" aria-hidden="true">
+          <svg viewBox="0 0 100 130" fill="none" stroke="var(--accent-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="50" cy="18" r="12"/>
+            <line x1="50" y1="30" x2="50" y2="80"/>
+            <line x1="50" y1="45" x2="22" y2="35"/>
+            <line x1="50" y1="45" x2="78" y2="35"/>
+            <line x1="50" y1="80" x2="34" y2="120"/>
+            <line x1="50" y1="80" x2="66" y2="120"/>
+            <g stroke-dasharray="2 6" opacity="0.7">
+              <line x1="16" y1="30" x2="10" y2="24"/>
+              <line x1="84" y1="30" x2="90" y2="24"/>
+              <line x1="30" y1="122" x2="24" y2="128"/>
+              <line x1="70" y1="122" x2="76" y2="128"/>
+            </g>
+          </svg>
+        </div>
+        <div>
+          <h3><span class="exercise-num">4</span>Protřepání rukou a nohou</h3>
+          <span class="exercise-duration">20–30 vteřin</span>
+          <p>Postav se a jemně protřepej ruce od zápěstí, jako bys otřepával/a vodu, pak přidej celé paže. Následně se opři o jednu nohu a protřepej druhou, pak strany vyměň.</p>
+          <p class="exercise-benefit">Rychlý fyzický reset, který pomáhá „vybít“ nahromaděnou nervozitu a adrenalin z těla.</p>
+        </div>
+      </article>
+
+      <article class="exercise-card">
+        <div class="exercise-fig" aria-hidden="true">
+          <svg viewBox="0 0 100 130" fill="none" stroke="var(--accent-color)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="14" y1="100" x2="88" y2="100"/>
+            <circle cx="30" cy="88" r="11"/>
+            <path d="M40 92 C55 92 58 60 58 60"/>
+            <path d="M58 60 C58 60 40 55 40 92"/>
+            <path d="M58 60 C68 55 74 68 66 78"/>
+            <path d="M58 60 C50 50 62 42 70 50"/>
+          </svg>
+        </div>
+        <div>
+          <h3><span class="exercise-num">5</span>Objetí kolen k hrudníku</h3>
+          <span class="exercise-duration">30–60 vteřin</span>
+          <p>Lehni si na záda (nebo si sedni), přitáhni obě kolena k hrudníku a jemně je obejmi pažemi. Hlavu nech uvolněnou na podložce a dýchej pomalu do břicha.</p>
+          <p class="exercise-benefit">Jemně protahuje dolní záda a navozuje pocit bezpečí, podobně jako klubíčková poloha.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="tip-box">
+      💡 <strong>Tip:</strong> Nejlepší efekt mají cvičení hned po sobě jako krátká 2–3minutová rutina, a hned potom pár minut <a href="index.html#cviceni">řízeného dechového cvičení Uklidni To</a> — nejdřív uvolníš tělo, pak zklidníš dech i mysl.
+    </div>
+  </section>
+
+  <section class="content" aria-labelledby="faq-cviceni">
+    <h2 id="faq-cviceni">Časté dotazy</h2>
+
+    <details class="faq-item">
+      <summary>Jak dlouho mají cvičení na zklidnění trvat?</summary>
+      <p>Stačí 2–3 minuty. Klidně vyber jen jedno cvičení podle toho, kde cítíš napětí nejvíc, nebo projdi všech pět jako krátkou rutinu.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Musím cvičení dělat v určitém pořadí?</summary>
+      <p>Ne. Pořadí není důležité — vyber si podle chuti nebo podle toho, která část těla je zrovna nejvíc napnutá.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Jsou cvičení vhodná i do práce nebo do školy?</summary>
+      <p>Ano. Všechna jdou dělat vsedě nebo vstoje v běžném oblečení, bez pomůcek a bez převlékání, klidně u stolu nebo o přestávce.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Dá se to kombinovat s dechovým cvičením Uklidni To?</summary>
+      <p>Ano, je to ideální kombinace. Nejdřív pár minut protažení pro uvolnění těla a hned potom řízené dechové cvičení pro zklidnění mysli.</p>
+    </details>
+  </section>
+
+  <section class="hero" style="padding-top:6px;">
+    <a href="index.html#cviceni" class="cta-btn">
+      <span aria-hidden="true">🌬️</span> Pokračovat dechovým cvičením
+    </a>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-links" aria-label="Další stránky">
+    <a href="jak-funguje-dechove-cviceni.html">Jak to funguje</a> ·
+    <a href="techniky-dechu.html">Techniky dechu</a> ·
+    <a href="clanky-o-dychani.html">Články o dýchání</a> ·
+    <a href="doplnky.html">Doplňky</a> ·
+    <a href="caste-dotazy.html">Časté dotazy</a>
+  </nav>
+  <div>© <span id="year"></span> Uklidni To — dechové cvičení zdarma online</div>
+  <div>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</div>
+  <div>made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
+  <div><a href="privacy.html">Zásady ochrany soukromí</a></div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
