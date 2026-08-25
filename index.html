@@ -3254,8 +3254,24 @@
   // zadání hesla se odemčení uloží do localStorage, ať ho uživatel nemusí
   // zadávat opakovaně (dokud si nevymaže data prohlížeče). Admin (přihlášený
   // přes tajný 3x klik na logo + Firebase Auth) zámek vůbec nevidí.
+  // Pozn.: heslo se neukládá jako čitelný text, ale jako SHA-256 otisk, takže
+  // ho nejde jednoduše přečíst pohledem do zdrojového kódu (View Source /
+  // vývojářské nástroje). Skutečné, neobejitelné zabezpečení by ale
+  // vyžadovalo ověření na serveru — tohle je jen zvýšení laťky, ne 100% jistota.
   const PROGRESS_UNLOCK_KEY = 'uklidnitoProgressUnlocked';
-  const PROGRESS_UNLOCK_PASSWORD = 'Uklidnito2026@309';
+  const PROGRESS_UNLOCK_PASSWORD_HASH = '147a610a2faa6959d7992088186db842bd1c362e304018dea5a2d84151e6bb21';
+
+  function sha256Hex(text) {
+    if (window.crypto && window.crypto.subtle) {
+      const data = new TextEncoder().encode(text);
+      return window.crypto.subtle.digest('SHA-256', data).then(function (buf) {
+        return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+          return b.toString(16).padStart(2, '0');
+        }).join('');
+      });
+    }
+    return Promise.resolve(null);
+  }
 
   function isAdminActiveForLock() {
     return !!document.getElementById('admin-badge');
@@ -3281,18 +3297,25 @@
   window.submitProgressUnlock = function () {
     const input = document.getElementById('progress-lock-input');
     const status = document.getElementById('progress-lock-status');
+    const btn = document.querySelector('.progress-lock-btn');
     const value = input ? input.value : '';
-    if (value === PROGRESS_UNLOCK_PASSWORD) {
-      try { localStorage.setItem(PROGRESS_UNLOCK_KEY, '1'); } catch (e) {}
-      if (status) { status.textContent = '✓ Odemčeno!'; status.className = 'progress-lock-status success'; }
-      setTimeout(function () {
-        updateProgressLockUI();
-        if (typeof renderProgress === 'function') renderProgress();
-      }, 250);
-    } else {
-      if (status) { status.textContent = 'Nesprávné heslo, zkus to znovu.'; status.className = 'progress-lock-status error'; }
-      if (input) { input.value = ''; input.focus(); }
-    }
+    if (!value) return;
+    if (btn) btn.disabled = true;
+    if (status) { status.textContent = 'Ověřuji…'; status.className = 'progress-lock-status'; }
+    sha256Hex(value).then(function (hash) {
+      if (btn) btn.disabled = false;
+      if (hash && hash === PROGRESS_UNLOCK_PASSWORD_HASH) {
+        try { localStorage.setItem(PROGRESS_UNLOCK_KEY, '1'); } catch (e) {}
+        if (status) { status.textContent = '✓ Odemčeno!'; status.className = 'progress-lock-status success'; }
+        setTimeout(function () {
+          updateProgressLockUI();
+          if (typeof renderProgress === 'function') renderProgress();
+        }, 250);
+      } else {
+        if (status) { status.textContent = 'Nesprávné heslo, zkus to znovu.'; status.className = 'progress-lock-status error'; }
+        if (input) { input.value = ''; input.focus(); }
+      }
+    });
   };
 
   (function initProgressLockInput() {

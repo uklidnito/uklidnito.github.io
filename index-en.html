@@ -3253,8 +3253,24 @@
   // correct password is entered, the unlock is remembered in localStorage so
   // the user isn't asked again (until browser data is cleared). Admin (signed
   // in via the hidden 3x logo tap + Firebase Auth) never sees the lock.
+  // Note: the password isn't stored as plain text, but as a SHA-256 hash, so
+  // it can't be simply read from View Source / dev tools. True, unbypassable
+  // security would still require server-side verification — this only raises
+  // the bar, it isn't a 100% guarantee.
   const PROGRESS_UNLOCK_KEY = 'uklidnitoProgressUnlocked';
-  const PROGRESS_UNLOCK_PASSWORD = 'Uklidnito2026@309';
+  const PROGRESS_UNLOCK_PASSWORD_HASH = '147a610a2faa6959d7992088186db842bd1c362e304018dea5a2d84151e6bb21';
+
+  function sha256Hex(text) {
+    if (window.crypto && window.crypto.subtle) {
+      const data = new TextEncoder().encode(text);
+      return window.crypto.subtle.digest('SHA-256', data).then(function (buf) {
+        return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+          return b.toString(16).padStart(2, '0');
+        }).join('');
+      });
+    }
+    return Promise.resolve(null);
+  }
 
   function isAdminActiveForLock() {
     return !!document.getElementById('admin-badge');
@@ -3280,18 +3296,25 @@
   window.submitProgressUnlock = function () {
     const input = document.getElementById('progress-lock-input');
     const status = document.getElementById('progress-lock-status');
+    const btn = document.querySelector('.progress-lock-btn');
     const value = input ? input.value : '';
-    if (value === PROGRESS_UNLOCK_PASSWORD) {
-      try { localStorage.setItem(PROGRESS_UNLOCK_KEY, '1'); } catch (e) {}
-      if (status) { status.textContent = '✓ Unlocked!'; status.className = 'progress-lock-status success'; }
-      setTimeout(function () {
-        updateProgressLockUI();
-        if (typeof renderProgress === 'function') renderProgress();
-      }, 250);
-    } else {
-      if (status) { status.textContent = 'Incorrect password, please try again.'; status.className = 'progress-lock-status error'; }
-      if (input) { input.value = ''; input.focus(); }
-    }
+    if (!value) return;
+    if (btn) btn.disabled = true;
+    if (status) { status.textContent = 'Checking…'; status.className = 'progress-lock-status'; }
+    sha256Hex(value).then(function (hash) {
+      if (btn) btn.disabled = false;
+      if (hash && hash === PROGRESS_UNLOCK_PASSWORD_HASH) {
+        try { localStorage.setItem(PROGRESS_UNLOCK_KEY, '1'); } catch (e) {}
+        if (status) { status.textContent = '✓ Unlocked!'; status.className = 'progress-lock-status success'; }
+        setTimeout(function () {
+          updateProgressLockUI();
+          if (typeof renderProgress === 'function') renderProgress();
+        }, 250);
+      } else {
+        if (status) { status.textContent = 'Incorrect password, please try again.'; status.className = 'progress-lock-status error'; }
+        if (input) { input.value = ''; input.focus(); }
+      }
+    });
   };
 
   (function initProgressLockInput() {
