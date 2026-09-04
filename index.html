@@ -3273,6 +3273,12 @@
   };
 
   window.addEventListener('popstate', function (e) {
+    // Když uživatel odejde z dechového cvičení tlačítkem zpět v prohlížeči
+    // (místo křížkem), cvičení by jinak zůstalo "aktivní" na pozadí a stopky
+    // by se nevynulovaly - příště by se pak zobrazilo staré, matoucí číslo.
+    if (typeof breathingActive !== 'undefined' && breathingActive && typeof stopBreathing === 'function') {
+      stopBreathing();
+    }
     const id = e.state && e.state.panel ? e.state.panel : null;
     if (id && DISCLAIMER_GATED_PANELS.indexOf(id) !== -1) {
       openSectionDisclaimerModal(id, null, 'popstate');
@@ -4152,6 +4158,13 @@
     breathingActive = true;
     breathingPaused = true;
     breathPhaseIndex = 0;
+    // Jistota, že "Cvičíš" vždy naskočí na 00:00 - kdyby se z jakéhokoli
+    // důvodu (např. odchod z cvičení tlačítkem zpět v prohlížeči místo
+    // křížkem) nestihly stopky pořádně vynulovat při minulém zavření.
+    breathStopwatchElapsedMs = 0;
+    breathStopwatchResumeTime = Date.now();
+    breathSessionStartTime = 0;
+    updateBreathStopwatchDisplay();
     document.body.classList.add('breathing-active');
     startBreathClock();
 

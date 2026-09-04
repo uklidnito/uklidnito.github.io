@@ -3268,6 +3268,13 @@
   };
 
   window.addEventListener('popstate', function (e) {
+    // If the user leaves the breathing exercise via the browser's back
+    // button (instead of the close button), the exercise would otherwise
+    // stay "active" in the background and the stopwatch would never reset -
+    // next time it would show a stale, confusing number.
+    if (typeof breathingActive !== 'undefined' && breathingActive && typeof stopBreathing === 'function') {
+      stopBreathing();
+    }
     const id = e.state && e.state.panel ? e.state.panel : null;
     if (id && DISCLAIMER_GATED_PANELS.indexOf(id) !== -1) {
       openSectionDisclaimerModal(id, null, 'popstate');
@@ -4144,6 +4151,13 @@
     breathingActive = true;
     breathingPaused = true;
     breathPhaseIndex = 0;
+    // Belt-and-braces: make sure "Exercising" always starts at 00:00, in
+    // case the stopwatch didn't get reset properly on the previous close
+    // (e.g. leaving via the browser's back button instead of the close button).
+    breathStopwatchElapsedMs = 0;
+    breathStopwatchResumeTime = Date.now();
+    breathSessionStartTime = 0;
+    updateBreathStopwatchDisplay();
     document.body.classList.add('breathing-active');
     startBreathClock();
 
