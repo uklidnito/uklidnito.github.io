@@ -2000,7 +2000,7 @@
           </div>
           <div class="progress-lock-gallery-dots" id="progress-lock-gallery-dots"></div>
         </div>
-        <p class="progress-lock-desc">Heslo pro odemčení získáš přes Gumroad ZDARMA: <a href="https://uklidnito.gumroad.com/" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>Pokud tě aplikace baví a chceš projekt podpořit, budeme moc rádi. Děkujeme!</p>
+        <p class="progress-lock-desc">Heslo pro odemčení získáš přes Gumroad ZDARMA: <a href="https://uklidnito.gumroad.com/l/code?layout=profile" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>Pokud tě aplikace baví a chceš projekt podpořit, budeme moc rádi. Děkujeme!</p>
         <div class="progress-lock-input-wrap">
           <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Zadej heslo" autocomplete="off">
           <button type="button" class="progress-lock-eye-btn" id="progress-lock-eye-btn" onclick="toggleProgressLockPasswordVisibility()" aria-label="Zobrazit heslo" aria-pressed="false" title="Zobrazit/skrýt heslo">👁️</button>
@@ -3327,7 +3327,9 @@
         input.type = 'password';
         const eyeBtn = document.getElementById('progress-lock-eye-btn');
         if (eyeBtn) { eyeBtn.textContent = '👁️'; eyeBtn.setAttribute('aria-pressed', 'false'); }
-        setTimeout(function () { input.focus({ preventScroll: true }); }, 60);
+        // Záměrně se sem nedává automatický focus() — i s preventScroll ho
+        // některé prohlížeče (např. starší Safari na iOS) přesto odscrollují
+        // na políčko. Uživatel do pole klikne/ťukne sám, když bude chtít heslo zadat.
       }
     }
   };

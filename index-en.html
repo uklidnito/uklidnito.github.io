@@ -1997,7 +1997,7 @@
           </div>
           <div class="progress-lock-gallery-dots" id="progress-lock-gallery-dots"></div>
         </div>
-        <p class="progress-lock-desc">You can get the password to unlock it for FREE through Gumroad: <a href="https://uklidnito.gumroad.com/" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>If you enjoy the app and want to support the project, we'd really appreciate it. Thank you! </p>
+        <p class="progress-lock-desc">You can get the password to unlock it for FREE through Gumroad: <a href="https://uklidnito.gumroad.com/l/code?layout=profile" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>If you enjoy the app and want to support the project, we'd really appreciate it. Thank you! </p>
         <div class="progress-lock-input-wrap">
           <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Enter password" autocomplete="off">
           <button type="button" class="progress-lock-eye-btn" id="progress-lock-eye-btn" onclick="toggleProgressLockPasswordVisibility()" aria-label="Show password" aria-pressed="false" title="Show/hide password">👁️</button>
@@ -3322,7 +3322,9 @@
         input.type = 'password';
         const eyeBtn = document.getElementById('progress-lock-eye-btn');
         if (eyeBtn) { eyeBtn.textContent = '👁️'; eyeBtn.setAttribute('aria-pressed', 'false'); }
-        setTimeout(function () { input.focus({ preventScroll: true }); }, 60);
+        // Intentionally no auto-focus() here — even with preventScroll, some
+        // browsers (e.g. older iOS Safari) still scroll the field into view.
+        // The user can tap/click the field themselves when ready to type.
       }
     }
   };
