@@ -1,6 +1,6 @@
 // Uklidni To — Service Worker
 // Zvyš CACHE_VERSION při každé větší aktualizaci obsahu, aby si klienti stáhli nová data.
-const CACHE_VERSION = 'v319';
+const CACHE_VERSION = 'v320';
 const CACHE_NAME = `uklidnito-${CACHE_VERSION}`;
 
 // Základní "app shell" — soubory nutné pro fungování appky offline.
@@ -13,8 +13,6 @@ const PRECACHE_URLS = [
   './caste-dotazy-en.html',
   './clanky-o-dychani.html',
   './clanky-o-dychani-en.html',
-  './doplnky.html',
-  './doplnky-en.html',
   './jak-funguje-dechove-cviceni.html',
   './jak-funguje-dechove-cviceni-en.html',
   './privacy.html',
