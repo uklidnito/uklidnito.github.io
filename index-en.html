@@ -1033,7 +1033,7 @@
   .poradna-report-status.error { color: #ff8a8a; }
   .poradna-report-status.success { color: #7be08a; }
 
-  /* ---------- Entry notice before sections (Supplements / Advice & Guidance) ---------- */
+  /* ---------- Entry notice before sections (Advice & Guidance) ---------- */
   .section-disclaimer-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
     display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
@@ -1687,7 +1687,6 @@
   <a href="#techniky" data-panel="sec-techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Breathing techniques</a>
   <a href="rychla-cviceni-na-zklidneni-en.html">Quick exercises</a>
   <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Breathing articles</a>
-  <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Supplements &amp; other paths to calm</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">FAQ</a>
   <a href="#vznik" data-panel="sec-vznik" onclick="showPanel('sec-vznik'); toggleSideNav(false); return false;">How it came to be</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Advice &amp; Guidance</a>
@@ -1702,11 +1701,6 @@
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
     <p>Continuous ambient, chillout, ASMR and piano sounds and melodies, free right in your browser, no sign-up. Great as a calm backdrop for focus, sleep or relaxation — from the SYNTHLUCIDA project.</p>
-  </div>
-
-  <div class="side-nav-external">
-    <a href="https://dazante.bandcamp.com/" target="_blank" rel="noopener">💛 Support us (BANDCAMP)</a>
-    <p>If you enjoy the Calm It Down project, you can support us on Bandcamp.</p>
   </div>
 
   <div class="side-nav-external">
@@ -2639,190 +2633,6 @@
     <p class="article-disclaimer">The text on this page summarizes publicly available peer-reviewed studies and is for general information only — it is not medical advice or a diagnosis. If you have an anxiety disorder, heart or lung condition, are pregnant, or don’t feel well during the exercise, consult a doctor and stop breathing immediately if you feel nauseous or dizzy.</p>
   </section>
 
-  <section class="content" aria-labelledby="doplnky-nadpis" id="doplnky">
-    <div class="panel-topbar">
-      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
-    </div>
-    <h2 id="doplnky-nadpis">Supplements &amp; other paths to calm</h2>
-    <p>Breathing is the foundation, but a few other things can help too — here’s what the research actually says about them.</p>
-
-    <div class="article-search-wrap">
-      <span class="article-search-icon">🔎</span>
-      <div class="article-search-input-wrap">
-        <input type="search" class="article-search-input" id="doplnky-search-input" placeholder="Search supplements… (e.g. magnesium, sleep, caffeine)" aria-label="Search supplements and other paths to calm" autocomplete="off">
-        <button type="button" class="article-search-clear" id="doplnky-search-clear" aria-label="Clear search" title="Clear">✕</button>
-      </div>
-    </div>
-    <p class="article-search-count" id="doplnky-search-count"></p>
-    <p class="article-search-empty" id="doplnky-search-empty">No articles matched your search.</p>
-
-    <!-- DOPLNKY:AUTO:START -->
-    <article class="article-card">
-      <h3>Strength training and mental health: what the research says about mood</h3>
-      <p>Strength training (bodyweight exercises, free weights, or resistance machines) is traditionally seen mainly as a tool for building muscle strength and physical fitness. In recent years, though, its effects have been shown to extend into mental health as well — likely through a combination of mechanisms: the release of endorphins and other neurotransmitters, a modest reduction in the stress hormone cortisol, improved sleep, and the psychological effect of mastering a task and feeling in control of one's own body.</p><p>According to a meta-analysis published in JAMA Psychiatry (2018), which pooled the results of randomized controlled trials involving nearly a thousand participants, resistance training significantly reduced depressive symptoms regardless of participants' health status, total training volume, or whether they actually made significant strength gains. In other words, the mood benefit wasn't limited to people who trained the most or improved their performance the most, which suggests something beyond physical progress alone is driving the effect. That's good news especially for beginners: even moderate, consistent strength training can have a positive effect on mood without needing to hit ambitious performance goals right away. Strength training is certainly not a substitute for treating clinical depression, but as a complementary part of a healthy lifestyle, it has solid scientific support behind it.</p>
-      <p class="article-source">Source: Gordon B. R. et al., <em>Association of Efficacy of Resistance Exercise Training With Depressive Symptoms: Meta-analysis and Meta-regression Analysis of Randomized Clinical Trials</em>, JAMA Psychiatry, 2018.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Magnesium: popular, but not miraculous</h3>
-      <p>Magnesium has recently become one of the most popular supplements for calm and better sleep, largely thanks to social media. Reviews from recent years show that in people prone to anxiety or with lower magnesium levels, supplementing may slightly improve feelings of anxiety and sleep quality.</p><p>The evidence isn’t particularly strong yet — studies tend to be small and use different forms and doses of magnesium, so there’s no clear-cut recommendation. Still, it’s a cheap and safe supplement with minimal side effects, so it’s a reasonable one to try, especially in the evening before bed. Talk to a doctor or pharmacist before starting — magnesium can be problematic for people with kidney problems.</p>
-      <p class="article-source">Source: systematic reviews of studies on magnesium and anxiety/sleep, 2017 and 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>L-theanine: calm without drowsiness, from green tea</h3>
-      <p>L-theanine is an amino acid naturally found in green tea that, according to EEG studies, increases so-called alpha brain waves — linked to a relaxed but alert state, similar to light meditation. In small studies, a dose of around 200 mg before a stressful situation slightly reduced feelings of anxiety and the body’s stress response, without causing drowsiness.</p><p>Unlike classic calming medications, L-theanine doesn’t slow reaction time or affect memory. Combined with caffeine (for example in a cup of tea), research shows it helps ease the jitters caffeine can cause on its own — which is why tea is said to feel “smoother” than coffee.</p>
-      <p class="article-source">Source: clinical studies on the effects of L-theanine on anxiety and brain alpha activity, 2004–2026.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Cold showers: why the shock comes first, and calm only afterward</h3>
-      <p>Cold water on the skin first triggers a so-called cold shock — the body briefly speeds up breathing and heart rate and releases stress hormones, just like with any other stressor. Only after this initial shock does the vagus nerve activate and calm set in: the heart rate drops below baseline and the nervous system shifts into a calmer mode. The effect is therefore the opposite of what you might expect — calm arrives as a reaction to the cold subsiding, not during it.</p><p>A 2022 study confirmed that applying cold to the face after a stressful task helped calm heart rate and subjective stress faster than without the cold. Regular cold exposure over several weeks has also been linked in smaller studies to slightly better heart rate variability (HRV) and better mood. To start, a few seconds of cold water at the end of a shower is enough, gradually extending the time — and right after the shower it’s good to breathe slowly for a bit to reinforce the calming effect. People with heart problems, high blood pressure or who are pregnant should only try cold exposure after consulting a doctor, since a sharp cold shock can briefly raise heart rate and blood pressure.</p>
-      <p class="article-source">Source: study on the effect of a cold facial stimulus (Cold Face Test) on acute stress, Scientific Reports, 2022; reviews of studies on the safety and effects of cold water on mental health, 2023–2026.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Caffeine and anxiety: when it helps and when it hurts</h3>
-      <p>The relationship between caffeine and anxiety isn’t clear-cut. At lower doses and in people used to regular consumption, caffeine often improves focus and mood; at higher doses or in more sensitive individuals, it raises cortisol and can trigger or worsen feelings of nervousness and a racing heart — so the effect is quite individual and dose-dependent.</p><p>If you’re prone to anxiety or sleep poorly, it can help to limit caffeine to the morning and watch how your body reacts — for some people, just one extra cup is enough to trigger restlessness. It’s best to try a breathing exercise or a cold shower outside caffeine’s peak effect, when the body is naturally calmer.</p>
-      <p class="article-source">Source: systematic review of the effect of caffeine on anxious behavior, 2023–2026; studies on caffeine and cortisol reactivity to stress.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Progressive muscle relaxation: tense and release</h3>
-      <p>Progressive muscle relaxation (Edmund Jacobson’s method from the 1930s) works on a simple principle — you tense and then release individual muscle groups one by one, from the feet up to the face. This helps the body better notice the difference between tension and release, which in turn helps you recognize and let go of hidden muscle tension you wouldn’t normally notice.</p><p>Recent reviews in adults confirm that regular progressive muscle relaxation reduces anxiety, stress and symptoms of depression, including in older adults or people in hospital care. Sessions usually last 5 to 20 minutes and can be done anywhere, sitting or lying down — it pairs nicely with a breathing exercise, for example as an evening ritual before bed.</p>
-      <p class="article-source">Source: systematic reviews of the effectiveness of progressive muscle relaxation on stress, anxiety and depression, 2024–2025.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Meditation: attention training that also changes the brain</h3>
-      <p>Mindfulness meditation means consciously and non-judgmentally focusing your attention on the present moment — most often on the breath, bodily sensations, or sounds around you. Whenever the mind wanders to thoughts of the past or future, you simply notice it and gently bring your attention back, without self-criticism. The best-known and most-studied program is the eight-week MBSR (Mindfulness-Based Stress Reduction) course, created by Jon Kabat-Zinn in the 1970s.</p><p>A large 2014 meta-analysis of dozens of clinical studies found that meditation programs lead to a mild but consistent improvement in anxiety, depression and pain perception — an effect comparable to other active therapies, though not dramatic. Another study showed that after eight weeks of regular MBSR practice, participants had measurable changes in gray matter density in brain regions linked to learning, memory and emotional processing. The effect mainly comes with regular, longer-term practice; as a complement to breathing exercises, starting with 10-15 minutes a day is plenty.</p>
-      <p class="article-source">Source: Goyal et al., <em>Meditation Programs for Psychological Stress and Well-being: A Systematic Review and Meta-analysis</em>, JAMA Internal Medicine, 2014; Hölzel et al., <em>Mindfulness practice leads to increases in regional brain gray matter density</em>, Psychiatry Research: Neuroimaging, 2011.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Time in nature: why a walk in the woods calms more than a walk through the city</h3>
-      <p>According to attention restoration theory, urban environments constantly flood the brain with stimuli you must actively react to — traffic lights, traffic, crowds — which drains what’s called directed attention. Natural environments, by contrast, capture attention gently and effortlessly (rustling leaves, running water), letting the brain rest and “recharge.” On top of that, stress hormone levels and blood pressure tend to drop measurably faster in green spaces than in built-up environments.</p><p>A 2015 brain-imaging study found that a 90-minute walk in nature, compared to an equally long walk down a busy street, reduced activity in a brain region linked to dwelling on negative thoughts (rumination). More recent research has shown that even 20-30 minutes in green space — even just sitting in a park without moving — can measurably lower salivary cortisol during the day, with longer exposure bringing a bigger drop, though even a short “dose” of nature had an effect. It doesn’t have to be wilderness; a city park or a tree-lined street works too.</p>
-      <p class="article-source">Source: Bratman et al., <em>Nature experience reduces rumination and subgenual prefrontal cortex activation</em>, PNAS, 2015; Hunter, Gillespie &amp; Chen, <em>Urban Nature Experiences Reduce Stress in the Context of Daily Life Based on Salivary Biomarkers</em>, Frontiers in Psychology, 2019.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Alcohol and sleep: why a nightcap doesn’t help you fall asleep, it wrecks your sleep</h3>
-      <p>Alcohol initially depresses the nervous system, so it can seem like it helps you fall asleep faster — but that effect is deceptive. As alcohol is metabolized overnight, the body enters a kind of mild withdrawal state: sleep becomes fragmented, you wake up more often (even if you don’t remember it in the morning), and REM sleep — during which emotions are processed and memory is consolidated — is significantly suppressed. The result is sleep that looks longer on the outside but is far less restorative.</p><p>Alcohol also relaxes the throat muscles, worsening snoring and increasing the risk of sleep apnea, and it’s a diuretic, which leads to waking up at night to use the bathroom. Regularly drinking before bed is therefore linked long-term to worse sleep quality, more daytime fatigue and higher anxiety — exactly the opposite of what people are looking for when they reach for a drink “to relax.” For restful sleep, it’s best to avoid alcohol in the evening entirely, or at least give it enough time to be metabolized before you lie down.</p>
-      <p class="article-source">Source: reviews of studies on alcohol’s effect on sleep architecture and REM sleep, 2018–2024; research on the link between alcohol, sleep apnea and sleep fragmentation.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Nicotine: a stimulant the body mistakes for calm</h3>
-      <p>A cigarette or vape is often seen as a way to “calm down,” but nicotine is actually a stimulant — it speeds up the heart rate, raises blood pressure and stimulates the nervous system, similar to caffeine. The sense of relief smokers describe is mostly related to withdrawal symptoms subsiding between cigarettes, not to any real calming effect of nicotine itself. Studies also show smokers have, on average, higher anxiety and stress levels than non-smokers or former smokers, and that anxiety declines long-term after quitting.</p><p>Nicotine affects sleep much like caffeine — it shortens total sleep time, delays falling asleep and leads to more frequent nighttime waking, partly due to nighttime withdrawal in regular smokers. For calmer sleep and lower anxiety, the clearly most effective step is to cut back on nicotine or quit entirely; if that’s not possible right away, at least avoiding it for a few hours before bed helps.</p><p>Want to keep track of how much nicotine you're actually using and gradually cut down? Try <a href="https://synthlucida.com/landing_vapetrack-en.html" target="_blank" rel="noopener">VapeTrack</a> — an app for tracking nicotine consumption and reducing it over time.</p>
-      <p class="article-source">Source: reviews of studies on the effect of nicotine on anxiety and sleep, 2019–2023; research on the relationship between smoking, quitting and anxiety levels.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Sleep hygiene: consistency, darkness and cool temperature, according to research</h3>
-      <p>Good sleep rests mainly on consistency. The body’s internal clock (circadian rhythm) sets itself best when you go to bed and wake up around the same time, even on weekends — an irregular schedule and frequent “catch-up” sleep are linked in newer studies to worse sleep quality and higher cardiovascular risk, even when the total number of sleep hours is similar.</p><p>Two environmental conditions have genuinely solid support in the data, according to review studies. The first is a cooler bedroom — body temperature naturally drops as you fall asleep, and a room temperature of around 18-20°C makes that drop easier, while an overheated room demonstrably worsens sleep. The second is darkness: light (including blue light from screens) suppresses melatonin production via the retina, so it’s recommended to limit bright light and screens roughly 1-3 hours before bed and sleep in a dark room or with an eye mask. Conversely, morning exposure to daylight helps set the internal clock to the right time. Pairing this with a breathing exercise like 4-7-8 or the Calm technique (see above) can make for a good evening ritual that builds on these habits.</p>
-      <p class="article-source">Source: Irish et al., <em>The role of sleep hygiene in promoting public health: A review of empirical evidence</em>, Sleep Medicine Reviews, 2015; Chaput et al., <em>Device-measured weekend catch-up sleep, mortality, and cardiovascular disease incidence in adults</em>, Sleep, 2024; Harding, Franks &amp; Wisden, <em>The Temperature Dependence of Sleep</em>, Frontiers in Neuroscience, 2019; light-exposure recommendations per Brown et al., 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Diet and adequate protein: how food affects calm and mood</h3>
-      <p>Protein supplies the body with amino acids the brain uses to make mood-related neurotransmitters — among them tryptophan, a precursor of serotonin. A study using whey protein rich in alpha-lactalbumin (a protein high in tryptophan) in people prone to stress found that regular use over several weeks lowered cortisol and improved mood under stress compared to a control group. Research on protein source (animal vs. plant) and mood is still mixed, though — some studies link higher animal protein intake to lower depression risk, others find no difference, so it’s more one factor among many than a guaranteed recipe.</p><p>A more practically important mechanism is different: protein in a meal slows sugar absorption and helps keep blood sugar more stable. A sharp drop in blood sugar after a skipped meal or a sweet snack without protein can cause shakiness, a racing heart, irritability and a feeling of anxiety that’s hard to tell apart from the “ordinary” kind. A 2021 review summarizing research on diet and anxiety lists regular meals with enough protein among the simple recommendations — alongside enough fiber and limiting refined sugar and alcohol. A smaller 2016 study also found that in people with generalized anxiety disorder and hypoglycemia-like symptoms, adjusting the diet in this direction eased their anxiety symptoms.</p><p>So how much protein is “enough”? According to the European Food Safety Authority (EFSA) reference intake, a healthy adult needs roughly 0.8 g of protein per kilogram of body weight per day — for someone weighing 70 kg, that works out to about 55-60 g a day. Physically active people and older adults, who naturally lose muscle mass, are often given higher recommendations, roughly 1.2 to 2.0 g per kilogram, ideally after checking with a doctor or dietitian. For more stable blood sugar throughout the day, it’s also often recommended to spread protein evenly across main meals — roughly 20-30 g per meal — rather than loading most of the daily amount onto dinner.</p><p>It’s also worth paying attention to where protein (and food in general) comes from. Highly processed foods — packaged snacks, sweetened drinks, instant meals with a long list of additives — have repeatedly been linked in recent years to a higher risk of depression and anxiety. A large 2023 US study followed over 31,000 women for more than ten years and found that those who ate the most ultra-processed food had a significantly higher risk of developing depression than those who ate the least; the strongest link showed up for drinks and foods with artificial sweeteners. A similar link between ultra-processed diets and the development of anxiety and depression was described in a Chinese cohort study the same year, covering more than 180,000 people. The exact mechanism isn’t clear yet — a combination of rapid blood-sugar swings, a poorer nutrient profile, and effects on the gut microbiome may all play a role — but the practical takeaway is similar to that for added sugar alone: it’s better to build protein and the rest of your diet mainly around less processed foods (meat, fish, eggs, dairy, legumes, nuts) than around packaged snacks and sweetened drinks.</p>
-      <p class="article-source">Zdroj: Markus a kol., <em>The bovine protein α-lactalbumin increases the plasma ratio of tryptophan to the other large neutral amino acids and improves mood under stress</em>, American Journal of Clinical Nutrition, 2000; Aucoin a kol., <em>Diet and Anxiety: A Scoping Review</em>, Nutrients, 2021; Aucoin a kol., <em>Generalized Anxiety Disorder and Hypoglycemia Symptoms Improved with Diet Modification</em>, Case Reports in Psychiatry, 2016; EFSA, <em>Dietary Reference Values for protein</em>, 2012; Wang a kol., <em>Association of Ultraprocessed Food Consumption With Risk of Depression</em>, JAMA Network Open, 2023; Sun a kol., <em>Association of ultra-processed food consumption with incident depression and anxiety</em>, Food &amp; Function, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Sugar and dopamine: why sweets lift your mood fast — and drop it just as fast</h3>
-      <p>Sugar, especially the fast-absorbing kind (white bread, sweets, sweetened drinks), triggers dopamine release in the brain’s mesolimbic reward pathway — specifically in a region called the nucleus accumbens, the same part of the brain activated by addictive substances like nicotine or cocaine. A striking example is a 2013 imaging study in which men were given two milkshakes that looked identical — equally sweet, equal calories, the same amount of protein and fat — except one was formulated so its sugar was absorbed quickly (high glycemic index) and the other slowly. The faster-absorbing shake triggered stronger nucleus accumbens activity; the difference wasn’t in sweetness, but in how sharply the food raised blood glucose.</p><p>The same study also showed the flip side: four hours after the fast-absorbing shake, blood sugar was lower and participants reported feeling hungrier than after the slower version — and that’s exactly when nucleus accumbens activity peaked, as if the brain were asking for another hit. This blood-sugar crash ties closely into what the previous article on protein describes: without protein or fiber to slow sugar absorption, the drop in blood sugar comes faster and sharper, bringing fatigue, irritability and cravings for more sweets along with it. Protein in a meal therefore doesn’t just prevent hypoglycemia-like symptoms — it also indirectly dampens this dopamine rollercoaster.</p><p>When it comes to long-term effects on the dopamine system, big conclusions call for caution. In animals it’s well documented that repeated access to large amounts of sugar produces addiction-like effects — tolerance (needing an ever-larger dose for the same reward), withdrawal symptoms after stopping, and a reduced number of so-called D2 dopamine receptors. In humans, the question of “sugar addiction” is still debated among experts, and direct evidence of the exact same mechanism is missing — though there are indirect clues: people with obesity or binge-eating patterns show lower D2 receptor availability in the striatum in research, similar to some substance addictions. High sugar intake is also repeatedly linked to higher rates of depression in observational studies, though the exact mechanism (inflammation, metabolic changes, or changes in the reward system itself) isn’t certain yet, and it’s not a proven direct causal link.</p>
-      <p class="article-source">Zdroj: Lennerz a kol., <em>Effects of dietary glycemic index on brain regions related to reward and craving in men</em>, American Journal of Clinical Nutrition, 2013; Avena, Rada &amp; Hoebel, <em>Evidence for sugar addiction: Behavioral and neurochemical effects of intermittent, excessive sugar intake</em>, Neuroscience &amp; Biobehavioral Reviews, 2008; Qin a kol., <em>Sugar Addiction: Neural Mechanisms and Health Implications</em>, Brain and Behavior, 2025.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Exercise and movement: how physical activity calms the mind too</h3>
-      <p>The relationship between exercise and anxiety is one of the best-studied topics in sports psychology. A classic 1991 meta-analysis, later updated in 2015, confirmed that even a single bout of aerobic exercise can briefly reduce so-called state anxiety — the anxiety felt in that specific moment — with an effect comparable to other commonly used calming techniques. A broader 2015 meta-meta-analysis, summarizing eight earlier reviews covering more than 10,000 participants, then showed that regular physical activity reduces anxiety even in the general, non-clinical population — the effect is smaller, but statistically reliable.</p><p>Not all types of movement work exactly the same way, though. A more recent 2024 network meta-analysis focused on young people compared different types of exercise, and so-called mind-body exercise — movement paired with conscious breathing and focus, like yoga or tai chi — came out as the most effective for anxiety, followed closely by classic aerobic exercise like running or cycling. For a lasting effect, consistency also matters — a meta-analysis in older adults found that exercise programs shorter than 10 weeks didn’t significantly reduce anxiety, while longer programs did, and it didn’t matter much whether it was walking, aerobics or strength training. Combining both approaches makes sense: exercise briefly activates the body and releases stress hormones, and a breathing exercise afterward helps consciously bring that activated state back down to calm.</p>
-      <p class="article-source">Source: Petruzzello et al., <em>A Meta-Analysis on the Anxiety-Reducing Effects of Acute and Chronic Exercise</em>, Sports Medicine, 1991, updated by Ensari et al., <em>Meta-Analysis of Acute Exercise Effects on State Anxiety</em>, Depression and Anxiety, 2015; Rebar et al., <em>A Meta-Meta-Analysis of the Effect of Physical Activity on Depression and Anxiety in Non-Clinical Adult Populations</em>, Health Psychology Review, 2015; Tian et al., <em>Comparative Efficacy of Acute Exercise Intervention on Anxiety in Adolescents and Young Adults: A Network Meta-Analysis</em>, Scandinavian Journal of Medicine &amp; Science in Sports, 2024; Goodarzi et al., <em>Effect of Physical Activity for Reducing Anxiety Symptoms in Older Adults</em>, BMC Sports Science, Medicine and Rehabilitation, 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Omega-3 fatty acids: what the research actually says about calm</h3>
-      <p>The omega-3 fatty acids EPA and DHA, which the body gets mainly from oily fish or fish oil, are among the most studied supplements when it comes to mood and anxiety. A large 2024 dose-response meta-analysis covering 23 trials with over 2,100 participants found that anxiety symptoms decreased slightly as the daily omega-3 dose increased, with the strongest effect around 2 grams per day — lower doses didn't meaningfully affect the outcome according to the analysis. The authors themselves note that the certainty of the evidence is still low, individual trials vary a lot in quality, and more research is needed.</p><p>Other reviews focus more on depression than anxiety and suggest the improvement tends to be more noticeable with formulations higher in EPA relative to DHA, at doses of roughly 1-2 grams per day; for anxiety specifically, well-designed comparable trials are still scarce. Omega-3s are generally well tolerated — common side effects include a fishy aftertaste, heartburn, or mild digestive upset. At higher doses (above roughly 3 grams per day) they can slightly prolong bleeding time, which matters mainly for people taking blood-thinning medication — worth discussing dosage with a doctor in that case. As with other supplements, food should come first (oily fish about twice a week), with a supplement as a complement, not a replacement.</p>
-      <p class="article-source">Source: Bafkar et al., <em>Efficacy and safety of omega-3 fatty acids supplementation for anxiety symptoms: a systematic review and dose-response meta-analysis of randomized controlled trials</em>, BMC Psychiatry, 2024; systematic review and meta-analysis of EPA and DHA effects on anxiety and depression, 2023; NCCIH, guidance on omega-3 supplement safety and interactions with blood-thinning medication.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>L-tryptophan: the amino acid your body turns into serotonin and melatonin</h3>
-      <p>L-tryptophan is one of nine essential amino acids — the body can't synthesize it, so it has to come from food. It's found in protein-rich foods such as turkey and chicken, eggs, cheese, fish, legumes, oats, and pumpkin or sesame seeds. In the brain, it's the starting material for serotonin, a neurotransmitter involved in mood, which is then converted further into melatonin, the hormone that governs the sleep-wake cycle. Interestingly, how much tryptophan is in a meal isn't what determines how much reaches the brain — tryptophan competes with other amino acids for transport across the blood-brain barrier, and a carbohydrate-rich meal (which raises insulin and lowers the level of competing amino acids in the blood) can actually help it through more than a meal that's mostly protein. That's why the popular idea that turkey makes you sleepy after a holiday dinner because of its tryptophan is something of an oversimplification — it's more likely the whole meal, and how much of it you ate.</p><p>As for supplements, a 2022 systematic review and meta-analysis (Sutanto et al.), covering 18 studies, found that doses of 1 gram of tryptophan per day or more shortened sleep latency and improved overall sleep quality; the effect was less clear at lower doses. L-tryptophan is generally considered safe, but it comes with important caveats: it shouldn't be combined with SSRI or SNRI antidepressants, or with MAOIs, since the combination raises the risk of serotonin syndrome, a rare but serious condition. Pregnant or breastfeeding women, and people with liver or kidney disease, should also check with a doctor before use. It's also worth noting that in 1989, a single contaminated manufacturing batch of tryptophan caused an outbreak of eosinophilia-myalgia syndrome in the US — but that was traced to an impurity from one specific production process, not to tryptophan itself, and today's quality-controlled supplements don't carry that risk. Even so, it's not a cure-all for insomnia — more a supplement worth considering mainly when regular diet doesn't provide enough of it.</p>
-      <p class="article-source">Source: Sutanto, Loh &amp; Kim, <em>The impact of tryptophan supplementation on sleep quality: a systematic review, meta-analysis, and meta-regression</em>, Nutrition Reviews, 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Essential vitamins: why the body needs them and what they do</h3>
-      <p>Vitamins are essential micronutrients — the body needs them only in small amounts, but many biochemical processes would not work without them. Based on solubility, they fall into two groups: fat-soluble vitamins (A, D, E, K), which can build up in fatty tissue and the liver, and water-soluble vitamins (the B-complex and vitamin C), which are not stored to any significant degree and need to be supplied through food on an ongoing basis.</p><p>Vitamin A supports vision and the immune system, vitamin D helps the body absorb calcium and maintain healthy bones, vitamin E acts as an antioxidant that protects cell membranes, and vitamin K plays a role in blood clotting. The B-complex vitamins (B1, B2, B3, B5, B6, B7, B9 and B12) are key for converting food into energy and for normal nervous-system function, while vitamin C supports collagen production, wound healing and iron absorption. Because fat-soluble vitamins can accumulate in the body, long-term high-dose supplementation can carry risks, so higher doses are worth discussing with a doctor.</p>
-      <p class="article-source">Source: Ward E., <em>Addressing nutritional gaps with multivitamin and mineral supplements</em>, Nutrition Journal, 2014.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Creatine: what it does for your muscles and how it relates to mood</h3>
-      <p>Creatine is a naturally occurring compound that the body partly synthesizes in the liver, kidneys and pancreas from the amino acids arginine, glycine and methionine, and partly obtains from food — mainly meat and fish. Most of the creatine in the body is stored in muscle as phosphocreatine, which serves as a rapidly available energy source for producing ATP during short, intense physical effort. A smaller but functionally important amount of creatine is also present in the brain, where it contributes to the energy metabolism of nerve cells.</p><p>This is why researchers have increasingly looked at whether creatine can also affect mood and mental well-being. Several clinical studies suggest that creatine, used as an add-on to SSRI antidepressants or cognitive behavioral therapy, may help ease depressive symptoms, and may also improve verbal fluency and reduce mental fatigue, for example after sleep deprivation. The results are not consistent, however — some studies in bipolar depression found no significant improvement in mood, and caution has been raised in these patients because of a possible risk of manic episodes. Creatine should therefore not yet be considered a substitute for depression treatment, but rather a promising, though not yet fully confirmed, area of supplementary research.</p>
-      <p class="article-source">Source: Lyoo I. K. et al., <em>A Randomized, Double-Blind Placebo-Controlled Trial of Oral Creatine Monohydrate Augmentation for Enhanced Response to a Selective Serotonin Reuptake Inhibitor in Women With Major Depressive Disorder</em>, American Journal of Psychiatry, 2012.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Melatonin: the sleep hormone that guides our internal rhythm</h3>
-      <p>Melatonin is a hormone produced by the pineal gland, and its level in the body naturally rises as light around us decreases and falls again with morning daylight. It acts as the main chemical signal of the circadian rhythm — the so-called internal biological clock that governs when we feel alert and when we feel sleepy. Unlike classic sedatives, melatonin doesn't "knock you out" by suppressing the nervous system; instead, it tells the body that it's time to wind down and helps align the internal rhythm with what's happening outside.</p><p>According to a systematic review and meta-analysis published in Neuropsychopharmacology (2022), melatonin has a measurable effect on shifting the sleep-wake cycle, with the effect depending on dose and, above all, on timing — an evening dose advances sleep onset, while a morning dose can shift the rhythm the other way. Melatonin's best-supported use is in conditions tied to a disrupted internal clock, such as jet lag or delayed sleep phase, while the evidence for ordinary insomnia without a circadian component is less clear-cut. Melatonin is generally well tolerated with minimal side effects and no risk of dependency, though it's still worth sticking to low doses and correct timing, ideally after checking with a doctor — and keeping in mind that the same signal melatonin sends to the body can also be suppressed by evening light from a phone or computer screen.</p>
-      <p class="article-source">Source: Moon E., Partonen T., Beaulieu S., Linnaranta O., <em>Melatonergic agents influence the sleep-wake and circadian rhythms in healthy and psychiatric participants: a systematic review and meta-analysis of randomized controlled trials</em>, Neuropsychopharmacology, 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Morning calm and three priorities: why it helps to take a few extra minutes after waking</h3>
-      <p>Right after waking, the brain is still partly in sleep mode, and the stress hormone cortisol naturally rises — this so-called cortisol awakening response helps the body kick-start the day, but it needs a few calm minutes to do so, not an immediate flood of stimulation from a phone or email. A short pause of roughly three to five minutes, just sitting, breathing, and letting the mind wake up gradually, gives the body room to make this transition naturally. This calm moment is also a good time to briefly sum up, in your head or on paper, what the day ahead looks like.</p><p>During this morning recap, it helps to deliberately narrow the to-do list down to just two or three of the most important tasks. The brain has a limited capacity for decision-making, and as the number of choices grows, so does what is known as decision fatigue — the more tasks we load onto ourselves first thing in the morning, the harder it becomes to focus on what actually matters. Writing down even a short plan has a measurable calming effect on the mind: according to a 2011 study by Masicampo and Baumeister, simply having a clear plan for when and how an unfinished task will get done is enough to stop the mind from bringing it back as intrusive thoughts — the task doesn't need to be completed, it just needs a scheduled place. A few minutes of morning calm combined with two or three clear priorities can start the day with less stress and a clearer head.</p>
-      <p class="article-source">Source: Masicampo E. J., Baumeister R. F., <em>Consider it done! Plan making can eliminate the cognitive effects of unfulfilled goals</em>, Journal of Personality and Social Psychology, 2011.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Zinc: the trace element that supports immunity and healing</h3>
-      <p>Zinc is an essential trace element — the body cannot produce it on its own, so it must be supplied regularly through food, even though only small amounts are needed. Despite this, it's involved in a wide range of key processes: it's essential for DNA synthesis, cell division, growth, wound healing, and normal taste and smell perception. It also plays a major role in the immune system, influencing the function and development of white blood cells and helping the body fight off infections.</p><p>According to a scoping review prepared for the Nordic Nutrition Recommendations (2023), severe zinc deficiency is linked to weakened immunity, poorer wound healing, hair loss, reduced appetite, altered taste perception, and skin problems, while the consequences of mild deficiency remain less clear. Good sources of zinc include meat, dairy products, legumes, eggs, fish, and cereals, though its absorption can be limited by phytates found in whole grains and legumes, as well as by a high calcium intake. On a typical, varied diet in our part of the world, the risk of zinc deficiency is low; it tends to be higher on a strictly plant-based diet or with certain digestive disorders. As with other supplements, consistently high doses of zinc above the recommended intake can interfere with copper absorption, so it's worth discussing higher doses with a doctor.</p>
-      <p class="article-source">Source: Strand T. A., Mathisen M., <em>Zinc – a scoping review for Nordic Nutrition Recommendations 2023</em>, Food & Nutrition Research, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Vitamin D: the sunshine vitamin that affects bones and mood</h3>
-      <p>Vitamin D is unusual in that the body can largely produce it on its own — when skin is exposed to sunlight (specifically UVB), a precursor forms that is then converted in the liver and kidneys into its active form. A smaller share also comes from food, such as fatty fish, egg yolks, or fortified foods. Vitamin D's best-supported function is helping the intestines absorb calcium and maintaining healthy bones — a long-term deficiency is linked to weaker bones and, in children, to rickets.</p><p>Because vitamin D receptors are also found in the brain, its possible role in mood regulation has drawn increasing research interest. According to a systematic review and meta-analysis of randomized controlled trials published in Critical Reviews in Food Science and Nutrition (2023), vitamin D supplementation modestly reduced depressive symptoms, with a stronger effect in people who actually had depressive symptoms to begin with. Other large genetic studies, however, have not confirmed a causal link between vitamin D deficiency and depression, so the results are not yet conclusive, and vitamin D should certainly not be seen as a substitute for depression treatment. For people with a confirmed deficiency — typically during winter months or with limited sun exposure — supplementation is still worth discussing with a doctor, and not just for the sake of bone health.</p>
-      <p class="article-source">Source: Mikola T. et al., <em>The effect of vitamin D supplementation on depressive symptoms in adults: A systematic review and meta-analysis of randomized controlled trials</em>, Critical Reviews in Food Science and Nutrition, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Black maca: what research shows about mood and energy</h3>
-      <p>Maca (Lepidium meyenii) is a root vegetable from the cabbage family that grows in the high-altitude regions of the Peruvian Andes, around 4,000 meters above sea level, and has been used as both food and traditional medicine for centuries. It comes in yellow, red, and black varieties, which differ somewhat in color, chemical composition, and traditional use — black maca is traditionally associated in Peru mainly with memory support and male fertility, while the red variety is traditionally used more for general vitality.</p><p>According to a randomized, double-blind, placebo-controlled study involving 175 adult participants, twelve weeks of daily supplementation with 3 g of black or red maca improved mood and health-related quality of life compared with placebo, with both varieties showing a similar effect in this regard. An interesting separate finding was that black maca also lowered blood glucose levels and, in participants living at high altitude, excessively elevated hemoglobin levels, while its effect on mood and energy was somewhat weaker than that of the red variety. Both varieties were well tolerated with no serious adverse effects. Although black maca is traditionally associated with supporting libido and fertility, this particular study did not directly measure those effects, so they should be regarded as traditional use rather than fully scientifically confirmed.</p>
-      <p class="article-source">Source: Gonzales-Arimborgo C. et al., <em>Acceptability, Safety, and Efficacy of Oral Administration of Extracts of Black or Red Maca (Lepidium meyenii) in Adult Human Subjects: A Randomized, Double-Blind, Placebo-Controlled Study</em>, Pharmaceuticals, 2016.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Hericium (Lion's Mane): what studies show about its effect on the brain and mood</h3>
-      <p>Hericium erinaceus (commonly known as Lion's Mane) is an edible mushroom that has been used in traditional Chinese and Japanese medicine for centuries and has more recently drawn growing interest from Western researchers. What makes it interesting are its bioactive compounds — erinacines and hericenones — which, in laboratory and animal studies, stimulated the production of nerve growth factor (NGF), a protein important for the growth, repair, and survival of nerve cells.</p><p>Human research, however, is still in its early stages and the results so far are fairly preliminary. According to a pilot randomized, placebo-controlled study published in Nutrients (2023), a single dose of Hericium erinaceus led to faster performance on an attention test (the Stroop task) in healthy young adults, and 28 days of regular use showed a hint of lower perceived stress — though that result sat right at the edge of statistical significance. The authors themselves note that the sample size was small and that the findings should be treated with caution until confirmed by larger studies. Hericium is therefore a promising but far from settled area of research — it should not yet be considered a proven way to improve mood or memory.</p>
-      <p class="article-source">Source: Docherty S., Doughty F. L., Smith E. F., <em>The Acute and Chronic Effects of Lion's Mane Mushroom Supplementation on Cognitive Function, Stress and Mood in Young Adults: A Double-Blind, Parallel Groups, Pilot Study</em>, Nutrients, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>CDP-choline (citicoline): what it does for memory and attention</h3>
-      <p>CDP-choline (cytidine-5′-diphosphocholine), commonly known by the trade name citicoline, is a naturally occurring compound that the body produces as an intermediate in the synthesis of phosphatidylcholine — an important building block of cell membranes, including those of nerve cells. In the brain, citicoline also acts as a precursor for the neurotransmitters acetylcholine, dopamine, and noradrenaline, and contributes to the energy metabolism of brain cells.</p><p>According to a randomized, placebo-controlled trial published in The Journal of Nutrition (2021), twelve weeks of citicoline supplementation (500 mg per day) in healthy older adults with age-associated memory impairment improved overall memory performance, most notably episodic memory. Earlier systematic reviews of studies in people with cognitive difficulties painted a more mixed picture — the effect on attention was not clearly confirmed, while effects on memory and behavior were reported somewhat more reliably, particularly in the short term. Citicoline is generally well tolerated with few reported side effects, but it is not a cure-all for cognitive performance and is certainly not a substitute for treating genuine cognitive disorders — anyone considering it, especially older adults or those on other medication, should discuss it with a doctor first.</p>
-      <p class="article-source">Source: Nakazaki E. et al., <em>Citicoline and Memory Function in Healthy Older Adults: A Randomized, Double-Blind, Placebo-Controlled Clinical Trial</em>, The Journal of Nutrition, 2021.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>SAMe (S-adenosylmethionine): what current research says about mood</h3>
-      <p>SAMe (S-adenosylmethionine) is a compound the body naturally produces from the amino acid methionine and ATP in virtually every cell. It acts as a key methyl-group donor in dozens of biochemical reactions — contributing, for example, to the synthesis of the neurotransmitters serotonin, dopamine, and noradrenaline, to phospholipid production, and to liver metabolism. Because of its role in neurotransmitter synthesis, SAMe has been studied for decades as a possible supplement for treating depression, and in some European countries it's even available as a prescription medication.</p><p>The results of these studies, however, are inconsistent. Older, smaller studies and open-label observations suggested that SAMe, at doses of 800 to 1600 mg per day, might have effects comparable to classic antidepressants. An updated systematic review and meta-analysis of randomized controlled trials published in 2024 (General Hospital Psychiatry), however, found no statistically significant difference between SAMe and placebo, or between SAMe and antidepressants, in reducing depressive symptoms — the authors attribute this to the small number of included studies and the wide range of doses used (200 to 3200 mg per day). Clinical guidelines therefore generally advise against SAMe as a standalone treatment for major depression, while cautiously allowing higher doses as a possible add-on to other treatment for milder depression. Given the mixed results and possible interactions with antidepressants, taking SAMe is always worth discussing with a doctor.</p>
-      <p class="article-source">Source: Peng T. R., Cheng H. Y., Wu T. W., <em>S-Adenosylmethionine (SAMe) as an adjuvant therapy for patients with depression: An updated systematic review and meta-analysis</em>, General Hospital Psychiatry, 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>N-acetylcysteine (NAC): how it affects glutamate and mental tension</h3>
-      <p>N-acetylcysteine (NAC) is a compound derived from the amino acid L-cysteine, long used in medicine mainly as an antidote for paracetamol (acetaminophen) overdose and as a mucolytic for breathing problems. Over the past decade, though, it has become clear that NAC also has a notable effect on the central nervous system: it acts as a precursor of glutathione, the body's main antioxidant, and it also helps regulate the transport and level of glutamate — the brain's main excitatory neurotransmitter, whose imbalance has been linked to anxiety, tension, and a range of psychiatric conditions.</p><p>According to a systematic review and meta-analysis of randomized controlled trials published in Frontiers in Psychiatry (2024), which included six trials with a total of 195 patients, adding NAC to standard SSRI treatment for obsessive-compulsive disorder led to greater symptom improvement compared with placebo, with good tolerability — the most common side effects were mild nausea, digestive changes, or headache. It's specifically in OCD, where glutamate dysregulation is particularly well documented, that NAC has its strongest scientific support. For ordinary anxiety and stress without a diagnosed disorder, the evidence is still more preliminary and smaller in scale, so NAC shouldn't be considered a proven remedy for everyday tension — it's a promising but not yet settled area of research, and its use is worth discussing with a doctor.</p>
-      <p class="article-source">Source: Eghdami S., Eissazade N., Heidari Mokarar M., Boroon M., Orsolini L., Shalbafan M., <em>The safety and efficacy of N-acetylcysteine as an augmentation in the treatment of obsessive-compulsive disorder in adults: a systematic review and meta-analysis of randomized clinical trials</em>, Frontiers in Psychiatry, 2024.</p>
-    </article>
-    <!-- DOPLNKY:AUTO:END -->
-
-    <p class="article-disclaimer">The text on this page summarizes publicly available peer-reviewed studies and is for general information only — it is not medical advice or a diagnosis. Don’t start taking supplements without consulting a doctor, especially if you take other medication, are pregnant or breastfeeding.</p>
-  </section>
-
   <section class="content" id="sec-faq" aria-labelledby="faq">
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Close</button>
@@ -2926,7 +2736,6 @@
     <a href="techniky-dechu-en.html">Breathing techniques</a> ·
     <a href="rychla-cviceni-na-zklidneni-en.html">Quick calming exercises</a> ·
     <a href="clanky-o-dychani-en.html">Breathing articles</a> ·
-    <a href="doplnky-en.html">Supplements</a> ·
     <a href="caste-dotazy-en.html">FAQ</a>
   </nav>
   <div class="footer-crisis">🆘 In an acute crisis, you're not alone: Linka první psychické pomoci (CZ) <strong>116 123</strong> · Linka bezpečí (CZ, under 26) <strong>116 111</strong> · emergency <strong>112</strong> — free, 24/7. Outside Czechia, contact your local emergency services.</div>
@@ -3231,7 +3040,7 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ---------- Expandable article cards (supplements and breathing articles) ----------
+  // ---------- Expandable article cards (breathing articles) ----------
   // By default only the heading is visible; clicking/pressing expands the article.
   (function initCollapsibleArticles() {
     document.querySelectorAll('.article-card').forEach(function (card) {
@@ -3265,7 +3074,7 @@
     });
   })();
 
-  // ---------- Article search (Breathing articles + Supplements sections) ----------
+  // ---------- Article search (Breathing articles section) ----------
   // Cards are queried live via querySelectorAll every time the user types,
   // so a newly added <article class="article-card"> inside the section is
   // automatically included in the search without touching this script.
@@ -3326,10 +3135,9 @@
     });
   }
   initArticleSearch('clanky', 'article-search-input', 'article-search-clear', 'article-search-count', 'article-search-empty');
-  initArticleSearch('doplnky', 'doplnky-search-input', 'doplnky-search-clear', 'doplnky-search-count', 'doplnky-search-empty');
 
   // ---------- Expandable panels (sections from the side menu) ----------
-  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'sec-vznik', 'poradna'];
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'sec-faq', 'sec-vznik', 'poradna'];
 
   function renderPanel(id, subId) {
     const hero = document.getElementById('cviceni');
@@ -3370,11 +3178,11 @@
   }
 
   // ---------- Entry notice before sensitive sections ----------
-  // "Supplements & other paths to calm" and "Advice & Guidance" (AI) show a
+  // "Breathing articles" and "Advice & Guidance" (AI) show a
   // confirmation modal every time they're entered: this is educational/
   // relaxation material, not a medical tool, and for the AI section there's
   // an extra reminder to always verify the generated answer.
-  const DISCLAIMER_GATED_PANELS = ['clanky', 'doplnky', 'poradna'];
+  const DISCLAIMER_GATED_PANELS = ['clanky', 'poradna'];
   let pendingDisclaimerNav = null;
 
   function activatePanelNav(id, subId) {
@@ -3396,14 +3204,10 @@
       bodyEl.innerHTML =
         '<p>This is educational and relaxation material, not a medical device or a substitute for professional care.</p>' +
         '<p>Answers in this section are generated by AI and may contain inaccuracies or mistakes. <strong>Please always verify the generated answer yourself</strong> — especially anything related to health — and consult a doctor or other qualified professional if you have any health concerns.</p>';
-    } else if (id === 'clanky') {
-      bodyEl.innerHTML =
-        '<p>This is educational and relaxation material, not a medical device or a substitute for professional care.</p>' +
-        '<p>Articles in this section are for general information only and may contain inaccuracies or mistakes. <strong>Please verify the information yourself</strong> and consult a doctor or other qualified professional if you have any health concerns.</p>';
     } else {
       bodyEl.innerHTML =
         '<p>This is educational and relaxation material, not a medical device or a substitute for professional care.</p>' +
-        '<p>Information about dietary supplements and other paths to calm is for general information only. Before starting anything new or changing your lifestyle, please consult a doctor or other qualified professional.</p>';
+        '<p>Articles in this section are for general information only and may contain inaccuracies or mistakes. <strong>Please verify the information yourself</strong> and consult a doctor or other qualified professional if you have any health concerns.</p>';
     }
     overlay.hidden = false;
   };

@@ -1031,7 +1031,7 @@
   .poradna-report-status.error { color: #ff8a8a; }
   .poradna-report-status.success { color: #7be08a; }
 
-  /* ---------- Vstupní upozornění před sekcemi (Doplňky / Rady a poradna) ---------- */
+  /* ---------- Vstupní upozornění před sekcemi (Rady a poradna) ---------- */
   .section-disclaimer-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px);
     display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
@@ -1685,7 +1685,6 @@
   <a href="#techniky" data-panel="sec-techniky" onclick="showPanel('sec-techniky'); toggleSideNav(false); return false;">Techniky dechu</a>
   <a href="rychla-cviceni-na-zklidneni.html">Rychlá cvičení</a>
   <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
-  <a href="#doplnky" data-panel="doplnky" onclick="showPanel('doplnky'); toggleSideNav(false); return false;">Doplňky a další cesty ke klidu</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
   <a href="#vznik" data-panel="sec-vznik" onclick="showPanel('sec-vznik'); toggleSideNav(false); return false;">Jak to vzniklo</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Rady a poradna</a>
@@ -1700,11 +1699,6 @@
   <div class="side-nav-external">
     <a href="https://relaxplayer.eu" target="_blank" rel="noopener">🎧 RelaxPlayer</a>
     <p>Nepřetržité ambientní, Chillout, ASMR a klavírní zvuky a melodie zdarma přímo v prohlížeči, bez registrace. Hodí se jako klidné pozadí k soustředění, spánku nebo relaxaci - od projektu SYNTHLUCIDA.</p>
-  </div>
-
-  <div class="side-nav-external">
-    <a href="https://dazante.bandcamp.com/" target="_blank" rel="noopener">💛 Podpořit (BANDCAMP)</a>
-    <p>Pokud se ti projekt Uklidni To líbí, můžeš nás podpořit na Bandcampu.</p>
   </div>
 
   <div class="side-nav-external">
@@ -2642,190 +2636,6 @@
     <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Pokud máš úzkostnou poruchu, srdeční či plicní onemocnění, jsi těhotná, nebo se během cvičení necítíš dobře, poraď se s lékařem a dýchání okamžitě přeruš, pokud se ti udělá nevolno nebo se ti zatočí hlava.</p>
   </section>
 
-  <section class="content" aria-labelledby="doplnky-nadpis" id="doplnky">
-    <div class="panel-topbar">
-      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
-    </div>
-    <h2 id="doplnky-nadpis">Doplňky a další cesty ke klidu</h2>
-    <p>Dech je základ, ale klidu pomáhá i pár dalších věcí, které stojí za zmínku — co o nich vlastně říká výzkum.</p>
-
-    <div class="article-search-wrap">
-      <span class="article-search-icon">🔎</span>
-      <div class="article-search-input-wrap">
-        <input type="search" class="article-search-input" id="doplnky-search-input" placeholder="Hledat v doplňcích… (např. hořčík, spánek, kofein)" aria-label="Hledat v doplňcích a dalších cestách ke klidu" autocomplete="off">
-        <button type="button" class="article-search-clear" id="doplnky-search-clear" aria-label="Vymazat hledání" title="Vymazat">✕</button>
-      </div>
-    </div>
-    <p class="article-search-count" id="doplnky-search-count"></p>
-    <p class="article-search-empty" id="doplnky-search-empty">Podle zadaného výrazu nebyl nalezen žádný článek.</p>
-
-    <!-- DOPLNKY:AUTO:START -->
-    <article class="article-card">
-      <h3>Silový trénink a psychika: co říká výzkum o vlivu na náladu</h3>
-      <p>Silový trénink (posilování s vlastní vahou, činkami nebo posilovacími stroji) je tradičně vnímaný především jako nástroj pro budování svalové síly a fyzické kondice. V posledních letech se ale ukazuje, že jeho účinky sahají i do oblasti duševního zdraví — souvisí to pravděpodobně s kombinací více mechanismů: uvolňováním endorfinů a dalších neurotransmiterů, mírným snížením hladiny stresového hormonu kortizolu, zlepšením spánku a také psychologickým efektem zvládnutého výkonu a pocitu kontroly nad vlastním tělem.</p><p>Podle metaanalýzy publikované v odborném časopise JAMA Psychiatry (2018), která shrnula výsledky randomizovaných studií s celkem téměř tisícem účastníků, silový trénink významně snižoval depresivní příznaky, a to bez ohledu na zdravotní stav účastníků, celkový objem tréninku nebo to, zda se u nich skutečně výrazně zlepšila síla. Jinými slovy — přínos pro náladu se neomezoval jen na lidi, kteří cvičili nejvíc nebo dosáhli největšího zlepšení výkonu, což naznačuje, že za zlepšením nálady stojí víc než jen samotný fyzický pokrok. To je dobrá zpráva zejména pro začátečníky: i mírný, pravidelný silový trénink se může na náladě projevit pozitivně, aniž by bylo nutné hned dosahovat velkých výkonnostních cílů. Silový trénink přitom rozhodně nenahrazuje léčbu klinické deprese, ale jako doplňková součást životního stylu má podle dostupných dat solidní vědeckou oporu.</p>
-      <p class="article-source">Zdroj: Gordon B. R. a kol., <em>Association of Efficacy of Resistance Exercise Training With Depressive Symptoms: Meta-analysis and Meta-regression Analysis of Randomized Clinical Trials</em>, JAMA Psychiatry, 2018.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Hořčík (magnesium): oblíbený, ale ne zázračný</h3>
-      <p>Hořčík se v poslední době stal jedním z nejoblíbenějších doplňků na klid a lepší spánek, hlavně díky sociálním sítím. Přehledy studií z posledních let ukazují, že u lidí, kteří mají sklon k úzkosti nebo nižší hladinu hořčíku, může doplňování hořčíku mírně zlepšit pocit úzkosti a kvalitu spánku.</p><p>Důkazy ale zatím nejsou nijak silné — studie bývají menší a používají různé formy i dávky hořčíku, takže jednoznačné doporučení zatím chybí. Přesto jde o levný a bezpečný doplněk s minimem vedlejších účinků, takže je to rozumná volba k vyzkoušení, hlavně večer před spaním. Než začneš, poraď se s lékařem nebo lékárníkem — u lidí s ledvinovými potížemi může být hořčík problematický.</p>
-      <p class="article-source">Zdroj: systematické přehledy studií o hořčíku a úzkosti/spánku, 2017 a 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>L-theanin: klid bez ospalosti ze zeleného čaje</h3>
-      <p>L-theanin je aminokyselina přirozeně obsažená v zeleném čaji, která je zajímavá tím, že podle EEG studií zvyšuje takzvané alfa vlny v mozku — ty souvisí s uvolněným, ale bdělým stavem, podobným lehké meditaci. V malých studiích dávka kolem 200 mg před stresující situací mírně snížila pocit úzkosti a tělesné reakce na stres, aniž by způsobila ospalost.</p><p>Na rozdíl od klasických uklidňujících léků L-theanin nezpomaluje reakce ani neovlivňuje paměť. Kombinace s kofeinem (například v šálku čaje) navíc podle výzkumu pomáhá zmírnit nervozitu, kterou kofein sám o sobě může způsobit — proto prý čaj působí „hladčeji“ než káva.</p>
-      <p class="article-source">Zdroj: klinické studie účinků L-theaninu na úzkost a alfa aktivitu mozku, 2004–2026.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Studená sprcha: proč nejdřív šok a teprve pak klid</h3>
-      <p>Studená voda na kůži nejdřív spustí takzvaný cold shock — tělo na pár vteřin zrychlí dech i tep a vyplaví stresové hormony, přesně jako při jakékoliv jiné zátěži. Teprve po tomto počátečním šoku se aktivuje bloudivý nerv a nastupuje uklidnění: tep se zpomalí pod výchozí úroveň a nervový systém se přepne do klidnějšího režimu. Efekt je proto opačný, než by se čekalo — klid přichází až jako reakce na ústup chladu, ne během něj.</p><p>Studie z roku 2022 potvrdila, že přiložení chladu na obličej po stresující úloze pomohlo tep i subjektivní pocit stresu zklidnit rychleji než bez chladu. Pravidelná studená expozice po dobu několika týdnů je navíc v menších studiích spojována s mírně lepší variabilitou srdečního tepu (HRV) a lepší náladou. Pro začátek stačí pár vteřin studeného konce sprchy a postupně čas prodlužovat — a hned po sprše je dobré chvíli pomalu dýchat, aby se uklidňující efekt ještě podpořil. Lidé se srdečními potížemi, vysokým tlakem nebo v těhotenství by měli chlad na tělo zkoušet jen po domluvě s lékařem, protože prudký cold shock může krátkodobě zvýšit tepovou frekvenci i krevní tlak.</p>
-      <p class="article-source">Zdroj: studie o vlivu chladového podnětu na obličej (Cold Face Test) na akutní stres, Scientific Reports, 2022; přehledy studií o bezpečnosti a účincích studené vody na duševní zdraví, 2023–2026.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Kofein a úzkost: kdy pomáhá a kdy škodí</h3>
-      <p>Vztah kofeinu a úzkosti není jednoznačný. U menších dávek a lidí zvyklých na pravidelnou konzumaci kofein často zlepšuje soustředění a náladu, u vyšších dávek nebo citlivějších jedinců ale zvyšuje kortizol a může spustit nebo zhoršit pocit nervozity a bušení srdce — efekt je tedy dost individuální a záleží na dávce.</p><p>Pokud máš sklony k úzkosti nebo špatně usínáš, může pomoct omezit kofein na dopoledne a sledovat, jak reaguje tvoje tělo — u někoho stačí i jeden šálek navíc, aby se objevil neklid. Dechové cvičení nebo studenou sprchu je dobré zkusit spíš mimo špičku účinku kofeinu, kdy je tělo přirozeně klidnější.</p>
-      <p class="article-source">Zdroj: systematický přehled vlivu kofeinu na úzkostné chování, 2023–2026; studie o kofeinu a reaktivitě kortizolu na stres.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Progresivní svalová relaxace: napni a pusť</h3>
-      <p>Progresivní svalová relaxace (metoda Edmunda Jacobsona z 30. let 20. století) funguje na jednoduchém principu — postupně napneš a pak uvolníš jednotlivé svalové skupiny od chodidel až po obličej. Tělo si tak lépe uvědomí rozdíl mezi napětím a uvolněním, což pomáhá rozpoznat a pustit i skryté svalové napětí, které si běžně ani neuvědomujeme.</p><p>Novější přehledy studií u dospělých potvrzují, že pravidelná progresivní svalová relaxace snižuje úzkost, stres i příznaky deprese, a to i u starších lidí nebo lidí v nemocniční péči. Sezení trvají obvykle 5 až 20 minut a dá se dělat úplně kdekoliv vsedě nebo vleže — hezky se doplňuje s dechovým cvičením, třeba jako večerní rituál před spaním.</p>
-      <p class="article-source">Zdroj: systematické přehledy účinnosti progresivní svalové relaxace na stres, úzkost a depresi, 2024–2025.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Meditace: trénink pozornosti, který mění i mozek</h3>
-      <p>Meditace všímavosti (mindfulness) spočívá v tom, že pozornost vědomě a bez hodnocení zaměříš na přítomný okamžik — nejčastěji na dech, tělesné pocity nebo zvuky kolem sebe. Kdykoliv mysl odběhne k myšlenkám na minulost nebo budoucnost, člověk si toho jen všimne a pozornost jemně vrátí zpátky, bez sebekritiky. Nejznámějším a nejlépe prozkoumaným programem je osmitýdenní kurz MBSR (Mindfulness-Based Stress Reduction), který v 70. letech vytvořil Jon Kabat-Zinn.</p><p>Rozsáhlá metaanalýza desítek klinických studií z roku 2014 zjistila, že meditační programy vedou k mírnému, ale konzistentnímu zlepšení úzkosti, deprese a vnímání bolesti — účinek je srovnatelný s jinými aktivními terapiemi, i když ne nijak dramatický. Jiná studie zase ukázala, že po osmi týdnech pravidelného cvičení MBSR dochází u účastníků k měřitelným změnám hustoty šedé hmoty v mozkových oblastech spojených s učením, pamětí a zpracováním emocí. Efekt se ale dostavuje hlavně s pravidelnou, dlouhodobější praxí; jako doplněk k dechovému cvičení stačí klidně začít s 10-15 minutami denně.</p>
-      <p class="article-source">Zdroj: Goyal a kol., <em>Meditation Programs for Psychological Stress and Well-being: A Systematic Review and Meta-analysis</em>, JAMA Internal Medicine, 2014; Hölzel a kol., <em>Mindfulness practice leads to increases in regional brain gray matter density</em>, Psychiatry Research: Neuroimaging, 2011.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Pobyt v přírodě: proč procházka lesem zklidní víc než procházka městem</h3>
-      <p>Podle takzvané teorie obnovy pozornosti (attention restoration theory) městské prostředí neustále zahlcuje mozek podněty, na které musíme aktivně reagovat — semafory, dopravu, davy lidí — a tím vyčerpává takzvanou řízenou pozornost. Přírodní prostředí naopak zaujme pozornost mírně a bez námahy (šum listí, tekoucí voda), takže si mozek může odpočinout a znovu „nabít“. K tomu se přidává i pokles hladiny stresových hormonů a krevního tlaku, který bývá v zeleni měřitelně rychlejší než v zastavěném prostředí.</p><p>Studie z roku 2015 pomocí zobrazování mozku zjistila, že devadesátiminutová procházka v přírodě oproti stejně dlouhé procházce rušnou ulicí snížila aktivitu v mozkové oblasti spojené s přežvykováním negativních myšlenek (ruminací). Novější výzkum pak ukázal, že už 20-30 minut v zeleni, klidně i jen sezení v parku bez pohybu, dokáže během dne měřitelně snížit hladinu kortizolu ve slinách — přičemž delší pobyt přinášel větší pokles, ale i krátká „dávka“ přírody měla efekt. Nemusí přitom jít o divočinu; funguje i městský park nebo stromořadí.</p>
-      <p class="article-source">Zdroj: Bratman a kol., <em>Nature experience reduces rumination and subgenual prefrontal cortex activation</em>, PNAS, 2015; Hunter, Gillespie &amp; Chen, <em>Urban Nature Experiences Reduce Stress in the Context of Daily Life Based on Salivary Biomarkers</em>, Frontiers in Psychology, 2019.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Alkohol a spánek: proč sklenka večer nepomáhá usnout, ale ničí spánek</h3>
-      <p>Alkohol sice zpočátku tlumí nervovou soustavu, a tak se může zdát, že člověku pomůže rychleji usnout — jenže tenhle efekt je zrádný. Jak se alkohol v noci odbourává, tělo se dostává do jakéhosi mírného odvykacího stavu: spánek se fragmentuje, člověk se častěji budí (i když si to ráno nemusí pamatovat) a hlavně se výrazně potlačuje REM fáze spánku, ve které se zpracovávají emoce a upevňuje paměť. Výsledkem je spánek, který se navenek zdá delší, ale je mnohem méně kvalitní a osvěžující.</p><p>Alkohol navíc uvolňuje svaly hrdla, takže zhoršuje chrápání a zvyšuje riziko spánkové apnoe, a působí močopudně, což vede k nočnímu buzení na toaletu. Pravidelné pití večer před spaním se tak dlouhodobě pojí s horší kvalitou spánku, větší denní únavou i vyšší úzkostí — je to přesně opačný efekt, než jaký člověk hledá, když sahá po skleničce „na uklidnění“. Pro klidný spánek je proto lepší se alkoholu večer vyhnout úplně, nebo ho aspoň nechat vstřebat dostatečně dlouho před ulehnutím.</p>
-      <p class="article-source">Zdroj: přehledy studií o vlivu alkoholu na architekturu spánku a REM fázi, 2018–2024; výzkum spojitosti alkoholu se spánkovou apnoí a fragmentací spánku.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Nikotin: stimulant, který si tělo splete s klidem</h3>
-      <p>Cigareta nebo vaporizér se často berou jako způsob, jak se „zklidnit“, ale nikotin je ve skutečnosti stimulant — zrychluje tep, zvyšuje krevní tlak a povzbuzuje nervovou soustavu podobně jako kofein. Pocit uklidnění, který kuřáci popisují, souvisí hlavně s odezněním abstinenčních příznaků mezi jednotlivými cigaretami, ne s reálným uklidňujícím účinkem nikotinu samotného. Studie navíc ukazují, že kuřáci mají v průměru vyšší hladinu úzkosti a stresu než nekuřáci nebo bývalí kuřáci, a že po odvykání kouření úzkost dlouhodobě klesá.</p><p>Na spánek má nikotin podobně negativní vliv jako kofein — zkracuje celkovou dobu spánku, prodlužuje usínání a vede k častějšímu nočnímu buzení, částečně i kvůli nočnímu odvykacímu stavu u pravidelných kuřáků. Pokud jde o klidný spánek a nižší úzkost, jednoznačně nejúčinnější je nikotin omezit nebo se ho zbavit úplně; když to hned nejde, pomáhá aspoň vyhnout se mu několik hodin před spaním.</p><p>Chceš mít přehled o tom, kolik nikotinu skutečně spotřebováváš, a postupně ho snižovat? Zkus <a href="https://synthlucida.com/landing_vapetrack.html" target="_blank" rel="noopener">VapeTrack</a> — jednoduchou aplikaci na sledování spotřeby nikotinu a její postupné snižování.</p>
-      <p class="article-source">Zdroj: přehledy studií o vlivu nikotinu na úzkost a spánek, 2019–2023; výzkum vztahu kouření a odvykání kouření k hladině úzkosti.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Spánková hygiena: pravidelnost, tma a chlad podle výzkumu</h3>
-      <p>Kvalitní spánek stojí hlavně na pravidelnosti. Vnitřní biologické hodiny (cirkadiánní rytmus) se nejlépe seřizují, když člověk chodí spát a vstává přibližně ve stejnou dobu i o víkendu — nepravidelný režim a časté „dospávání“ jsou v novějších studiích spojovány s horší kvalitou spánku a vyšším kardiovaskulárním rizikem, i když celkový počet hodin spánku vychází podobně.</p><p>Dvě podmínky prostředí mají podle přehledových studií opravdu solidní oporu v datech. První je chladnější ložnice — tělesná teplota při usínání přirozeně klesá, a pokojová teplota kolem 18-20 °C tento pokles usnadňuje, zatímco přetopená místnost spánek prokazatelně zhoršuje. Druhá je tma: světlo (včetně modrého světla z obrazovek) potlačuje přes sítnici tvorbu melatoninu, a proto se doporučuje omezit jasné světlo a displeje zhruba 1-3 hodiny před spaním a spát v zatemněné místnosti nebo s maskou na oči. Naopak ranní vystavení se dennímu světlu pomáhá vnitřní hodiny nastavit na správný čas. Kombinace s dechovým cvičením jako 4-7-8 nebo technikou Calm (viz výše) může být dobrým večerním rituálem, který na tyto návyky navazuje.</p>
-      <p class="article-source">Zdroj: Irish a kol., <em>The role of sleep hygiene in promoting public health: A review of empirical evidence</em>, Sleep Medicine Reviews, 2015; Chaput a kol., <em>Device-measured weekend catch-up sleep, mortality, and cardiovascular disease incidence in adults</em>, Sleep, 2024; Harding, Franks &amp; Wisden, <em>The Temperature Dependence of Sleep</em>, Frontiers in Neuroscience, 2019; doporučení pro expozici světlu podle Brown a kol., 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Strava a dostatek bílkovin: jak jídlo ovlivňuje klid a náladu</h3>
-      <p>Bílkoviny dodávají tělu aminokyseliny, ze kterých mozek vyrábí neurotransmitery ovlivňující náladu — mimo jiné tryptofan, který je prekurzorem serotoninu. Studie se syrovátkovou bílkovinou bohatou na alfa-laktalbumin (protein s vysokým podílem tryptofanu) u lidí náchylných ke stresu zjistila, že pravidelné užívání po několika týdnech snížilo hladinu kortizolu a zlepšilo náladu při zátěži oproti kontrolní skupině. Výzkum ohledně zdroje bílkoviny (živočišná vs. rostlinná) a nálady je ale zatím nejednoznačný — některé studie spojují vyšší příjem živočišných bílkovin s nižším rizikem deprese, jiné žádný rozdíl nenacházejí, takže jde spíš o jeden z mnoha faktorů než o zaručený recept.</p><p>Prakticky důležitější bývá jiný mechanismus: bílkovina v jídle zpomaluje vstřebávání cukrů a pomáhá udržet stabilnější hladinu glykémie. Prudký pokles cukru v krvi po vynechaném jídle nebo po sladkém jídle bez bílkoviny může vyvolat třes, bušení srdce, podrážděnost a pocit úzkosti, který je od té „obyčejné“ těžko k rozeznání. Přehledová studie z roku 2021, která shrnula dosavadní výzkum vztahu stravy a úzkosti, proto mezi jednoduchá doporučení řadí i pravidelná jídla s dostatkem bílkoviny — vedle dostatku vlákniny a omezení rafinovaného cukru a alkoholu. Menší studie z roku 2016 navíc u lidí s generalizovanou úzkostnou poruchou a příznaky podobnými hypoglykémii ukázala, že úprava jídelníčku tímto směrem jejich úzkostné příznaky zmírnila.</p><p>Kolik bílkoviny je tedy „dost“? Podle referenčního příjmu Evropského úřadu pro bezpečnost potravin (EFSA) potřebuje zdravý dospělý zhruba 0,8 g bílkoviny na kilogram tělesné hmotnosti a den — u člověka s hmotností 70 kg to vychází na přibližně 55-60 g denně. Fyzicky aktivní lidé a starší dospělí, u kterých přirozeně ubývá svalová hmota, mívají doporučení vyšší, orientačně 1,2 až 2,0 g na kilogram, ideálně po konzultaci s lékařem nebo nutričním terapeutem. Pro stabilnější hladinu cukru v krvi během dne se navíc často doporučuje rozložit bílkovinu rovnoměrně mezi hlavní jídla — orientačně kolem 20-30 g na jedno jídlo — místo toho, aby většina denní dávky padla jen na večeři.</p><p>Pozor je dobré dávat i na to, odkud bílkovina (a energie obecně) pochází. Vysoce průmyslově zpracované potraviny, lidově „prefabrikáty“ — balené snacky, slazené nápoje, instantní jídla s dlouhým seznamem přídatných látek — jsou v posledních letech opakovaně spojovány s vyšším rizikem deprese a úzkosti. Rozsáhlá americká studie z roku 2023 sledovala přes 31 000 žen déle než deset let a zjistila, že ty, které jedly nejvíc ultra-zpracovaných potravin, měly výrazně vyšší riziko rozvoje deprese než ty, které jich jedly nejméně; nejsilnější souvislost se přitom ukázala u nápojů a potravin s umělými sladidly. Podobnou souvislost mezi ultra-zpracovanou stravou a rozvojem úzkosti i deprese popsala i čínská kohortová studie ze stejného roku na více než 180 000 lidech. Přesný mechanismus zatím není jasný — roli může hrát kombinace rychlých výkyvů krevního cukru, chudšího nutričního profilu a vlivu na střevní mikrobiom — ale praktický závěr je podobný jako u samotného přidaného cukru: bílkovinu i zbytek jídelníčku je lepší stavět hlavně na méně upravených potravinách (maso, ryby, vejce, mléčné výrobky, luštěniny, ořechy) než na balených snacích a slazených nápojích.</p>
-      <p class="article-source">Zdroj: Markus a kol., <em>The bovine protein α-lactalbumin increases the plasma ratio of tryptophan to the other large neutral amino acids and improves mood under stress</em>, American Journal of Clinical Nutrition, 2000; Aucoin a kol., <em>Diet and Anxiety: A Scoping Review</em>, Nutrients, 2021; Aucoin a kol., <em>Generalized Anxiety Disorder and Hypoglycemia Symptoms Improved with Diet Modification</em>, Case Reports in Psychiatry, 2016; EFSA, <em>Dietary Reference Values for protein</em>, 2012; Wang a kol., <em>Association of Ultraprocessed Food Consumption With Risk of Depression</em>, JAMA Network Open, 2023; Sun a kol., <em>Association of ultra-processed food consumption with incident depression and anxiety</em>, Food &amp; Function, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Cukr a dopamin: proč sladké náladu rychle zvedne — a stejně rychle srazí</h3>
-      <p>Cukr, hlavně ten rychle vstřebatelný (bílé pečivo, sladkosti, slazené nápoje), spouští v mozku uvolnění dopaminu v takzvané mezolimbické odměňovací dráze — konkrétně v oblasti zvané nucleus accumbens, tedy ve stejné části mozku, kterou aktivují i návykové látky jako nikotin nebo kokain. Zajímavou ukázkou je zobrazovací studie z roku 2013, ve které dostali muži dva na první pohled stejné mléčné koktejly — stejně sladké, stejně kalorické, se stejným množstvím bílkovin a tuku — jenže jeden byl vyrobený tak, aby se cukr z něj vstřebával rychle (vysoký glykemický index), druhý pomalu. Právě rychlejší koktejl vyvolal silnější aktivitu nucleus accumbens; rozdíl tedy nebyl ve sladké chuti, ale v tom, jak prudce jídlo zvedlo hladinu glukózy v krvi.</p><p>Stejná studie ale ukázala i druhou stranu mince: čtyři hodiny po rychle vstřebatelném koktejlu byla hladina cukru v krvi nižší a účastníci hlásili větší hlad než po pomalejší variantě — a právě v tuto chvíli byla aktivita nucleus accumbens nejvyšší, jako by mozek žádal o další dávku. Tenhle glykemický propad úzce souvisí s tím, co popisuje i předchozí článek o bílkovinách: bez bílkoviny nebo vlákniny, které vstřebávání cukru zpomalují, přichází pokles hladiny cukru rychleji a prudčeji, a s ním i únava, podrážděnost a chuť dát si další sladké. Bílkovina v jídle proto nefunguje jen jako prevence hypoglykemických příznaků, ale nepřímo tlumí i tenhle dopaminový kolotoč.</p><p>U dlouhodobého efektu na dopaminový systém je ale na místě opatrnost s velkými závěry. U zvířat je dobře zdokumentováno, že opakovaný přístup k velkému množství cukru vede k jevům podobným návykovosti — toleranci (je potřeba čím dál větší dávka pro stejný pocit odměny), abstinenčním příznakům po vysazení a sníženému počtu takzvaných D2 dopaminových receptorů. U lidí je otázka „cukrové závislosti“ mezi odborníky stále diskutovaná a přímý důkaz úplně stejného mechanismu chybí, existují ale nepřímé indicie — u lidí s obezitou nebo záchvatovitým přejídáním se ve výzkumech pozoruje nižší dostupnost D2 receptorů ve striatu, podobně jako u některých látkových závislostí. Vysoký příjem cukru se navíc v pozorovacích studiích opakovaně pojí s vyšším výskytem deprese, přesný mechanismus (zánět, metabolické změny, nebo právě změny v odměňovacím systému) ale zatím není jistý a nejde o prokázanou přímou příčinnou souvislost.</p>
-      <p class="article-source">Zdroj: Lennerz a kol., <em>Effects of dietary glycemic index on brain regions related to reward and craving in men</em>, American Journal of Clinical Nutrition, 2013; Avena, Rada &amp; Hoebel, <em>Evidence for sugar addiction: Behavioral and neurochemical effects of intermittent, excessive sugar intake</em>, Neuroscience &amp; Biobehavioral Reviews, 2008; Qin a kol., <em>Sugar Addiction: Neural Mechanisms and Health Implications</em>, Brain and Behavior, 2025.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Sport a pohyb: jak fyzická zátěž zklidní i mysl</h3>
-      <p>Vztah mezi pohybem a úzkostí patří k nejlépe prozkoumaným tématům sportovní psychologie. Klasická metaanalýza z roku 1991, později aktualizovaná v roce 2015, potvrdila, že už jediné aerobní cvičení dokáže krátkodobě snížit takzvanou stavovou úzkost — tedy aktuální pocit napětí v danou chvíli — a to s účinkem srovnatelným s jinými běžně používanými uklidňujícími technikami. Širší meta-meta-analýza z roku 2015, která shrnula osm dřívějších přehledů s více než 10 000 účastníky, pak ukázala, že pravidelná fyzická aktivita snižuje úzkost i u běžné, klinicky nezatížené populace — účinek je menší, ale statisticky spolehlivý.</p><p>Ne všechny druhy pohybu přitom fungují úplně stejně. Novější síťová metaanalýza z roku 2024, zaměřená na mladé lidi, srovnávala různé typy cvičení a jako nejúčinnější na úzkost vyšlo takzvané mind-body cvičení, tedy pohyb spojený s vědomým dýcháním a soustředěním, jako jóga nebo tai-chi, hned za ním klasické aerobní cvičení typu běh nebo jízda na kole. Pro trvalejší efekt je navíc důležitá vytrvalost — metaanalýza u starších dospělých zjistila, že cvičební program kratší než 10 týdnů úzkost statisticky významně nesnížil, zatímco delší programy ano, a nezáleželo přitom příliš na tom, zda šlo o chůzi, aerobik nebo posilování. Kombinace obou přístupů dává smysl: pohyb tělo krátkodobě zaktivuje a vyplaví stresové hormony, a dechové cvičení po něm pomůže tento aktivovaný stav vědomě stáhnout zpátky do klidu.</p>
-      <p class="article-source">Zdroj: Petruzzello a kol., <em>A Meta-Analysis on the Anxiety-Reducing Effects of Acute and Chronic Exercise</em>, Sports Medicine, 1991, aktualizováno Ensari a kol., <em>Meta-Analysis of Acute Exercise Effects on State Anxiety</em>, Depression and Anxiety, 2015; Rebar a kol., <em>A Meta-Meta-Analysis of the Effect of Physical Activity on Depression and Anxiety in Non-Clinical Adult Populations</em>, Health Psychology Review, 2015; Tian a kol., <em>Comparative Efficacy of Acute Exercise Intervention on Anxiety in Adolescents and Young Adults: A Network Meta-Analysis</em>, Scandinavian Journal of Medicine &amp; Science in Sports, 2024; Goodarzi a kol., <em>Effect of Physical Activity for Reducing Anxiety Symptoms in Older Adults</em>, BMC Sports Science, Medicine and Rehabilitation, 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Omega-3 mastné kyseliny: co skutečně říká výzkum o klidu</h3>
-      <p>Omega-3 mastné kyseliny EPA a DHA, které tělo přijímá hlavně z tučných ryb nebo rybího oleje, patří k nejzkoumanějším doplňkům ve vztahu k náladě a úzkosti. Rozsáhlá dávkově-závislá metaanalýza z roku 2024, která zahrnula 23 studií s více než 2 100 účastníky, zjistila, že s rostoucí denní dávkou omega-3 mírně klesaly příznaky úzkosti, s nejvýraznějším efektem kolem 2 gramů denně — nižší dávky podle analýzy výsledek zásadně neovlivnily. Autoři ale sami upozorňují, že jistota důkazů je zatím nízká, jednotlivé studie se dost liší kvalitou a je potřeba dalšího výzkumu.</p><p>Jiné přehledy se soustředí spíš na depresi než na úzkost a naznačují, že zlepšení bývá patrnější u přípravků s vyšším podílem EPA oproti DHA v dávce zhruba 1-2 gramy denně; přímo pro úzkost je zatím kvalitně provedených studií jen málo. Omega-3 bývají obecně dobře snášené — mezi časté nežádoucí účinky patří pachuť ryby, pálení žáhy nebo mírné zažívací potíže. Ve vyšších dávkách (nad zhruba 3 gramy denně) mohou mírně prodloužit dobu krvácení, což je důležité hlavně u lidí užívajících léky na ředění krve — tam je namístě dávkování probrat s lékařem. Jako u ostatních doplňků platí, že přednost by měla mít strava (tučné ryby zhruba dvakrát týdně) a doplněk brát spíš jako doplněk, ne náhradu.</p>
-      <p class="article-source">Zdroj: Bafkar a kol., <em>Efficacy and safety of omega-3 fatty acids supplementation for anxiety symptoms: a systematic review and dose-response meta-analysis of randomized controlled trials</em>, BMC Psychiatry, 2024; systematický přehled a metaanalýza účinků EPA a DHA na úzkost a depresi, 2023; NCCIH, doporučení k bezpečnosti omega-3 doplňků a interakcím s léky na ředění krve.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>L-tryptofan: aminokyselina, ze které si tělo vyrábí serotonin a melatonin</h3>
-      <p>L-tryptofan je jedna z devíti esenciálních aminokyselin — tělo si ji neumí samo vytvořit, a musí ji tedy přijímat z potravy. Najdeme ji v bílkovinných potravinách, jako je krůtí a kuřecí maso, vejce, sýry, ryby, luštěniny, ovesné vločky nebo dýňová a sezamová semínka. V mozku slouží jako výchozí surovina pro syntézu serotoninu, neurotransmiteru, který ovlivňuje náladu, a ten se dál přeměňuje na melatonin, hormon řídící cyklus spánku a bdění. Zajímavé je, že samotné množství tryptofanu v jídle nerozhoduje o tom, kolik ho nakonec doputuje do mozku — tryptofan tam soupeří o transport s dalšími aminokyselinami, a jídlo bohaté na sacharidy (které zvýší inzulin a sníží hladinu konkurenčních aminokyselin v krvi) mu paradoxně pomáhá projít snáz než jídlo bohaté jen na bílkoviny. Proto je populární představa, že po krůtím mase na Vánoce usínáme kvůli tryptofanu, poněkud zjednodušená — spíš za to může celé sváteční menu a jeho množství.</p><p>Pokud jde o doplňky stravy, systematický přehled a metaanalýza z roku 2022 (Sutanto a kol.), která zahrnula 18 studií, zjistila, že dávky tryptofanu od 1 gramu denně výše dokážou zkrátit dobu usínání a zlepšit celkovou kvalitu spánku; u nižších dávek nebyl efekt tak jasný. L-tryptofan se obecně považuje za bezpečný, ale má důležitá omezení: neměl by se kombinovat s antidepresivy typu SSRI, SNRI ani s IMAO, protože společně zvyšují riziko serotoninového syndromu — vzácného, ale závažného stavu. Opatrní by měli být i těhotné a kojící ženy a lidé s onemocněním jater nebo ledvin, a to bez konzultace s lékařem. Stojí také za zmínku, že v roce 1989 způsobila v USA jedna kontaminovaná výrobní šarže tryptofanu vlnu onemocnění zvaného eozinofilně-myalgický syndrom — šlo ale o nečistotu z konkrétní výroby, ne o problém tryptofanu jako takového, a dnešní doplňky s kontrolovanou kvalitou toto riziko nenesou. I tak platí, že nejde o samospásný lék na nespavost, ale o doplněk, který má smysl především tam, kde běžná strava tryptofan neposkytuje v dostatečném množství.</p>
-      <p class="article-source">Zdroj: Sutanto, Loh a Kim, <em>The impact of tryptophan supplementation on sleep quality: a systematic review, meta-analysis, and meta-regression</em>, Nutrition Reviews, 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Základní vitamíny: proč je tělo potřebuje a co dělají</h3>
-      <p>Vitamíny patří mezi esenciální mikroživiny — tělo je potřebuje v malém množství, ale bez nich by řada biochemických procesů nefungovala. Podle rozpustnosti se dělí do dvou skupin: vitamíny rozpustné v tucích (A, D, E, K), které se mohou hromadit v tukové tkáni a játrech, a vitamíny rozpustné ve vodě (vitamíny skupiny B a vitamín C), které se v těle příliš neukládají a je třeba je přijímat průběžně stravou.</p><p>Vitamín A podporuje zrak a imunitní systém, vitamín D pomáhá vstřebávat vápník a udržovat zdravé kosti, vitamín E působí jako antioxidant chránící buněčné membrány a vitamín K se podílí na srážlivosti krve. Vitamíny skupiny B (B1, B2, B3, B5, B6, B7, B9 a B12) jsou klíčové pro přeměnu energie z potravy a správnou funkci nervové soustavy, zatímco vitamín C podporuje tvorbu kolagenu, hojení ran a vstřebávání železa. Protože se vitamíny rozpustné v tucích mohou v těle hromadit, jejich nadměrné dlouhodobé užívání ve formě doplňků stravy může být rizikové, a proto je vhodné konzultovat vyšší dávky s lékařem.</p>
-      <p class="article-source">Zdroj: Ward E., <em>Addressing nutritional gaps with multivitamin and mineral supplements</em>, Nutrition Journal, 2014.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Kreatin: co dělá ve svalech a jak souvisí s náladou</h3>
-      <p>Kreatin je přirozeně se vyskytující látka, kterou si tělo částečně syntetizuje v játrech, ledvinách a slinivce z aminokyselin arginin, glycin a metionin, a částečně získává ze stravy — především z masa a ryb. Naprostá většina kreatinu v těle je uložena ve svalech ve formě fosfokreatinu, který slouží jako rychle dostupný zdroj energie pro tvorbu ATP při krátkodobé, intenzivní fyzické zátěži. Menší, ale funkčně důležité množství kreatinu se nachází také v mozku, kde se podílí na energetickém metabolismu nervových buněk.</p><p>Právě proto se v posledních letech zkoumá, zda může kreatin ovlivňovat i náladu a duševní pohodu. Několik klinických studií naznačuje, že kreatin jako doplněk k SSRI antidepresivům nebo ke kognitivně-behaviorální terapii může přispět ke zmírnění příznaků deprese, případně zlepšit verbální plynulost a snížit mentální únavu, například po nedostatku spánku. Výsledky ale nejsou jednotné — u bipolární deprese se v některých studiích signifikantní zlepšení nálady neprokázalo a u těchto pacientů byla popsána i opatrnost kvůli riziku manických epizod. Kreatin proto zatím nelze považovat za náhradu léčby deprese, ale za slibnou, byť ještě ne zcela potvrzenou doplňkovou oblast výzkumu.</p>
-      <p class="article-source">Zdroj: Lyoo I. K. a kol., <em>A Randomized, Double-Blind Placebo-Controlled Trial of Oral Creatine Monohydrate Augmentation for Enhanced Response to a Selective Serotonin Reuptake Inhibitor in Women With Major Depressive Disorder</em>, American Journal of Psychiatry, 2012.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Melatonin: hormon spánku, který řídí náš vnitřní rytmus</h3>
-      <p>Melatonin je hormon produkovaný šišinkou mozkovou (epifýzou), jehož hladina v těle přirozeně stoupá se snižujícím se množstvím světla kolem nás a klesá s ránem a denním světlem. Funguje jako hlavní chemický signál cirkadiánního rytmu — takzvaných vnitřních biologických hodin, které řídí, kdy se cítíme bdělí a kdy ospalí. Na rozdíl od klasických sedativ melatonin sám o sobě „neuspává“ ve smyslu útlumu nervové soustavy, ale spíš tělu sděluje, že nastal čas na spánek, a pomáhá sladit vnitřní rytmus s tím, co se děje venku.</p><p>Podle systematického přehledu a metaanalýzy publikované v časopise Neuropsychopharmacology (2022) má podávaný melatonin měřitelný vliv na posun spánkového a bdělého cyklu, přičemž efekt závisí na dávce a hlavně na době podání — večerní dávka posouvá usínání dopředu, zatímco ranní dávka může rytmus naopak posunout dozadu. Nejvíc podložené využití má melatonin u stavů spojených s narušením vnitřních hodin, jako je jet lag nebo opožděná fáze spánku, důkazy pro běžnou nespavost bez cirkadiánní složky jsou méně jednoznačné. Melatonin je obecně dobře snášený s minimem vedlejších účinků a bez rizika závislosti, přesto se doporučuje řídit se nízkými dávkami a správným načasováním, ideálně po konzultaci s lékařem — a mít na paměti, že stejný signál, jaký melatonin tělu dává, dokáže potlačit i večerní světlo z telefonu nebo počítače.</p>
-      <p class="article-source">Zdroj: Moon E., Partonen T., Beaulieu S., Linnaranta O., <em>Melatonergic agents influence the sleep-wake and circadian rhythms in healthy and psychiatric participants: a systematic review and meta-analysis of randomized controlled trials</em>, Neuropsychopharmacology, 2022.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Ranní klid a tři priority: proč si po probuzení dát pár minut navíc</h3>
-      <p>Bezprostředně po probuzení je mozek ještě částečně v režimu spánku a hladina stresového hormonu kortizolu přirozeně stoupá — tento takzvaný ranní vzestup kortizolu tělu pomáhá nastartovat den, ale potřebuje k tomu pár klidných minut, ne okamžitý příval podnětů z telefonu nebo e-mailu. Krátká pauza v délce zhruba tří až pěti minut, kdy jen sedíme, dýcháme a necháme mysl postupně se probrat, dává tělu prostor tento přechod zvládnout přirozeně. Právě v tomto klidu je pak dobrá chvíle si v hlavě nebo na papír stručně shrnout, co nás ten den čeká.</p><p>Při této ranní rekapitulaci se vyplatí seznam úkolů záměrně zúžit jen na dva až tři nejdůležitější body. Mozek má omezenou kapacitu pro rozhodování a s přibývajícím počtem voleb roste takzvaná rozhodovací únava — čím víc úkolů si na sebe hned ráno naložíme, tím hůř se pak soustředíme na to podstatné. Napsání i jen krátkého plánu má navíc měřitelný účinek na klid mysli: podle studie Masicampa a Baumeistera z roku 2011 stačí mít pro nesplněný úkol jasný plán, kdy a jak ho uděláme, a mysl přestane úkol vracet formou rušivých myšlenek — nemusí být přitom vůbec hotový, stačí vědět, že má svůj čas. Pár minut ranního klidu spojených se dvěma až třemi jasnými prioritami tak může den nastartovat s menším stresem a jasnější hlavou.</p>
-      <p class="article-source">Zdroj: Masicampo E. J., Baumeister R. F., <em>Consider it done! Plan making can eliminate the cognitive effects of unfulfilled goals</em>, Journal of Personality and Social Psychology, 2011.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Zinek: stopový prvek, který podporuje imunitu i hojení</h3>
-      <p>Zinek patří mezi esenciální stopové prvky — tělo si ho neumí samo vytvořit, a musí ho proto pravidelně přijímat ze stravy, přestože ho potřebuje jen v malých množstvích. Přesto se podílí na řadě klíčových procesů: je nezbytný pro syntézu DNA, dělení buněk, růst, hojení ran i normální vnímání chuti a čichu. Zásadní roli hraje také v imunitním systému, kde ovlivňuje funkci a vývoj bílých krvinek a pomáhá tělu bránit se infekcím.</p><p>Podle přehledového shrnutí zpracovaného pro Severské výživové doporučené hodnoty (2023) je závažný nedostatek zinku spojen se sníženou obranyschopností, horším hojením ran, vypadáváním vlasů, ztrátou chuti k jídlu, poruchami vnímání chuti a kožními problémy, zatímco důsledky mírného nedostatku zůstávají méně jasné. Dobrými zdroji zinku jsou maso, mléčné výrobky, luštěniny, vejce, ryby a obiloviny, jeho vstřebávání ale mohou omezovat fytáty obsažené v celozrnných obilovinách a luštěninách a vysoký příjem vápníku. U běžné, pestré stravy v našich zeměpisných šířkách je riziko nedostatku zinku nízké, vyšší je typicky u přísně rostlinné stravy nebo u lidí s poruchami trávení. Stejně jako u jiných doplňků platí, že dlouhodobě vysoké dávky zinku nad rámec doporučeného příjmu mohou narušovat vstřebávání mědi, a proto se vyplatí případné vyšší dávkování konzultovat s lékařem.</p>
-      <p class="article-source">Zdroj: Strand T. A., Mathisen M., <em>Zinc – a scoping review for Nordic Nutrition Recommendations 2023</em>, Food & Nutrition Research, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Vitamín D: sluneční vitamín, který ovlivňuje kosti i náladu</h3>
-      <p>Vitamín D je svým způsobem výjimečný v tom, že si ho tělo z velké části umí vyrobit samo — po vystavení kůže slunečnímu záření (konkrétně UVB) vzniká jeho prekurzor, který se dále přeměňuje v játrech a ledvinách na aktivní formu. Menší část přijímáme i ze stravy, například z tučných ryb, vaječných žloutků nebo obohacených potravin. Nejlépe podloženou funkcí vitamínu D je podpora vstřebávání vápníku ve střevech a udržení zdravých kostí — jeho dlouhodobý nedostatek je spojen s křehčími kostmi a u dětí s křivicí.</p><p>Protože se receptory pro vitamín D nacházejí i v mozku, zkoumá se v posledních letech i jeho možná role v regulaci nálady. Podle systematického přehledu a metaanalýzy randomizovaných studií publikované v časopise Critical Reviews in Food Science and Nutrition (2023) doplňování vitamínu D mírně snižovalo depresivní příznaky, přičemž efekt byl výraznější u lidí, kteří depresivní symptomy skutečně měli. Jiné velké genetické studie ale kauzální souvislost mezi nedostatkem vitamínu D a depresí nepotvrdily, takže výsledky zatím nejsou jednoznačné a vitamín D rozhodně nelze považovat za náhradu léčby deprese. U lidí s prokázaným nedostatkem, typicky v zimních měsících nebo při omezeném pobytu na slunci, se ale doplnění vyplatí probrat s lékařem — a to nejen kvůli kostem.</p>
-      <p class="article-source">Zdroj: Mikola T. a kol., <em>The effect of vitamin D supplementation on depressive symptoms in adults: A systematic review and meta-analysis of randomized controlled trials</em>, Critical Reviews in Food Science and Nutrition, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Black maca: co ukazuje výzkum o vlivu na náladu a energii</h3>
-      <p>Maca (Lepidium meyenii) je hlíznatá rostlina z čeledi brukvovitých, která roste ve vysokohorských oblastech peruánských And v nadmořské výšce kolem 4000 metrů a už staletí se používá jako potravina i v tradiční medicíně. Existuje ve žluté, červené a černé (black) variantě, které se liší jak barvou, tak částečně i chemickým složením a tradičním využitím — black maca bývá v Peru spojována především s podporou paměti a mužské plodnosti, zatímco červená odrůda se tradičně používá spíš pro celkovou vitalitu.</p><p>Podle randomizované, dvojitě zaslepené studie kontrolované placebem, do níž bylo zapojeno 175 dospělých účastníků, vedlo dvanáctitýdenní podávání 3 g černé nebo červené maky denně ke zlepšení nálady a kvality života souvisejícím se zdravím ve srovnání s placebem, obě odrůdy měly v tomto ohledu podobný efekt. Zajímavým samostatným zjištěním bylo, že black maca navíc snížila hladinu krevní glukózy a u obyvatel žijících ve vysoké nadmořské výšce i abnormálně zvýšenou hladinu hemoglobinu, zatímco na náladu a energii působila o něco slaběji než odrůda červená. Obě varianty byly účastníky dobře snášeny bez závažných nežádoucích účinků. Přestože je black maca tradičně spojována s podporou libida a plodnosti, tato konkrétní studie takové účinky přímo neměřila, a proto je třeba je brát spíš jako tradiční, ne plně vědecky potvrzené použití.</p>
-      <p class="article-source">Zdroj: Gonzales-Arimborgo C. a kol., <em>Acceptability, Safety, and Efficacy of Oral Administration of Extracts of Black or Red Maca (Lepidium meyenii) in Adult Human Subjects: A Randomized, Double-Blind, Placebo-Controlled Study</em>, Pharmaceuticals, 2016.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>Hericium (korálovec ježatý): co ukazují studie o vlivu na mozek a náladu</h3>
-      <p>Hericium erinaceus (česky korálovec ježatý, v angličtině známý jako Lion's Mane) je jedlá houba, která se v tradiční čínské a japonské medicíně používá už staletí a v posledních letech se dostává do popředí zájmu i západní výzkumné komunity. Zajímavost spočívá v jejích bioaktivních látkách — erinacinech a hericenonech — které v laboratorních a zvířecích studiích stimulovaly tvorbu nervového růstového faktoru (NGF), bílkoviny důležité pro růst, obnovu a přežití nervových buněk.</p><p>Výzkum na lidech je ale zatím na začátku a výsledky jsou spíš předběžné. Podle pilotní randomizované, placebem kontrolované studie publikované v časopise Nutrients (2023) vedla jednorázová dávka Hericium erinaceus u zdravých mladých dospělých k rychlejšímu výkonu v testu pozornosti (Stroopův test), po 28 dnech pravidelného užívání se pak objevil náznak nižšího vnímaného stresu, tento výsledek ale byl jen na hranici statistické významnosti. Autoři sami upozorňují, že šlo o malý vzorek účastníků a že závěry je třeba brát s rezervou, dokud je nepotvrdí větší studie. Hericium tak zatím představuje slibný, ale zdaleka ne uzavřený směr výzkumu — rozhodně jej nelze považovat za prokázaný prostředek na zlepšení nálady či paměti.</p>
-      <p class="article-source">Zdroj: Docherty S., Doughty F. L., Smith E. F., <em>The Acute and Chronic Effects of Lion's Mane Mushroom Supplementation on Cognitive Function, Stress and Mood in Young Adults: A Double-Blind, Parallel Groups, Pilot Study</em>, Nutrients, 2023.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>CDP-cholin (citicolin): co dělá pro paměť a pozornost</h3>
-      <p>CDP-cholin (cytidin-difosfát-cholin), běžně známý pod obchodním názvem citicolin, je přirozeně se vyskytující sloučenina, kterou si tělo vytváří jako meziprodukt při syntéze fosfatidylcholinu — důležité stavební látky buněčných membrán, včetně membrán nervových buněk. V mozku citicolin funguje i jako prekurzor pro tvorbu neurotransmiterů acetylcholinu, dopaminu a noradrenalinu a podílí se na energetickém metabolismu mozkových buněk.</p><p>Podle randomizované, placebem kontrolované studie publikované v časopise The Journal of Nutrition (2021) vedlo dvanáctitýdenní užívání citicolinu (500 mg denně) u zdravých starších dospělých s věkem podmíněným poklesem paměti ke zlepšení celkové paměťové výkonnosti, nejvýrazněji u epizodické paměti. Starší souhrnné přehledy studií u lidí s kognitivními potížemi přitom přinesly smíšenější obraz — vliv citicolinu na pozornost se v nich jednoznačně nepotvrdil, zatímco na paměť a chování byl efekt zaznamenán o něco spolehlivěji, zejména v krátkodobém horizontu. Citicolin je celkově dobře snášený s minimem hlášených nežádoucích účinků, není ale všelékem na kognitivní výkon a rozhodně nenahrazuje léčbu skutečných kognitivních poruch — jeho případné užívání je vhodné probrat s lékařem, zvlášť u starších osob nebo při současné medikaci.</p>
-      <p class="article-source">Zdroj: Nakazaki E. a kol., <em>Citicoline and Memory Function in Healthy Older Adults: A Randomized, Double-Blind, Placebo-Controlled Clinical Trial</em>, The Journal of Nutrition, 2021.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>SAMe (S-adenosylmethionin): co říká aktuální výzkum o vlivu na náladu</h3>
-      <p>SAMe (S-adenosylmethionin) je sloučenina, kterou si tělo přirozeně vytváří z aminokyseliny metioninu a adenosintrifosfátu (ATP) prakticky v každé buňce. Funguje jako klíčový dárce methylové skupiny v desítkách biochemických reakcí — podílí se například na syntéze neurotransmiterů serotoninu, dopaminu a noradrenalinu, na tvorbě fosfolipidů a na metabolismu v játrech. Právě kvůli roli v tvorbě neurotransmiterů se SAMe už desítky let zkoumá jako možný doplněk při léčbě deprese, v některých evropských zemích je dokonce dostupný jako lék na předpis.</p><p>Výsledky studií jsou ale nejednotné. Starší menší studie a otevřená pozorování naznačovaly, že SAMe v dávkách 800 až 1600 mg denně může mít účinek srovnatelný s klasickými antidepresivy. Aktualizovaná systematická review a metaanalýza randomizovaných studií z roku 2024 (General Hospital Psychiatry) ale mezi SAMe a placebem, ani mezi SAMe a antidepresivy, nenašla statisticky významný rozdíl v míře zlepšení depresivních příznaků — autoři výsledky připisují malému počtu zahrnutých studií a velkému rozptylu použitých dávek (200 až 3200 mg denně). Klinické doporučené postupy proto obecně nedoporučují SAMe jako samostatnou léčbu závažné deprese, ale u vyšších dávek jej opatrně připouštějí jako možný doplněk k jiné léčbě mírnější deprese. Vzhledem k nejednoznačným výsledkům a možným interakcím s antidepresivy je užívání SAMe vždy vhodné probrat s lékařem.</p>
-      <p class="article-source">Zdroj: Peng T. R., Cheng H. Y., Wu T. W., <em>S-Adenosylmethionine (SAMe) as an adjuvant therapy for patients with depression: An updated systematic review and meta-analysis</em>, General Hospital Psychiatry, 2024.</p>
-    </article>
-
-    <article class="article-card">
-      <h3>N-acetylcystein (NAC): jak ovlivňuje glutamát a napětí v mozku</h3>
-      <p>N-acetylcystein (NAC) je sloučenina odvozená od aminokyseliny L-cysteinu, kterou lékařská medicína dlouho využívá především jako protijed při otravě paracetamolem a jako lék na uvolnění hlenu při dýchacích potížích. V posledním desetiletí se ale ukazuje, že NAC má i výrazný vliv na centrální nervový systém: funguje jako prekurzor glutathionu, hlavního antioxidantu v těle, a zároveň pomáhá regulovat transport a hladinu glutamátu — hlavního excitačního (budivého) neurotransmiteru v mozku, jehož nerovnováha se dává do souvislosti s úzkostí, napětím a řadou psychiatrických potíží.</p><p>Podle systematického přehledu a metaanalýzy randomizovaných studií publikované v časopise Frontiers in Psychiatry (2024), která zahrnula šest studií s celkem 195 pacienty, vedlo přidání NAC k standardní léčbě SSRI antidepresivy u obsedantně-kompulzivní poruchy k výraznějšímu zlepšení příznaků oproti placebu, a to při dobré snášenlivosti — nejčastějšími nežádoucími účinky byly mírná nevolnost, změny trávení nebo bolest hlavy. Právě u OCD, kde je dysregulace glutamátu obzvlášť dobře zdokumentovaná, má NAC nejsilnější vědeckou oporu. U běžné úzkosti a stresu bez diagnostikované poruchy jsou důkazy zatím spíš předběžné a menšího rozsahu, takže NAC nelze považovat za prokázaný prostředek proti běžnému každodennímu napětí — jde spíš o slibný, ale ještě ne uzavřený směr výzkumu, jehož případné využití je vhodné konzultovat s lékařem.</p>
-      <p class="article-source">Zdroj: Eghdami S., Eissazade N., Heidari Mokarar M., Boroon M., Orsolini L., Shalbafan M., <em>The safety and efficacy of N-acetylcysteine as an augmentation in the treatment of obsessive-compulsive disorder in adults: a systematic review and meta-analysis of randomized clinical trials</em>, Frontiers in Psychiatry, 2024.</p>
-    </article>
-    <!-- DOPLNKY:AUTO:END -->
-
-    <p class="article-disclaimer">Texty na této stránce shrnují veřejně dostupné recenzované studie a slouží jen pro obecnou informaci — nejde o lékařskou radu ani diagnózu. Doplňky nezačínej brát bez konzultace s lékařem, hlavně pokud bereš i jiné léky, jsi těhotná nebo kojíš.</p>
-  </section>
-
   <section class="content" id="sec-faq" aria-labelledby="faq">
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
@@ -2928,7 +2738,6 @@
     <a href="techniky-dechu.html">Techniky dechu</a> ·
     <a href="rychla-cviceni-na-zklidneni.html">Rychlá cvičení na zklidnění</a> ·
     <a href="clanky-o-dychani.html">Články o dýchání</a> ·
-    <a href="doplnky.html">Doplňky</a> ·
     <a href="caste-dotazy.html">Časté dotazy</a>
   </nav>
   <div class="footer-crisis">🆘 V akutní krizi nejsi sám/sama: Linka první psychické pomoci <strong>116 123</strong> · Linka bezpečí (do 26 let) <strong>116 111</strong> · tísňová linka <strong>112</strong> — vše nonstop a zdarma.</div>
@@ -3233,7 +3042,7 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // ---------- Rozklikávací karty článků (doplňky i články o dýchání) ----------
+  // ---------- Rozklikávací karty článků (články o dýchání) ----------
   // Ve výchozím stavu je vidět jen nadpis; kliknutím/klávesou se článek rozbalí.
   (function initCollapsibleArticles() {
     document.querySelectorAll('.article-card').forEach(function (card) {
@@ -3267,7 +3076,7 @@
     });
   })();
 
-  // ---------- Vyhledávání v článcích (sekce "Články o dýchání" a "Doplňky") ----------
+  // ---------- Vyhledávání v článcích (sekce "Články o dýchání") ----------
   // Karty se hledají živě přes querySelectorAll pokaždé, když uživatel píše
   // – takže nově přidaný <article class="article-card"> do dané sekce se
   // do hledání zapojí automaticky, bez jakékoli další úpravy tohoto skriptu.
@@ -3330,10 +3139,9 @@
     });
   }
   initArticleSearch('clanky', 'article-search-input', 'article-search-clear', 'article-search-count', 'article-search-empty');
-  initArticleSearch('doplnky', 'doplnky-search-input', 'doplnky-search-clear', 'doplnky-search-count', 'doplnky-search-empty');
 
   // ---------- Rozklikávací panely (sekce z bočního menu) ----------
-  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'doplnky', 'sec-faq', 'sec-vznik', 'poradna'];
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'sec-faq', 'sec-vznik', 'poradna'];
 
   function renderPanel(id, subId) {
     const hero = document.getElementById('cviceni');
@@ -3374,12 +3182,12 @@
   }
 
   // ---------- Vstupní upozornění před citlivějšími sekcemi ----------
-  // "Doplňky a další cesty ke klidu" a "Rady a poradna" (AI) zobrazí před
-  // prvním vstupem potvrzovací modál: jde o edukační/relaxační materiál,
-  // ne zdravotnický nástroj, a u AI poradny navíc upozornění, ať si uživatel
-  // vygenerovanou odpověď vždy sám ověří. Zobrazuje se při každém vstupu
-  // do sekce (nepamatuje se), aby na upozornění uživatel nezapomněl.
-  const DISCLAIMER_GATED_PANELS = ['clanky', 'doplnky', 'poradna'];
+  // "Články o dýchání" a "Rady a poradna" (AI) zobrazí před prvním vstupem
+  // potvrzovací modál: jde o edukační/relaxační materiál, ne zdravotnický
+  // nástroj, a u AI poradny navíc upozornění, ať si uživatel vygenerovanou
+  // odpověď vždy sám ověří. Zobrazuje se při každém vstupu do sekce
+  // (nepamatuje se), aby na upozornění uživatel nezapomněl.
+  const DISCLAIMER_GATED_PANELS = ['clanky', 'poradna'];
   let pendingDisclaimerNav = null;
 
   function activatePanelNav(id, subId) {
@@ -3401,14 +3209,10 @@
       bodyEl.innerHTML =
         '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
         '<p>Odpovědi v této sekci generuje umělá inteligence a mohou obsahovat nepřesnosti či chyby. <strong>Vygenerovanou odpověď si prosím vždy sám/sama ověř</strong> — zejména vše, co se týká zdraví — a v případě potíží se poraď s lékařem nebo jiným kvalifikovaným odborníkem.</p>';
-    } else if (id === 'clanky') {
-      bodyEl.innerHTML =
-        '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
-        '<p>Články v této sekci slouží jen jako obecná informace a mohou obsahovat nepřesnosti nebo chyby. <strong>Uvedené informace si prosím ověř</strong> a v případě zdravotních potíží se poraď s lékařem nebo jiným kvalifikovaným odborníkem.</p>';
     } else {
       bodyEl.innerHTML =
         '<p>Toto je edukační a relaxační materiál, ne zdravotnický nástroj ani náhrada odborné péče.</p>' +
-        '<p>Informace o doplňcích stravy a dalších cestách ke klidu slouží jen jako obecná informace. Než začneš cokoliv užívat nebo měnit svůj životní styl, poraď se prosím s lékařem či jiným kvalifikovaným odborníkem.</p>';
+        '<p>Články v této sekci slouží jen jako obecná informace a mohou obsahovat nepřesnosti nebo chyby. <strong>Uvedené informace si prosím ověř</strong> a v případě zdravotních potíží se poraď s lékařem nebo jiným kvalifikovaným odborníkem.</p>';
     }
     overlay.hidden = false;
   };

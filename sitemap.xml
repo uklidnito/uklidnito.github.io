@@ -93,26 +93,6 @@
   </url>
 
   <url>
-    <loc>https://uklidnito.eu/doplnky.html</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/doplnky.html" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/doplnky-en.html" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/doplnky.html" />
-  </url>
-
-  <url>
-    <loc>https://uklidnito.eu/doplnky-en.html</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="cs" href="https://uklidnito.eu/doplnky.html" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://uklidnito.eu/doplnky-en.html" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://uklidnito.eu/doplnky.html" />
-  </url>
-
-  <url>
     <loc>https://uklidnito.eu/caste-dotazy.html</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
