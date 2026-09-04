@@ -19,7 +19,19 @@
       gold:   ['#fbbf24', '#78350f'],
       sky:    ['#0ea5e9', '#0c4a6e'],
       mint:   ['#34d399', '#065f46'],
-      rose:   ['#f43f5e', '#831843']
+      rose:   ['#f43f5e', '#831843'],
+      copper:    ['#c2703d', '#5c2f10'],
+      sand:      ['#d4a373', '#6b4a26'],
+      silver:    ['#b8c4d0', '#4a5560'],
+      steel:     ['#5b7c99', '#1f3347'],
+      sunflower: ['#ffd23f', '#8a5a00'],
+      honey:     ['#ffb020', '#7a3d00'],
+      platinum:  ['#e0e8ec', '#5a6b73'],
+      aqua:      ['#4fd1c5', '#0f5c54'],
+      diamond:   ['#a0e9ff', '#0a4a5c'],
+      sapphire:  ['#3b5bdb', '#131f5c'],
+      master:    ['#b026ff', '#3a0a5c'],
+      legend:    ['#ffd700', '#3a0a1e']
     };
     try {
       var raw = localStorage.getItem('uklidnito_settings');
@@ -2921,7 +2933,7 @@
   <div>© <span id="year"></span> Uklidni To — free online breathing exercise</div>
   <div class="made-in">This is educational and relaxation material, not a medical device or a substitute for professional care.</div>
   <div class="made-in">made in <a href="https://synthlucida.com/player.html" target="_blank" rel="noopener">SYNTHLUCIDA</a></div>
-  <div class="made-in">More apps: <a href="https://synthlucida.com/pohadkovnik.html">FAIRY TALE GENERATOR</a> · <a href="https://synthlucida.com/landing_vapetrack-en.html">VAPETRACK</a> · <a href="https://synthlucida.com/tripcost.html">TRIP COST</a> · <a href="https://synthlucida.com/weather.html">WEATHER</a> · <a href="https://synthlucida.com/landing_webzenith-en.html">WEBZENith</a> · <a href="https://synthlucida.com/vyplata.html">PAYDAY</a> · <a href="https://synthlucida.com/michani-liquidu.html">LIQUID MIXER</a> · <a href="https://synthlucida.com/denik-vozidla.html">VEHICLE LOG</a> · <a href="https://synthlucida.com/vodovaha.html">SPIRIT LEVEL</a> · <a href="https://relaxplayer.eu">RELAXPLAYER</a></div>
+  <div class="made-in">More apps: <a href="https://synthlucida.com/progrese-landing.html">PROGRESS</a> · <a href="https://synthlucida.com/pohadkovnik.html">FAIRY TALE GENERATOR</a> · <a href="https://synthlucida.com/landing_vapetrack-en.html">VAPETRACK</a> · <a href="https://synthlucida.com/tripcost.html">TRIP COST</a> · <a href="https://synthlucida.com/weather.html">WEATHER</a> · <a href="https://synthlucida.com/landing_webzenith-en.html">WEBZENith</a> · <a href="https://synthlucida.com/vyplata.html">PAYDAY</a> · <a href="https://synthlucida.com/michani-liquidu.html">LIQUID MIXER</a> · <a href="https://synthlucida.com/denik-vozidla.html">VEHICLE LOG</a> · <a href="https://synthlucida.com/vodovaha.html">SPIRIT LEVEL</a> · <a href="https://relaxplayer.eu">RELAXPLAYER</a></div>
   <div class="made-in"><a href="privacy-en.html">Privacy Policy</a></div>
   <div class="visit-stats" id="visit-stats"><span id="total-visits-badge">–</span> · <span id="online-count-badge">–</span></div>
 </footer>
@@ -5109,6 +5121,18 @@
         if (settings.breathVisual === 'mandala' || settings.breathVisual === 'orb' || settings.breathVisual === 'rays') currentBreathVisual = settings.breathVisual;
       }
     } catch (e) { /* ignore */ }
+    // Safety net: whether or not the early <head> script applied the color
+    // correctly (e.g. for a newly added theme missing from that shortened
+    // copy of the list), reapply the CSS variables here based on
+    // currentThemeId, so the checkmark and the actual page color never
+    // disagree.
+    (function reapplyThemeColors() {
+      const theme = BREATH_THEMES.find(function (t) { return t.id === currentThemeId; });
+      if (theme) {
+        document.documentElement.style.setProperty('--accent-color', theme.accent);
+        document.documentElement.style.setProperty('--accent-glow', theme.glow);
+      }
+    })();
     updateBreathTechniqueUI();
     applyBreathVibrationVisibility();
     applyBreathLogoVisibility();
