@@ -493,12 +493,20 @@
   .progress-lock-desc a { color: var(--accent-color); }
   .progress-lock-list { list-style: none; margin: 0 0 14px; padding: 0; text-align: left; }
   .progress-lock-list li { font-size: 12px; line-height: 1.9; opacity: 0.85; }
+  .progress-lock-input-wrap { position: relative; margin-bottom: 10px; }
   .progress-lock-input {
-    display: block; width: 100%; margin-bottom: 10px; padding: 11px 12px; border-radius: 8px;
+    display: block; width: 100%; margin-bottom: 0; padding: 11px 40px 11px 12px; border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff;
     font-family: 'Poppins', sans-serif; font-size: 13px; text-align: center;
   }
   .progress-lock-input:focus { outline: none; border-color: var(--accent-color); }
+  .progress-lock-eye-btn {
+    position: absolute; top: 50%; right: 6px; transform: translateY(-50%); width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center; background: transparent; border: none;
+    cursor: pointer; font-size: 16px; opacity: 0.65; padding: 0; line-height: 1;
+  }
+  .progress-lock-eye-btn:hover { opacity: 1; }
+  .progress-lock-eye-btn:focus-visible { outline: 1px solid var(--accent-color); outline-offset: 2px; border-radius: 4px; }
   .progress-lock-btn {
     width: 100%; padding: 11px; border-radius: 8px; border: 1px solid var(--accent-color);
     background: rgba(255,119,0,0.15); color: #fff; cursor: pointer; font-family: 'Orbitron', sans-serif;
@@ -1990,7 +1998,10 @@
           <div class="progress-lock-gallery-dots" id="progress-lock-gallery-dots"></div>
         </div>
         <p class="progress-lock-desc">You can get the password to unlock it for FREE through Gumroad: <a href="https://uklidnito.gumroad.com/" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>If you enjoy the app and want to support the project, we'd really appreciate it. Thank you! </p>
-        <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Enter password" autocomplete="off">
+        <div class="progress-lock-input-wrap">
+          <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Enter password" autocomplete="off">
+          <button type="button" class="progress-lock-eye-btn" id="progress-lock-eye-btn" onclick="toggleProgressLockPasswordVisibility()" aria-label="Show password" aria-pressed="false" title="Show/hide password">👁️</button>
+        </div>
         <button type="button" class="progress-lock-btn" onclick="submitProgressUnlock()">🔓 Unlock</button>
         <p class="progress-lock-status" id="progress-lock-status"></p>
         <p class="progress-lock-hint">💡 This browser will remember the password once entered, so you won't need to enter it again next time. If you clear your browser data (or use a different browser/device), you'll need to enter it again.</p>
@@ -3306,8 +3317,27 @@
     content.style.display = unlocked ? '' : 'none';
     if (!unlocked) {
       const input = document.getElementById('progress-lock-input');
-      if (input) setTimeout(function () { input.focus(); }, 60);
+      if (input) {
+        input.value = '';
+        input.type = 'password';
+        const eyeBtn = document.getElementById('progress-lock-eye-btn');
+        if (eyeBtn) { eyeBtn.textContent = '👁️'; eyeBtn.setAttribute('aria-pressed', 'false'); }
+        setTimeout(function () { input.focus({ preventScroll: true }); }, 60);
+      }
     }
+  };
+
+  window.toggleProgressLockPasswordVisibility = function () {
+    const input = document.getElementById('progress-lock-input');
+    const eyeBtn = document.getElementById('progress-lock-eye-btn');
+    if (!input) return;
+    const showing = input.type === 'text';
+    input.type = showing ? 'password' : 'text';
+    if (eyeBtn) {
+      eyeBtn.textContent = showing ? '👁️' : '🙈';
+      eyeBtn.setAttribute('aria-pressed', showing ? 'false' : 'true');
+    }
+    input.focus({ preventScroll: true });
   };
 
   window.submitProgressUnlock = function () {
@@ -3329,7 +3359,7 @@
         }, 250);
       } else {
         if (status) { status.textContent = 'Incorrect password, please try again.'; status.className = 'progress-lock-status error'; }
-        if (input) { input.value = ''; input.focus(); }
+        if (input) { input.value = ''; input.type = 'password'; input.focus({ preventScroll: true }); const eyeBtn = document.getElementById('progress-lock-eye-btn'); if (eyeBtn) { eyeBtn.textContent = '👁️'; eyeBtn.setAttribute('aria-pressed', 'false'); } }
       }
     });
   };
