@@ -1068,18 +1068,6 @@
   }
   .section-disclaimer-confirm:hover { box-shadow: 0 0 14px var(--accent-color); }
 
-  /* ---------- Sekce "Jak to vzniklo" ---------- */
-  .vznik-photo { margin: 22px auto; text-align: center; }
-  .vznik-photo img {
-    max-width: 260px; width: 100%; border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.12);
-  }
-  .vznik-wish {
-    margin-top: 20px; padding: 16px 18px; border-radius: 14px;
-    background: rgba(255,119,0,0.08); border: 1px solid rgba(255,119,0,0.25);
-    font-style: italic; line-height: 1.8;
-  }
-  .vznik-signature { display: inline-block; margin-top: 6px; font-style: normal; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; color: var(--accent-color); }
 
   .benefits-list { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
   .benefits-list li { font-size: 13.5px; opacity: 0.82; padding-left: 22px; position: relative; line-height: 1.6; }
@@ -1694,7 +1682,6 @@
   <a href="rychla-cviceni-na-zklidneni.html">Rychlá cvičení</a>
   <a href="#clanky" data-panel="clanky" onclick="showPanel('clanky'); toggleSideNav(false); return false;">Články o dýchání</a>
   <a href="#faq" data-panel="sec-faq" onclick="showPanel('sec-faq'); toggleSideNav(false); return false;">Časté dotazy</a>
-  <a href="#vznik" data-panel="sec-vznik" onclick="showPanel('sec-vznik'); toggleSideNav(false); return false;">Jak to vzniklo</a>
   <a href="#poradna" data-panel="poradna" onclick="showPanel('poradna'); toggleSideNav(false); return false;">💬 Rady a poradna</a>
 
   <div class="side-nav-external side-nav-install" id="side-nav-install-box" hidden>
@@ -2000,7 +1987,7 @@
           </div>
           <div class="progress-lock-gallery-dots" id="progress-lock-gallery-dots"></div>
         </div>
-        <p class="progress-lock-desc">Heslo pro odemčení získáš přes Gumroad ZDARMA: <a href="https://uklidnito.gumroad.com/l/code?layout=profile" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>Pokud tě aplikace baví a chceš projekt podpořit, budeme moc rádi. Děkujeme!</p>
+        <p class="progress-lock-desc">Heslo pro odemčení získáš přes Gumroad: <a href="https://uklidnito.gumroad.com/l/code?layout=profile" target="_blank" rel="noopener noreferrer">uklidnito.gumroad.com</a>.<br>Pokud tě aplikace baví a chceš projekt podpořit, budeme moc rádi. Děkujeme!</p>
         <div class="progress-lock-input-wrap">
           <input type="password" id="progress-lock-input" class="progress-lock-input" placeholder="Zadej heslo" autocomplete="off">
           <button type="button" class="progress-lock-eye-btn" id="progress-lock-eye-btn" onclick="toggleProgressLockPasswordVisibility()" aria-label="Zobrazit heslo" aria-pressed="false" title="Zobrazit/skrýt heslo">👁️</button>
@@ -2674,21 +2661,6 @@
     </div>
   </section>
 
-  <section class="content" id="sec-vznik" aria-labelledby="vznik-nadpis">
-    <div class="panel-topbar">
-      <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
-    </div>
-    <h2 id="vznik-nadpis">Jak to vzniklo</h2>
-    <p>Uklidni To původně vzniklo čistě pro osobní, soukromé použití. Hledal jsem různá cvičení na relaxaci a snížení stresu a informace byly roztroušené kdekoliv po internetu — kousek tady, kousek tam, nikde to nebylo pohromadě. Rozhodl jsem se proto vytvořit si vlastní aplikaci, která bude jednoduchá na používání, bude v ní vše potřebné a bude dostupná kdykoliv a kdekoliv, ať jsem doma nebo na cestách.</p>
-
-    <figure class="vznik-photo">
-      <img src="david.jpg" alt="David, autor aplikace Uklidni To" loading="lazy">
-    </figure>
-
-    <p>Postupem času jsem se rozhodl aplikaci zpřístupnit zdarma široké veřejnosti, aby lidé, kteří hledají to samé, měli usnadněnou práci a nemuseli trávit hodiny hledáním a zjišťováním, jako jsem to musel dělat já.</p>
-    <p class="vznik-wish">Přeju appce, ať pomáhá a dělá radost všem, kdo si díky ní najdou chvilku klidu.<br><span class="vznik-signature">David</span></p>
-  </section>
-
   <section class="content" id="poradna" aria-labelledby="poradna-nadpis">
     <div class="panel-topbar">
       <button class="panel-nav-btn close-btn" onclick="closePanel()">✕ Zavřít</button>
@@ -3152,7 +3124,7 @@
   initArticleSearch('clanky', 'article-search-input', 'article-search-clear', 'article-search-count', 'article-search-empty');
 
   // ---------- Rozklikávací panely (sekce z bočního menu) ----------
-  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'sec-faq', 'sec-vznik', 'poradna'];
+  const PANEL_IDS = ['sec-jak-funguje', 'sec-techniky', 'pokrok', 'clanky', 'sec-faq', 'poradna'];
 
   function renderPanel(id, subId) {
     const hero = document.getElementById('cviceni');
@@ -3501,7 +3473,7 @@
 
   (function initPanelFromHash() {
     const hashId = location.hash ? location.hash.slice(1) : '';
-    const hashToPanel = { 'jak-funguje': 'sec-jak-funguje', 'techniky': 'sec-techniky', 'faq': 'sec-faq', 'vznik': 'sec-vznik' };
+    const hashToPanel = { 'jak-funguje': 'sec-jak-funguje', 'techniky': 'sec-techniky', 'faq': 'sec-faq' };
     let startId = null;
     let subId = null;
     if (PANEL_IDS.indexOf(hashId) !== -1) startId = hashId;
