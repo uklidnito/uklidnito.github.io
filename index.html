@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="cs" class="no-js">
 <head>
+<script>
+  // HTTP -> HTTPS (GitHub Pages nejde přepnout "Enforce HTTPS", tak přesměrujeme sami)
+  if (location.protocol === 'http:' && /(^|\.)uklidnito\.eu$/.test(location.hostname)) {
+    location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+  }
+</script>
 <script>document.documentElement.classList.replace('no-js','js');</script>
 <script>
   // Načtení uloženého barevného motivu co nejdřív (ještě před vykreslením

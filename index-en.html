@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
+<script>
+  // HTTP -> HTTPS (GitHub Pages "Enforce HTTPS" is stuck, so we redirect ourselves)
+  if (location.protocol === 'http:' && /(^|\.)uklidnito\.eu$/.test(location.hostname)) {
+    location.replace('https://' + location.host + location.pathname + location.search + location.hash);
+  }
+</script>
 <script>document.documentElement.classList.replace('no-js','js');</script>
 <script>
   // Load the saved color theme as early as possible (before styles paint),
