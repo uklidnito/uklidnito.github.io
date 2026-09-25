@@ -1136,6 +1136,12 @@
     font-size: 15px; letter-spacing: 0.5px; text-transform: none; color: #fff;
     font-variant-numeric: tabular-nums; text-shadow: 0 0 10px var(--accent-color);
   }
+  /* Na úzkých mobilech by se vycentrovaný řádek stopek dotýkal třetího kulatého
+     tlačítka vlevo nahoře - posuneme ho kousek doprava (vpravo je jen ✖). */
+  @media (max-width: 440px) {
+    .breath-stats-row { left: calc(50% + 28px); gap: 16px; }
+    .breath-stat-item { letter-spacing: 1px; }
+  }
   @media (max-width: 380px) {
     .breath-stats-row { gap: 14px; }
     .breath-stat-item { font-size: 8px; }
@@ -7464,6 +7470,17 @@
 
   renderProgress();
   initReminderUI();
+
+  // Multiple open tabs (or CZ + EN at once): when another tab saves progress,
+  // reload it here too. Otherwise stale data from this tab would overwrite
+  // newer data on the next save (lost notes, ratings, XP).
+  window.addEventListener('storage', function (e) {
+    if (e.key !== null && e.key !== PROGRESS_STORAGE_KEY) return;
+    progressData = loadProgressData();
+    renderProgress();
+    renderXpBadge();
+    updateThemeLockStates();
+  });
 </script>
 
 <!-- Hidden login dialog: activated by 6 quick clicks on the logo in the header.
@@ -8365,20 +8382,33 @@ Rules:
   // itself, so the user doesn't have to press or clear anything manually.
   if ('serviceWorker' in navigator) {
     let swRefreshing = false;
+    // On the very first visit no SW controls the page yet. Its first takeover
+    // (clients.claim) is not a new version, and reloading would only interrupt the user.
+    const swHadController = !!navigator.serviceWorker.controller;
+
+    // Don't interrupt a running exercise or unsent text (note, question, message) - wait.
+    function swIsBusy() {
+      if (typeof breathingActive !== 'undefined' && breathingActive) return true;
+      return Array.prototype.some.call(
+        document.querySelectorAll('textarea, input[type="text"], input[type="email"]'),
+        (el) => el.value.trim() !== ''
+      );
+    }
+    function swReloadWhenSafe() {
+      if (swRefreshing || !swHadController) return;
+      swRefreshing = true;
+      (function tryReload() {
+        if (swIsBusy()) setTimeout(tryReload, 5000);
+        else window.location.reload();
+      })();
+    }
 
     // As soon as a new SW version takes control of the page, refresh it (only once).
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (swRefreshing) return;
-      swRefreshing = true;
-      window.location.reload();
-    });
+    navigator.serviceWorker.addEventListener('controllerchange', swReloadWhenSafe);
 
     // Fallback path via an explicit message from the service worker (see 'activate' in sw.js).
     navigator.serviceWorker.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'SW_UPDATED' && !swRefreshing) {
-        swRefreshing = true;
-        window.location.reload();
-      }
+      if (event.data && event.data.type === 'SW_UPDATED') swReloadWhenSafe();
     });
 
     window.addEventListener('load', () => {

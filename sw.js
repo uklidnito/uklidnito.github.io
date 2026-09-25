@@ -1,6 +1,6 @@
 // Uklidni To — Service Worker
 // Zvyš CACHE_VERSION při každé větší aktualizaci obsahu, aby si klienti stáhli nová data.
-const CACHE_VERSION = 'v330';
+const CACHE_VERSION = 'v331';
 const CACHE_NAME = `uklidnito-${CACHE_VERSION}`;
 
 // Základní "app shell" — soubory nutné pro fungování appky offline.
@@ -73,6 +73,15 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Cizí zdroje, které má smysl kešovat (neměnné soubory potřebné i offline).
+// Všechno ostatní cizí (GoatCounter, reCAPTCHA, Firebase API, Gumroad…) jde vždy
+// rovnou na síť - kešování by jen zbytečně plnilo úložiště a mohlo vracet stará data.
+function isCacheableCrossOrigin(url) {
+  return url.hostname === 'fonts.googleapis.com' ||
+    url.hostname === 'fonts.gstatic.com' ||
+    (url.hostname === 'www.gstatic.com' && url.pathname.startsWith('/firebasejs/'));
+}
+
 self.addEventListener('fetch', (event) => {
   const req = event.request;
 
@@ -80,44 +89,49 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
+  const sameOrigin = url.origin === self.location.origin;
 
-  // Firebase (realtime počítadlo) a reklamy musí jít vždy na síť — nekešovat.
-  if (
-    url.hostname.includes('firebaseio.com') ||
-    url.hostname.includes('firebasedatabase.app') ||
-    url.hostname.includes('googlesyndication.com') ||
-    url.hostname.includes('googleapis.com') && url.pathname.includes('firebase')
-  ) {
+  if (!sameOrigin && !isCacheableCrossOrigin(url)) {
     return; // necháváme prohlížeč zpracovat normálně (network only)
   }
 
-  // Navigace (otevření/refresh stránky): network-first s offline fallbackem na index.html.
+  // Navigace (otevření/refresh stránky): network-first s offline fallbackem.
+  // Klíč bez ?parametrů (utm, fbclid…), ať se jedna stránka neukládá mnohokrát.
   if (req.mode === 'navigate') {
+    const pageKey = url.origin + url.pathname;
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const resClone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+          if (res && res.ok) {
+            const resClone = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(pageKey, resClone));
+          }
           return res;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(() =>
+          caches.match(pageKey).then((cached) =>
+            cached || caches.match(/-en(\.html)?$/.test(url.pathname) ? './index-en.html' : './index.html')
+          )
+        )
     );
     return;
   }
 
-  // Ostatní same-origin i cizí statické zdroje (fonty, ikony, ...) — stale-while-revalidate.
+  // Ostatní statické zdroje (ikony, fonty, Firebase SDK…) — stale-while-revalidate.
   event.respondWith(
     caches.match(req).then((cached) => {
       const fetchPromise = fetch(req)
         .then((res) => {
-          // Cache jen platné odpovědi (vyhneme se ukládání chyb/opaque odpovědí s problémy).
-          if (res && res.status === 200) {
+          // Cache jen platné odpovědi. CSS z Google Fonts přichází jako "opaque"
+          // (bez stavového kódu) - to jediné bereme i tak, ať fonty fungují offline.
+          const ok = res && (res.status === 200 || (res.type === 'opaque' && url.hostname === 'fonts.googleapis.com'));
+          if (ok) {
             const resClone = res.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
           }
           return res;
         })
-        .catch(() => cached);
+        .catch(() => cached || Response.error());
 
       return cached || fetchPromise;
     })

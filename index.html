@@ -1134,6 +1134,12 @@
     font-size: 15px; letter-spacing: 0.5px; text-transform: none; color: #fff;
     font-variant-numeric: tabular-nums; text-shadow: 0 0 10px var(--accent-color);
   }
+  /* Na úzkých mobilech by se vycentrovaný řádek stopek dotýkal třetího kulatého
+     tlačítka vlevo nahoře - posuneme ho kousek doprava (vpravo je jen ✖). */
+  @media (max-width: 440px) {
+    .breath-stats-row { left: calc(50% + 28px); gap: 16px; }
+    .breath-stat-item { letter-spacing: 1px; }
+  }
   @media (max-width: 380px) {
     .breath-stats-row { gap: 14px; }
     .breath-stat-item { font-size: 8px; }
@@ -7468,6 +7474,17 @@
 
   renderProgress();
   initReminderUI();
+
+  // Víc otevřených záložek (nebo CZ + EN verze zároveň): když jiná záložka uloží pokrok,
+  // načteme ho i tady. Jinak by starší data z této záložky při dalším uložení
+  // přepsala novější (ztracené poznámky, hodnocení, XP).
+  window.addEventListener('storage', function (e) {
+    if (e.key !== null && e.key !== PROGRESS_STORAGE_KEY) return;
+    progressData = loadProgressData();
+    renderProgress();
+    renderXpBadge();
+    updateThemeLockStates();
+  });
 </script>
 
 <!-- Skrytý přihlašovací dialog: aktivuje se 6x rychlým klikem na logo v hlavičce.
@@ -8366,20 +8383,33 @@ Pravidla:
   // takže uživatel nemusí nic mačkat ani ručně mazat cache.
   if ('serviceWorker' in navigator) {
     let swRefreshing = false;
+    // Při úplně první návštěvě stránku ještě žádný SW neřídí. Jeho první převzetí kontroly
+    // (clients.claim) tedy není nová verze a obnovení by jen přerušilo, co uživatel dělá.
+    const swHadController = !!navigator.serviceWorker.controller;
+
+    // Nepřerušuj běžící cvičení ani rozepsaný text (poznámka, dotaz, zpráva) - počkej.
+    function swIsBusy() {
+      if (typeof breathingActive !== 'undefined' && breathingActive) return true;
+      return Array.prototype.some.call(
+        document.querySelectorAll('textarea, input[type="text"], input[type="email"]'),
+        (el) => el.value.trim() !== ''
+      );
+    }
+    function swReloadWhenSafe() {
+      if (swRefreshing || !swHadController) return;
+      swRefreshing = true;
+      (function tryReload() {
+        if (swIsBusy()) setTimeout(tryReload, 5000);
+        else window.location.reload();
+      })();
+    }
 
     // Jakmile nová verze SW převezme kontrolu nad stránkou, obnov ji (jen jednou).
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (swRefreshing) return;
-      swRefreshing = true;
-      window.location.reload();
-    });
+    navigator.serviceWorker.addEventListener('controllerchange', swReloadWhenSafe);
 
     // Záložní cesta přes explicitní zprávu ze service workera (viz activate v sw.js).
     navigator.serviceWorker.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'SW_UPDATED' && !swRefreshing) {
-        swRefreshing = true;
-        window.location.reload();
-      }
+      if (event.data && event.data.type === 'SW_UPDATED') swReloadWhenSafe();
     });
 
     window.addEventListener('load', () => {
